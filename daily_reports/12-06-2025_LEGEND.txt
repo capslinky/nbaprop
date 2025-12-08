@@ -1,0 +1,184 @@
+
+================================================================================
+                    NBA PROP ANALYSIS - DAILY REPORT LEGEND
+                              12-06-2025
+================================================================================
+
+This file explains all columns in the daily report CSV.
+
+================================================================================
+SECTION 1: IDENTIFIERS
+================================================================================
+
+report_date         Date of the analysis (MM-DD-YYYY)
+player              Player's full name
+player_team         3-letter abbreviation of player's team (e.g., LAL, BOS)
+opponent            3-letter abbreviation of opposing team
+home_away           HOME = playing at home, AWAY = playing on the road
+matchup             Full matchup format: "AWAY @ HOME"
+
+================================================================================
+SECTION 2: PROP INFORMATION
+================================================================================
+
+prop_type           Type of prop bet:
+                    - points: Total points scored
+                    - rebounds: Total rebounds
+                    - assists: Total assists
+                    - pra: Points + Rebounds + Assists combined
+                    - threes: 3-point field goals made
+
+line                The betting line (e.g., 25.5 means over/under 25.5)
+over_odds           American odds for the OVER (e.g., -110, +120)
+bookmaker           Sportsbook offering this line (draftkings, fanduel, etc.)
+
+================================================================================
+SECTION 3: RAW PLAYER STATISTICS (Current 2025-26 Season)
+================================================================================
+
+season_avg          Average for this stat across all games this season
+recent_5_avg        Average for the last 5 games only (recent form)
+median              Median value (middle value, less affected by outliers)
+std_dev             Standard deviation (higher = more volatile/inconsistent)
+min                 Lowest value recorded this season
+max                 Highest value recorded this season
+games_analyzed      Number of games used in analysis (up to 15)
+times_over          How many games the player went OVER this line
+times_under         How many games the player went UNDER this line
+times_push          How many games the player hit exactly on the line
+over_rate_pct       Percentage of games player went over (times_over/games × 100)
+
+================================================================================
+SECTION 4: CONTEXT FACTORS
+================================================================================
+
+is_back_to_back     TRUE if playing second game in 2 days (rest disadvantage)
+days_rest           Days since last game (1 = back-to-back, 2+ = rested)
+
+recent_mins_avg     Average minutes in last 5 games
+season_mins_avg     Average minutes for full season
+minutes_factor      Recent mins / Season mins:
+                    - > 1.0 = playing MORE minutes recently
+                    - < 1.0 = playing FEWER minutes recently
+
+opp_defense_factor  Opponent's defensive factor for this stat type:
+                    - > 1.0 = opponent ALLOWS more than average (good matchup)
+                    - < 1.0 = opponent ALLOWS less than average (bad matchup)
+                    - 1.05 = opponent allows 5% more than league average
+
+opp_defense_rank    Opponent's rank in allowing this stat (1-30):
+                    - 1-5 = Worst defense (allows most) = SMASH SPOT
+                    - 6-10 = Below average defense = Good matchup
+                    - 11-20 = Average defense
+                    - 21-25 = Above average defense
+                    - 26-30 = Best defense (allows least) = TOUGH matchup
+
+team_pace_factor    Player's team pace factor:
+                    - > 1.0 = faster than average = more possessions
+                    - < 1.0 = slower than average = fewer possessions
+
+opp_pace_factor     Opponent's pace factor
+
+combined_pace       Average of both teams' pace factors
+
+vegas_game_total    Vegas over/under for total game points (e.g., 225.5)
+                    - High (235+) = expected shootout = boost scoring props
+                    - Low (215-) = expected defensive game = reduce scoring props
+
+blowout_risk        Risk of blowout based on spread:
+                    - HIGH = spread > 10 points (starters may rest)
+                    - MEDIUM = spread 7-10 points
+                    - LOW = spread < 7 points (competitive game)
+
+================================================================================
+SECTION 5: MODEL OUTPUT
+================================================================================
+
+model_projection    Final projected value after all adjustments
+base_projection     Initial projection before context adjustments
+edge_pct            Edge percentage: (projection - line) / line × 100
+                    - Positive = projection ABOVE line (lean OVER)
+                    - Negative = projection BELOW line (lean UNDER)
+                    - Higher absolute value = stronger edge
+
+confidence_pct      Model confidence (0-100%):
+                    - Based on consistency, sample size, trend strength
+                    - Higher = more reliable projection
+
+recommended_pick    Model recommendation:
+                    - OVER = bet the over
+                    - UNDER = bet the under  
+                    - PASS = edge too small or confidence too low
+
+context_flags       Visual indicators for key factors:
+                    - 💥 SMASH SPOT = great defensive matchup (rank 1-5)
+                    - 🛡️ TOUGH DEF = bad defensive matchup (rank 26-30)
+                    - ⚠️ B2B = back-to-back game (-8% adjustment)
+                    - 🏃 FAST PACE = high combined pace (boost)
+                    - 🐢 SLOW PACE = low combined pace (penalty)
+                    - 📈 HIGH TOTAL = game total 235+ (scoring boost)
+                    - 📉 LOW TOTAL = game total <215 (scoring penalty)
+                    - 💨 BLOWOUT RISK = large spread (may reduce minutes)
+                    - ⏰ MINS UP = recent minutes trending up
+                    - ⏰ MINS DOWN = recent minutes trending down
+
+================================================================================
+SECTION 6: ADJUSTMENT BREAKDOWN (in percentage points)
+================================================================================
+
+These show how much each factor adjusted the base projection:
+
+adj_defense_pct     Adjustment from opponent defense (+/- %)
+adj_location_pct    Adjustment from home/away (+2.5% home, -2.5% away)
+adj_b2b_pct         Adjustment from back-to-back (-8% if B2B)
+adj_pace_pct        Adjustment from combined pace factor
+adj_game_total_pct  Adjustment from Vegas game total
+adj_blowout_pct     Adjustment from blowout risk
+adj_minutes_pct     Adjustment from minutes trend
+
+Example: If adj_defense_pct = 5.0, the projection was boosted 5% due to 
+         a favorable defensive matchup.
+
+================================================================================
+HOW TO USE THIS REPORT
+================================================================================
+
+1. FILTER by recommended_pick = "OVER" or "UNDER" to see actionable plays
+
+2. SORT by edge_pct (absolute value) to find highest-edge opportunities
+
+3. LOOK FOR plays with:
+   - High edge_pct (|edge| > 10%)
+   - High confidence_pct (> 60%)
+   - High over_rate_pct for OVER picks (> 60%)
+   - Low over_rate_pct for UNDER picks (< 40%)
+   - Favorable context_flags (💥 SMASH SPOT, 🏃 FAST PACE, etc.)
+
+4. AVOID plays with:
+   - ⚠️ B2B flag (higher variance)
+   - 💨 BLOWOUT RISK (minutes uncertainty)
+   - Low games_analyzed (< 10 games = small sample)
+   - High std_dev (inconsistent player)
+
+================================================================================
+TEAM ABBREVIATIONS
+================================================================================
+
+ATL = Atlanta Hawks          MEM = Memphis Grizzlies
+BOS = Boston Celtics         MIA = Miami Heat
+BKN = Brooklyn Nets          MIL = Milwaukee Bucks
+CHA = Charlotte Hornets      MIN = Minnesota Timberwolves
+CHI = Chicago Bulls          NOP = New Orleans Pelicans
+CLE = Cleveland Cavaliers    NYK = New York Knicks
+DAL = Dallas Mavericks       OKC = Oklahoma City Thunder
+DEN = Denver Nuggets         ORL = Orlando Magic
+DET = Detroit Pistons        PHI = Philadelphia 76ers
+GSW = Golden State Warriors  PHX = Phoenix Suns
+HOU = Houston Rockets        POR = Portland Trail Blazers
+IND = Indiana Pacers         SAC = Sacramento Kings
+LAC = LA Clippers            SAS = San Antonio Spurs
+LAL = Los Angeles Lakers     TOR = Toronto Raptors
+                             UTA = Utah Jazz
+                             WAS = Washington Wizards
+
+================================================================================
