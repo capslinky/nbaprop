@@ -95,40 +95,75 @@ def run_daily_analysis():
     """
     Complete daily prop analysis workflow.
     Run this each day before games start.
+    Saves results to Excel and caches API response.
     """
     # Add parent directory to path for imports
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    
+
     from nba_integrations import NBADataFetcher, OddsAPIClient, LivePropAnalyzer
-    
+    from datetime import datetime
+    import json
+
     print("🏀 NBA PROP ANALYSIS - DAILY RUN")
     print("=" * 50)
-    
+
     # Initialize components
     fetcher = NBADataFetcher()
-    
+
     api_key = CONFIG['ODDS_API_KEY'] or os.environ.get('ODDS_API_KEY')
     odds_client = OddsAPIClient(api_key=api_key) if api_key else None
-    
+
     analyzer = LivePropAnalyzer(nba_fetcher=fetcher, odds_client=odds_client)
-    
+
+    # Output filename with today's date
+    today = datetime.now().strftime('%Y-%m-%d')
+    excel_file = f"nba_daily_picks_{today}.xlsx"
+    cache_file = f"nba_odds_cache_{today}.json"
+
     if odds_client:
         print("\n📊 Fetching live odds...")
         value_props = analyzer.find_value_props(min_edge=CONFIG['MIN_EDGE_THRESHOLD'])
-        
+
         if not value_props.empty:
-            print(f"\n🎯 Found {len(value_props)} value plays:")
-            print(value_props.to_string(index=False))
+            print(f"\n🎯 Found {len(value_props)} value plays")
+
+            # Save to Excel
+            try:
+                value_props.to_excel(excel_file, index=False, sheet_name='Value Plays')
+                print(f"✅ Results saved to: {excel_file}")
+            except Exception as e:
+                print(f"⚠️ Could not save Excel: {e}")
+                # Fallback to CSV
+                csv_file = f"nba_daily_picks_{today}.csv"
+                value_props.to_csv(csv_file, index=False)
+                print(f"✅ Results saved to: {csv_file}")
+
+            # Print summary of top plays
+            print("\n" + "=" * 60)
+            print("                 TOP VALUE PLAYS")
+            print("=" * 60)
+
+            # Sort by confidence and edge
+            top_plays = value_props.copy()
+            top_plays['abs_edge'] = top_plays['avg_edge'].abs()
+            top_plays = top_plays.sort_values(['confidence', 'abs_edge'], ascending=[False, False])
+
+            # Show top 20 plays
+            display_cols = ['player', 'prop_type', 'line', 'recommended_side', 'avg_edge', 'confidence', 'recent_avg', 'hit_rate_over', 'bookmaker']
+            available_cols = [c for c in display_cols if c in top_plays.columns]
+            print(top_plays[available_cols].head(20).to_string(index=False))
+
+            print(f"\n📁 Full results ({len(value_props)} plays) saved to: {excel_file}")
         else:
             print("No value plays found meeting criteria")
     else:
         print("\n⚠️ No Odds API key configured")
         print("Set ODDS_API_KEY in config or environment variable")
         print("Get free key at: https://the-odds-api.com/")
-        
+
         # Run manual analysis instead
         print("\n📊 Running manual analysis on sample props...")
-        
+
         sample_props = [
             {'player': 'Luka Doncic', 'prop_type': 'points', 'line': 32.5},
             {'player': 'Shai Gilgeous-Alexander', 'prop_type': 'points', 'line': 30.5},
@@ -136,9 +171,9 @@ def run_daily_analysis():
             {'player': 'Tyrese Haliburton', 'prop_type': 'assists', 'line': 10.5},
             {'player': 'Nikola Jokic', 'prop_type': 'pra', 'line': 47.5},
         ]
-        
+
         results = analyzer.analyze_multiple_props(sample_props)
-        
+
         if not results.empty:
             print("\n" + "=" * 60)
             print("                 ANALYSIS RESULTS")
