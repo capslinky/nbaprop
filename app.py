@@ -1,6 +1,8 @@
 """
 NBA Prop Analysis Dashboard
 Run with: streamlit run app.py
+
+Uses UnifiedPropModel for consistent, context-aware analysis.
 """
 
 import streamlit as st
@@ -12,28 +14,13 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from nba_integrations import NBADataFetcher, OddsAPIClient
-from nba_prop_model import SmartModel
+from nba_integrations import NBADataFetcher, OddsAPIClient, InjuryTracker
+from nba_prop_model import UnifiedPropModel
 from nba_quickstart import CONFIG
 
 st.set_page_config(page_title="NBA Props", page_icon="🏀", layout="wide")
 
-# Cache player stats to avoid repeated API calls
-@st.cache_data(ttl=300)  # Cache for 5 minutes
-def get_player_stats(player_name, num_games):
-    fetcher = NBADataFetcher()
-    return fetcher.get_player_game_logs(player_name, last_n_games=num_games)
-
-@st.cache_data(ttl=3600)  # Cache defense data for 1 hour
-def get_defense_data():
-    fetcher = NBADataFetcher()
-    return fetcher.get_team_defense_vs_position()
-
-@st.cache_data(ttl=3600)  # Cache pace data for 1 hour
-def get_pace_data():
-    fetcher = NBADataFetcher()
-    return fetcher.get_team_pace()
-
+# Cache resources
 @st.cache_resource
 def get_odds_client():
     api_key = CONFIG.get('ODDS_API_KEY') or os.environ.get('ODDS_API_KEY')
@@ -43,9 +30,22 @@ def get_odds_client():
 def get_fetcher():
     return NBADataFetcher()
 
+@st.cache_resource
+def get_model():
+    """Get unified model with all dependencies."""
+    return UnifiedPropModel(
+        data_fetcher=get_fetcher(),
+        injury_tracker=InjuryTracker(),
+        odds_client=get_odds_client()
+    )
+
+@st.cache_data(ttl=300)  # Cache for 5 minutes
+def get_player_stats(player_name, num_games):
+    """Cached player stats for Player Lookup tab."""
+    return get_fetcher().get_player_game_logs(player_name, last_n_games=num_games)
+
 odds_client = get_odds_client()
-defense_data = get_defense_data()
-pace_data = get_pace_data()
+model = get_model()
 fetcher = get_fetcher()
 
 st.title("🏀 NBA Prop Analyzer")
@@ -107,9 +107,22 @@ with tab1:
         markets = [market_map[p] for p in prop_types]
 
         all_results = []
-        model = SmartModel()
-
         progress = st.progress(0, text="Loading props...")
+
+        # Team name to abbreviation mapping
+        team_abbrev_map = {
+            'Atlanta Hawks': 'ATL', 'Boston Celtics': 'BOS', 'Brooklyn Nets': 'BKN',
+            'Charlotte Hornets': 'CHA', 'Chicago Bulls': 'CHI', 'Cleveland Cavaliers': 'CLE',
+            'Dallas Mavericks': 'DAL', 'Denver Nuggets': 'DEN', 'Detroit Pistons': 'DET',
+            'Golden State Warriors': 'GSW', 'Houston Rockets': 'HOU', 'Indiana Pacers': 'IND',
+            'LA Clippers': 'LAC', 'Los Angeles Clippers': 'LAC',
+            'Los Angeles Lakers': 'LAL', 'Memphis Grizzlies': 'MEM',
+            'Miami Heat': 'MIA', 'Milwaukee Bucks': 'MIL', 'Minnesota Timberwolves': 'MIN',
+            'New Orleans Pelicans': 'NOP', 'New York Knicks': 'NYK', 'Oklahoma City Thunder': 'OKC',
+            'Orlando Magic': 'ORL', 'Philadelphia 76ers': 'PHI', 'Phoenix Suns': 'PHX',
+            'Portland Trail Blazers': 'POR', 'Sacramento Kings': 'SAC', 'San Antonio Spurs': 'SAS',
+            'Toronto Raptors': 'TOR', 'Utah Jazz': 'UTA', 'Washington Wizards': 'WAS'
+        }
 
         for i, event in enumerate(events):
             game_name = f"{event['away_team']} @ {event['home_team']}"
@@ -126,40 +139,23 @@ with tab1:
             best = odds_client.get_best_odds(props_df)
             overs = best[best['side'] == 'over']
 
-            # Get team abbreviations for matchup analysis
+            # Get team abbreviations
             home_team = event.get('home_team', '')
             away_team = event.get('away_team', '')
             event_id = event.get('id', '')
-
-            # Map full team names to abbreviations
-            team_abbrev_map = {
-                'Atlanta Hawks': 'ATL', 'Boston Celtics': 'BOS', 'Brooklyn Nets': 'BKN',
-                'Charlotte Hornets': 'CHA', 'Chicago Bulls': 'CHI', 'Cleveland Cavaliers': 'CLE',
-                'Dallas Mavericks': 'DAL', 'Denver Nuggets': 'DEN', 'Detroit Pistons': 'DET',
-                'Golden State Warriors': 'GSW', 'Houston Rockets': 'HOU', 'Indiana Pacers': 'IND',
-                'LA Clippers': 'LAC', 'Los Angeles Clippers': 'LAC',
-                'Los Angeles Lakers': 'LAL', 'Memphis Grizzlies': 'MEM',
-                'Miami Heat': 'MIA', 'Milwaukee Bucks': 'MIL', 'Minnesota Timberwolves': 'MIN',
-                'New Orleans Pelicans': 'NOP', 'New York Knicks': 'NYK', 'Oklahoma City Thunder': 'OKC',
-                'Orlando Magic': 'ORL', 'Philadelphia 76ers': 'PHI', 'Phoenix Suns': 'PHX',
-                'Portland Trail Blazers': 'POR', 'Sacramento Kings': 'SAC', 'San Antonio Spurs': 'SAS',
-                'Toronto Raptors': 'TOR', 'Utah Jazz': 'UTA', 'Washington Wizards': 'WAS'
-            }
             home_abbrev = team_abbrev_map.get(home_team, home_team[:3].upper() if home_team else '')
             away_abbrev = team_abbrev_map.get(away_team, away_team[:3].upper() if away_team else '')
 
             # Get game context (total, spread, blowout risk)
-            game_context = {}
+            game_total = None
+            blowout_risk = None
             if not game_lines.empty:
                 game_line = game_lines[game_lines['game_id'] == event_id]
                 if not game_line.empty:
-                    game_context = {
-                        'total': game_line['total'].values[0],
-                        'blowout_risk': game_line['blowout_risk'].values[0],
-                        'spread': game_line['home_spread'].values[0]
-                    }
+                    game_total = game_line['total'].values[0]
+                    blowout_risk = game_line['blowout_risk'].values[0]
 
-            # Analyze each prop
+            # Analyze each prop using UnifiedPropModel
             players_done = set()
             for _, row in overs.iterrows():
                 player = row['player']
@@ -173,73 +169,29 @@ with tab1:
                 players_done.add(key)
 
                 try:
-                    # Use cached stats
-                    logs = get_player_stats(player, num_games)
-                    if logs.empty or prop not in logs.columns:
-                        continue
-
-                    stats = logs[prop]
-
-                    # Determine player's team and opponent from their recent games
-                    # Player is on home team if their recent matchups show them at home vs away_team
-                    player_team = None
-                    is_home = None
-                    opponent = None
-
-                    if not logs.empty and 'matchup' in logs.columns:
-                        recent_matchup = logs.iloc[0]['matchup']
-                        # Extract team from matchup like "DAL vs. LAL" or "DAL @ LAL"
-                        if 'vs.' in recent_matchup:
-                            player_team = recent_matchup.split(' vs.')[0].strip()
-                        elif '@' in recent_matchup:
-                            player_team = recent_matchup.split(' @')[0].strip()
-
-                        # Determine if home/away for this game
-                        if player_team:
-                            if player_team == home_abbrev or home_team.startswith(player_team):
-                                is_home = True
-                                opponent = away_abbrev
-                            elif player_team == away_abbrev or away_team.startswith(player_team):
-                                is_home = False
-                                opponent = home_abbrev
-
-                    # Get under odds
+                    # Get under odds for display
                     under_row = best[(best['player'] == player) &
                                     (best['prop_type'] == prop) &
                                     (best['side'] == 'under')]
                     under_odds = under_row['odds'].values[0] if len(under_row) > 0 else -110
                     over_odds = int(row['odds']) if row['odds'] else -110
 
-                    # Check for back-to-back
-                    b2b_info = fetcher.check_back_to_back(logs)
-                    is_b2b = b2b_info.get('is_b2b', False)
-
-                    # Get minutes trend
-                    mins_info = fetcher.get_player_minutes_trend(logs)
-                    mins_factor = mins_info.get('minutes_factor', 1.0) if mins_info else 1.0
-
-                    # Use SmartModel with FULL context-aware analysis
-                    analysis = model.analyze_with_context(
-                        history=stats,
+                    # Use UnifiedPropModel - it handles ALL context internally
+                    analysis = model.analyze(
+                        player_name=player,
+                        prop_type=prop,
                         line=line,
                         odds=over_odds,
-                        prop_type=prop,
-                        opponent=opponent,
-                        is_home=is_home,
-                        defense_data=defense_data,
-                        # New context
-                        is_b2b=is_b2b,
-                        pace_data=pace_data,
-                        player_team=player_team,
-                        game_total=game_context.get('total'),
-                        blowout_risk=game_context.get('blowout_risk'),
-                        minutes_factor=mins_factor
+                        game_total=game_total,
+                        blowout_risk=blowout_risk,
+                        last_n_games=num_games
                     )
 
-                    if 'error' in analysis:
+                    # Skip if no data
+                    if analysis.games_analyzed == 0:
                         continue
 
-                    edge = analysis['edge']
+                    edge = analysis.edge * 100  # Convert to percentage
 
                     # Only keep if meets edge threshold
                     if abs(edge) >= min_edge:
@@ -248,27 +200,26 @@ with tab1:
                             'Player': player,
                             'Prop': prop.upper(),
                             'Line': line,
-                            'Proj': analysis['projection'],
-                            'L5': analysis['recent_avg'],
-                            'Avg': analysis['season_avg'],
-                            'O%': int(analysis['over_rate']),
-                            'U%': int(analysis['under_rate']),
-                            'Trend': analysis['trend'],
-                            'Matchup': analysis.get('matchup', 'N/A'),
-                            'OppRk': analysis.get('opp_rank'),
+                            'Proj': analysis.projection,
+                            'L5': analysis.recent_avg,
+                            'Avg': analysis.season_avg,
+                            'O%': int(analysis.over_rate * 100),
+                            'U%': int(analysis.under_rate * 100),
+                            'Trend': analysis.trend,
+                            'Matchup': analysis.matchup_rating,
+                            'OppRk': analysis.opp_rank,
                             'Edge': edge,
-                            'Conf': int(analysis['confidence']),
-                            'Pick': analysis['pick'],
+                            'Conf': int(analysis.confidence * 100),
+                            'Pick': analysis.pick,
                             'Over': over_odds,
                             'Under': int(under_odds) if under_odds else None,
                             'Book': row['bookmaker'],
-                            'Home': '🏠' if is_home else '✈️' if is_home is False else '',
-                            # New context fields
-                            'Flags': analysis.get('flags', []),
-                            'Total': analysis.get('game_total'),
-                            'B2B': '⚠️' if analysis.get('is_b2b') else '',
-                            'TotalAdj': analysis.get('total_adjustment', 0),
-                            'Adjustments': analysis.get('adjustments', {})
+                            'Home': '🏠' if analysis.is_home else '✈️' if analysis.is_home is False else '',
+                            'Flags': analysis.flags,
+                            'Total': analysis.game_total,
+                            'B2B': '⚠️' if analysis.is_b2b else '',
+                            'TotalAdj': round(analysis.total_adjustment * 100, 1),
+                            'Adjustments': analysis.adjustments
                         })
                 except Exception as e:
                     continue

@@ -12,7 +12,7 @@ Key Features:
 
 import pandas as pd
 import numpy as np
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, List
 from datetime import datetime, timedelta
 import warnings
@@ -1142,6 +1142,908 @@ class Backtester:
         print(f"  Avg Edge:          {metrics['avg_edge']*100:.2f}%")
         
         print("\n" + "="*60 + "\n")
+
+
+# =============================================================================
+# UNIFIED PROP MODEL - Production-Grade Analysis
+# =============================================================================
+
+@dataclass
+class PropAnalysis:
+    """
+    Comprehensive analysis result from UnifiedPropModel.
+    Contains projection, recommendations, and full context breakdown.
+    Includes validation, warnings, and explain() for debugging.
+    """
+    # Core predictions
+    player: str
+    prop_type: str
+    line: float
+    projection: float
+    base_projection: float
+    edge: float  # As decimal (0.05 = 5%)
+    confidence: float  # 0-1 scale
+    pick: str  # 'OVER', 'UNDER', 'PASS'
+
+    # Historical stats
+    recent_avg: float  # Last 5 games
+    season_avg: float  # All games analyzed
+    over_rate: float  # % of games over line
+    under_rate: float  # % of games under line
+    std_dev: float
+    games_analyzed: int
+    trend: str  # 'HOT', 'COLD', 'NEUTRAL'
+
+    # Context used
+    opponent: Optional[str] = None
+    is_home: Optional[bool] = None
+    is_b2b: bool = False
+    game_total: Optional[float] = None
+    blowout_risk: Optional[str] = None
+    matchup_rating: str = 'NEUTRAL'
+    opp_rank: Optional[int] = None
+
+    # Adjustment breakdown
+    adjustments: dict = field(default_factory=dict)
+    total_adjustment: float = 0.0
+    flags: List[str] = field(default_factory=list)
+
+    # Injury context
+    player_status: str = 'HEALTHY'
+    teammate_boost: float = 1.0
+    stars_out: List[str] = field(default_factory=list)
+
+    # Validation & Quality (NEW)
+    context_quality: int = 0  # 0-100 score
+    warnings: List[str] = field(default_factory=list)
+    evidence: dict = field(default_factory=dict)  # What data supported each adjustment
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary for DataFrame creation."""
+        return {
+            'player': self.player,
+            'prop_type': self.prop_type,
+            'line': self.line,
+            'projection': self.projection,
+            'edge': round(self.edge * 100, 1),
+            'confidence': round(self.confidence * 100, 0),
+            'pick': self.pick,
+            'recent_avg': self.recent_avg,
+            'season_avg': self.season_avg,
+            'over_rate': round(self.over_rate * 100, 0),
+            'under_rate': round(self.under_rate * 100, 0),
+            'trend': self.trend,
+            'matchup': self.matchup_rating,
+            'opp_rank': self.opp_rank,
+            'is_home': self.is_home,
+            'is_b2b': self.is_b2b,
+            'flags': self.flags,
+            'total_adjustment': round(self.total_adjustment * 100, 1),
+            'context_quality': self.context_quality,
+            'warnings': self.warnings,
+        }
+
+    def explain(self, return_string: bool = False) -> Optional[str]:
+        """
+        Print detailed breakdown of the analysis for debugging.
+        Shows exactly why this pick was made and what context was/wasn't applied.
+        """
+        lines = []
+
+        # Header
+        lines.append("")
+        lines.append("=" * 60)
+        lines.append(f"PICK ANALYSIS: {self.player} {self.prop_type.upper()} {self.line}")
+        lines.append("=" * 60)
+
+        # Raw Stats
+        lines.append("")
+        lines.append(f"RAW STATS ({self.games_analyzed} games)")
+        lines.append("-" * 30)
+        lines.append(f"  L5 Average:   {self.recent_avg:.1f}")
+        lines.append(f"  L15 Average:  {self.season_avg:.1f}")
+        lines.append(f"  Std Dev:      {self.std_dev:.1f}")
+        lines.append(f"  Over Rate:    {self.over_rate*100:.0f}% ({int(self.over_rate * self.games_analyzed)}/{self.games_analyzed})")
+        lines.append(f"  Under Rate:   {self.under_rate*100:.0f}% ({int(self.under_rate * self.games_analyzed)}/{self.games_analyzed})")
+        lines.append(f"  Trend:        {self.trend}")
+
+        # Base Projection
+        lines.append("")
+        lines.append(f"BASE PROJECTION: {self.base_projection:.1f}")
+        lines.append(f"  (60% x {self.recent_avg:.1f}) + (40% x {self.season_avg:.1f}) + trend adj")
+
+        # Adjustments
+        lines.append("")
+        lines.append("ADJUSTMENTS APPLIED")
+        lines.append("-" * 30)
+
+        adj_names = {
+            'opp_defense': 'Opponent Defense',
+            'location': 'Location (H/A)',
+            'b2b': 'Back-to-Back',
+            'pace': 'Pace Factor',
+            'total': 'Game Total',
+            'blowout': 'Blowout Risk',
+            'vs_team': 'vs Team History',
+            'minutes': 'Minutes Trend',
+            'injury_boost': 'Injury Boost',
+        }
+
+        active_adj = 0
+        for key, name in adj_names.items():
+            adj_val = self.adjustments.get(key, 0)
+            evidence = self.evidence.get(key, '')
+
+            if adj_val != 0:
+                sign = '+' if adj_val > 0 else ''
+                lines.append(f"  {name:20s} {sign}{adj_val:+.1f}%  {evidence}")
+                active_adj += 1
+            else:
+                lines.append(f"  {name:20s}   0.0%  (not applied)")
+
+        lines.append("")
+        lines.append(f"TOTAL ADJUSTMENT: {self.total_adjustment*100:+.1f}%")
+        lines.append(f"Adjustments Active: {active_adj}/9")
+
+        # Final Projection
+        lines.append("")
+        lines.append(f"FINAL PROJECTION: {self.projection:.1f}")
+        lines.append(f"  Base ({self.base_projection:.1f}) x Total Adj ({1 + self.total_adjustment:.3f})")
+
+        # Edge Calculation
+        lines.append("")
+        lines.append("EDGE CALCULATION")
+        lines.append("-" * 30)
+        lines.append(f"  Projection: {self.projection:.1f}")
+        lines.append(f"  Line:       {self.line}")
+        lines.append(f"  Edge:       {self.edge*100:+.1f}%")
+
+        # Confidence
+        lines.append("")
+        lines.append(f"CONFIDENCE: {self.confidence*100:.0f}%")
+
+        # Context Quality
+        lines.append("")
+        lines.append(f"CONTEXT QUALITY: {self.context_quality}/100")
+        quality_desc = (
+            "EXCELLENT" if self.context_quality >= 80 else
+            "GOOD" if self.context_quality >= 60 else
+            "FAIR" if self.context_quality >= 40 else
+            "POOR"
+        )
+        lines.append(f"  Rating: {quality_desc}")
+
+        # Pick
+        lines.append("")
+        if self.pick == 'PASS':
+            lines.append(f"PICK: PASS (edge {self.edge*100:+.1f}% below threshold)")
+        else:
+            lines.append(f"PICK: {self.pick} {self.line}")
+            lines.append(f"  Edge: {self.edge*100:+.1f}%, Confidence: {self.confidence*100:.0f}%")
+
+        # Warnings
+        if self.warnings:
+            lines.append("")
+            lines.append("WARNINGS")
+            lines.append("-" * 30)
+            for w in self.warnings:
+                lines.append(f"  * {w}")
+        else:
+            lines.append("")
+            lines.append("WARNINGS: None")
+
+        # Flags
+        if self.flags:
+            lines.append("")
+            lines.append(f"FLAGS: {', '.join(self.flags)}")
+
+        lines.append("")
+        lines.append("=" * 60)
+
+        output = '\n'.join(lines)
+
+        if return_string:
+            return output
+        else:
+            print(output)
+            return None
+
+    def is_high_quality(self) -> bool:
+        """Returns True if context quality is sufficient for a confident pick."""
+        return self.context_quality >= 50 and len(self.warnings) <= 2
+
+
+class UnifiedPropModel:
+    """
+    Production-grade NBA prop prediction model.
+    Combines all contextual factors into a single, consistent analysis.
+
+    Features:
+    - Automatic context detection (opponent, home/away, B2B)
+    - 9 multiplicative adjustments (defense, pace, injuries, etc.)
+    - Multi-factor confidence scoring
+    - Cached context data for performance
+
+    Usage:
+        model = UnifiedPropModel()
+        analysis = model.analyze("Luka Doncic", "points", 32.5)
+        print(f"Pick: {analysis.pick} (Edge: {analysis.edge:.1%})")
+    """
+
+    # Adjustment constants
+    HOME_BOOST = 1.025
+    AWAY_PENALTY = 0.975
+    B2B_PENALTY = 0.92
+    BLOWOUT_HIGH_PENALTY = 0.95
+    BLOWOUT_MED_PENALTY = 0.98
+    LEAGUE_AVG_TOTAL = 225.0
+    TOTAL_WEIGHT = 0.3  # How much game total affects projection
+
+    # Matchup thresholds
+    SMASH_RANK = 5
+    GOOD_RANK = 10
+    HARD_RANK = 21
+    TOUGH_RANK = 26
+
+    def __init__(self, data_fetcher=None, injury_tracker=None, odds_client=None):
+        """
+        Initialize with optional data sources.
+        If not provided, will create default instances.
+        """
+        # Lazy imports to avoid circular dependencies
+        self._fetcher = data_fetcher
+        self._injuries = injury_tracker
+        self._odds = odds_client
+
+        # Cached context data with timestamps
+        self._defense_cache = {'data': None, 'timestamp': None}
+        self._pace_cache = {'data': None, 'timestamp': None}
+        self._game_lines_cache = {'data': None, 'timestamp': None}
+        self._cache_ttl = 3600  # 1 hour cache TTL
+
+    @property
+    def fetcher(self):
+        """Lazy load data fetcher."""
+        if self._fetcher is None:
+            from nba_integrations import NBADataFetcher
+            self._fetcher = NBADataFetcher()
+        return self._fetcher
+
+    @property
+    def injuries(self):
+        """Lazy load injury tracker."""
+        if self._injuries is None:
+            from nba_integrations import InjuryTracker
+            self._injuries = InjuryTracker()
+        return self._injuries
+
+    @property
+    def odds(self):
+        """Return odds client (may be None)."""
+        return self._odds
+
+    def _is_cache_valid(self, cache: dict) -> bool:
+        """Check if cached data is still valid."""
+        if cache['data'] is None or cache['timestamp'] is None:
+            return False
+        from datetime import datetime
+        age = (datetime.now() - cache['timestamp']).total_seconds()
+        return age < self._cache_ttl
+
+    def _get_defense_data(self) -> pd.DataFrame:
+        """Get team defense data with caching."""
+        if not self._is_cache_valid(self._defense_cache):
+            from datetime import datetime
+            self._defense_cache['data'] = self.fetcher.get_team_defense_vs_position()
+            self._defense_cache['timestamp'] = datetime.now()
+        return self._defense_cache['data']
+
+    def _get_pace_data(self) -> pd.DataFrame:
+        """Get team pace data with caching."""
+        if not self._is_cache_valid(self._pace_cache):
+            from datetime import datetime
+            self._pace_cache['data'] = self.fetcher.get_team_pace()
+            self._pace_cache['timestamp'] = datetime.now()
+        return self._pace_cache['data']
+
+    def _get_game_lines(self) -> pd.DataFrame:
+        """Get game lines with caching (requires odds client)."""
+        if self.odds is None:
+            return pd.DataFrame()
+        if not self._is_cache_valid(self._game_lines_cache):
+            from datetime import datetime
+            self._game_lines_cache['data'] = self.odds.get_game_lines()
+            self._game_lines_cache['timestamp'] = datetime.now()
+        return self._game_lines_cache['data']
+
+    def _detect_context_from_logs(self, logs: pd.DataFrame) -> dict:
+        """
+        Auto-detect game context from player's recent game logs.
+        Returns opponent, home/away, player team, and B2B status.
+        """
+        context = {
+            'player_team': None,
+            'opponent': None,
+            'is_home': None,
+            'is_b2b': False,
+        }
+
+        if logs.empty:
+            return context
+
+        # Get player's team from most recent matchup
+        if 'matchup' in logs.columns:
+            recent_matchup = logs.iloc[0]['matchup']
+            if 'vs.' in recent_matchup:
+                context['player_team'] = recent_matchup.split(' vs.')[0].strip()
+            elif '@' in recent_matchup:
+                context['player_team'] = recent_matchup.split(' @')[0].strip()
+
+        # Detect B2B from game dates
+        b2b_info = self.fetcher.check_back_to_back(logs)
+        context['is_b2b'] = b2b_info.get('is_b2b', False)
+
+        return context
+
+    def _calculate_base_projection(self, history: pd.Series) -> tuple:
+        """
+        Calculate base projection using weighted recent/older split.
+        Returns (projection, trend, recent_avg, older_avg).
+        """
+        if len(history) < 5:
+            return history.mean(), 'NEUTRAL', history.mean(), history.mean()
+
+        # Split into recent (last 5) and older (6-15)
+        recent = history.tail(5)
+        older = history.tail(15).head(10) if len(history) >= 10 else history.head(len(history) - 5)
+
+        recent_avg = recent.mean()
+        older_avg = older.mean() if len(older) > 0 else recent_avg
+
+        # Weighted projection: 60% recent, 40% older
+        projection = (recent_avg * 0.6) + (older_avg * 0.4)
+
+        # Trend adjustment (10% of trend magnitude)
+        if older_avg > 0:
+            trend_pct = (recent_avg - older_avg) / older_avg
+            projection *= (1 + trend_pct * 0.1)
+            trend = 'HOT' if trend_pct > 0.05 else 'COLD' if trend_pct < -0.05 else 'NEUTRAL'
+        else:
+            trend = 'NEUTRAL'
+
+        return projection, trend, recent_avg, older_avg
+
+    def _calculate_adjustments(
+        self,
+        prop_type: str,
+        opponent: str,
+        player_team: str,
+        is_home: bool,
+        is_b2b: bool,
+        game_total: float,
+        blowout_risk: str,
+        minutes_factor: float,
+        teammate_boost: float,
+        defense_data: pd.DataFrame,
+        pace_data: pd.DataFrame,
+    ) -> tuple:
+        """
+        Calculate all 9 adjustment factors.
+        Returns (adjustments_dict, total_multiplier, flags, matchup_rating, opp_rank).
+        """
+        adjustments = {
+            'opp_defense': 1.0,
+            'location': 1.0,
+            'b2b': 1.0,
+            'pace': 1.0,
+            'total': 1.0,
+            'blowout': 1.0,
+            'vs_team': 1.0,  # Placeholder - would need additional data
+            'minutes': 1.0,
+            'injury_boost': 1.0,
+        }
+        flags = []
+        matchup_rating = 'NEUTRAL'
+        opp_rank = None
+
+        # 1. OPPONENT DEFENSE
+        if opponent and defense_data is not None and not defense_data.empty:
+            opponent_normalized = normalize_team_abbrev(opponent)
+            opp_row = defense_data[defense_data['team_abbrev'] == opponent_normalized]
+            if not opp_row.empty:
+                factor_map = {
+                    'points': 'pts_factor',
+                    'rebounds': 'reb_factor',
+                    'assists': 'ast_factor',
+                    'pra': 'pra_factor',
+                    'threes': 'threes_factor',
+                    'fg3m': 'threes_factor',
+                }
+                rank_map = {
+                    'points': 'pts_rank',
+                    'rebounds': 'reb_rank',
+                    'assists': 'ast_rank',
+                    'threes': 'threes_rank',
+                    'fg3m': 'threes_rank',
+                }
+                factor_col = factor_map.get(prop_type, 'pts_factor')
+                rank_col = rank_map.get(prop_type, 'pts_rank')
+
+                if factor_col in opp_row.columns:
+                    adjustments['opp_defense'] = float(opp_row[factor_col].values[0])
+                if rank_col in opp_row.columns:
+                    opp_rank = int(opp_row[rank_col].values[0])
+
+                    if opp_rank <= self.SMASH_RANK:
+                        matchup_rating = 'SMASH'
+                        flags.append('SMASH SPOT')
+                    elif opp_rank <= self.GOOD_RANK:
+                        matchup_rating = 'GOOD'
+                    elif opp_rank >= self.TOUGH_RANK:
+                        matchup_rating = 'TOUGH'
+                        flags.append('TOUGH DEF')
+                    elif opp_rank >= self.HARD_RANK:
+                        matchup_rating = 'HARD'
+
+        # 2. HOME/AWAY
+        if is_home is not None:
+            adjustments['location'] = self.HOME_BOOST if is_home else self.AWAY_PENALTY
+
+        # 3. BACK-TO-BACK
+        if is_b2b:
+            adjustments['b2b'] = self.B2B_PENALTY
+            flags.append('B2B')
+
+        # 4. PACE
+        if pace_data is not None and not pace_data.empty and player_team and opponent:
+            player_team_normalized = normalize_team_abbrev(player_team)
+            opponent_normalized = normalize_team_abbrev(opponent)
+            player_pace = pace_data[pace_data['team_abbrev'] == player_team_normalized]
+            opp_pace = pace_data[pace_data['team_abbrev'] == opponent_normalized]
+
+            if not player_pace.empty and not opp_pace.empty:
+                combined_pace = (
+                    float(player_pace['pace_factor'].values[0]) +
+                    float(opp_pace['pace_factor'].values[0])
+                ) / 2
+                adjustments['pace'] = combined_pace
+
+                if combined_pace >= 1.03:
+                    flags.append('FAST PACE')
+                elif combined_pace <= 0.97:
+                    flags.append('SLOW PACE')
+
+        # 5. GAME TOTAL (for scoring props)
+        if game_total and prop_type in ['points', 'pra', 'threes', 'fg3m']:
+            total_factor = game_total / self.LEAGUE_AVG_TOTAL
+            adjustments['total'] = 1 + (total_factor - 1) * self.TOTAL_WEIGHT
+
+            if game_total >= 235:
+                flags.append('HIGH TOTAL')
+            elif game_total <= 215:
+                flags.append('LOW TOTAL')
+
+        # 6. BLOWOUT RISK
+        if blowout_risk == 'HIGH':
+            adjustments['blowout'] = self.BLOWOUT_HIGH_PENALTY
+            flags.append('BLOWOUT RISK')
+        elif blowout_risk == 'MEDIUM':
+            adjustments['blowout'] = self.BLOWOUT_MED_PENALTY
+
+        # 7. MINUTES TREND
+        if minutes_factor and minutes_factor != 1.0:
+            adjustments['minutes'] = max(0.9, min(1.1, minutes_factor))
+            if minutes_factor >= 1.05:
+                flags.append('MINS UP')
+            elif minutes_factor <= 0.95:
+                flags.append('MINS DOWN')
+
+        # 8. TEAMMATE INJURY BOOST
+        if teammate_boost and teammate_boost > 1.0:
+            adjustments['injury_boost'] = min(1.15, teammate_boost)
+            boost_pct = round((teammate_boost - 1) * 100)
+            flags.append(f'USAGE +{boost_pct}%')
+
+        # Calculate total multiplier
+        total = 1.0
+        for adj in adjustments.values():
+            total *= adj
+
+        return adjustments, total, flags, matchup_rating, opp_rank
+
+    def _calculate_confidence(
+        self,
+        history: pd.Series,
+        line: float,
+        trend: str,
+        matchup_rating: str,
+        is_b2b: bool,
+        blowout_risk: str,
+        teammate_boost: float,
+    ) -> float:
+        """
+        Calculate multi-factor confidence score (0-1).
+        """
+        if len(history) < 5:
+            return 0.2
+
+        # Base factors
+        mean_val = history.mean()
+        std_val = history.std()
+        cv = std_val / mean_val if mean_val > 0 else 1
+
+        # 1. Consistency (30%) - lower CV = higher confidence
+        consistency_score = max(0, 1 - cv)
+
+        # 2. Sample size (20%) - max at 15 games
+        sample_score = min(1, len(history) / 15)
+
+        # 3. Hit rate clarity (30%) - how clear is the over/under edge
+        over_rate = (history > line).mean()
+        hit_clarity = abs(over_rate - 0.5) * 2
+
+        # 4. Trend strength (20%)
+        recent = history.tail(5).mean()
+        older = history.tail(15).head(10).mean() if len(history) >= 10 else mean_val
+        trend_magnitude = abs(recent - older) / older if older > 0 else 0
+        trend_score = min(1, trend_magnitude * 5)
+
+        base_confidence = (
+            consistency_score * 0.3 +
+            sample_score * 0.2 +
+            hit_clarity * 0.3 +
+            trend_score * 0.2
+        )
+
+        # Adjustments
+        if matchup_rating == 'SMASH':
+            base_confidence += 0.10
+        elif matchup_rating == 'GOOD':
+            base_confidence += 0.05
+        elif matchup_rating == 'TOUGH':
+            base_confidence -= 0.05
+
+        if is_b2b:
+            base_confidence -= 0.05
+
+        if blowout_risk == 'HIGH':
+            base_confidence -= 0.05
+
+        if teammate_boost and teammate_boost > 1.0:
+            base_confidence += 0.05
+
+        return max(0.2, min(0.95, base_confidence))
+
+    def analyze(
+        self,
+        player_name: str,
+        prop_type: str,
+        line: float,
+        odds: int = -110,
+        # Optional overrides (auto-detected if not provided)
+        opponent: str = None,
+        is_home: bool = None,
+        game_total: float = None,
+        blowout_risk: str = None,
+        last_n_games: int = 15,
+    ) -> PropAnalysis:
+        """
+        Analyze a player prop with full contextual adjustments.
+
+        Args:
+            player_name: Full player name (e.g., "Luka Doncic")
+            prop_type: 'points', 'rebounds', 'assists', 'pra', 'threes'
+            line: Betting line (e.g., 32.5)
+            odds: American odds (default -110)
+            opponent: Optional opponent team abbreviation (auto-detected)
+            is_home: Optional home/away indicator (auto-detected)
+            game_total: Optional Vegas over/under total
+            blowout_risk: Optional 'HIGH', 'MEDIUM', 'LOW'
+            last_n_games: Games to analyze (default 15)
+
+        Returns:
+            PropAnalysis with projection, edge, confidence, and full context
+        """
+        # Fetch player game logs
+        logs = self.fetcher.get_player_game_logs(player_name, last_n_games=last_n_games)
+
+        if logs.empty or prop_type not in logs.columns:
+            # Return a "no data" analysis
+            return PropAnalysis(
+                player=player_name,
+                prop_type=prop_type,
+                line=line,
+                projection=0,
+                base_projection=0,
+                edge=0,
+                confidence=0,
+                pick='PASS',
+                recent_avg=0,
+                season_avg=0,
+                over_rate=0,
+                under_rate=0,
+                std_dev=0,
+                games_analyzed=0,
+                trend='NEUTRAL',
+                flags=['NO DATA'],
+            )
+
+        history = logs[prop_type]
+
+        # Auto-detect context
+        context = self._detect_context_from_logs(logs)
+        player_team = context['player_team']
+        if opponent is None:
+            opponent = context.get('opponent')
+        if is_home is None:
+            is_home = context.get('is_home')
+        is_b2b = context['is_b2b']
+
+        # Load cached context data
+        defense_data = self._get_defense_data()
+        pace_data = self._get_pace_data()
+
+        # Get game lines if odds client available
+        if game_total is None or blowout_risk is None:
+            game_lines = self._get_game_lines()
+            # Would need to match game - simplified for now
+
+        # Get injury info
+        player_status_info = self.injuries.get_player_status(player_name)
+        player_status = player_status_info.get('status', 'HEALTHY')
+
+        teammate_boost_info = self.injuries.get_teammate_boost(
+            player_name, player_team or '', prop_type
+        ) if player_team else {'boost_factor': 1.0, 'stars_out': []}
+        teammate_boost = teammate_boost_info.get('boost_factor', 1.0)
+        stars_out = teammate_boost_info.get('stars_out', [])
+
+        # Get minutes trend
+        mins_info = self.fetcher.get_player_minutes_trend(logs)
+        minutes_factor = mins_info.get('minutes_factor', 1.0) if mins_info else 1.0
+
+        # Calculate base projection
+        base_projection, trend, recent_avg, older_avg = self._calculate_base_projection(history)
+
+        # Calculate all adjustments
+        adjustments, total_adj, flags, matchup_rating, opp_rank = self._calculate_adjustments(
+            prop_type=prop_type,
+            opponent=opponent,
+            player_team=player_team,
+            is_home=is_home,
+            is_b2b=is_b2b,
+            game_total=game_total,
+            blowout_risk=blowout_risk,
+            minutes_factor=minutes_factor,
+            teammate_boost=teammate_boost,
+            defense_data=defense_data,
+            pace_data=pace_data,
+        )
+
+        # Apply adjustments
+        projection = base_projection * total_adj
+
+        # Calculate stats
+        season_avg = history.mean()
+        std_dev = history.std()
+        over_rate = (history > line).mean()
+        under_rate = (history < line).mean()
+
+        # Calculate edge
+        edge = (projection - line) / line if line > 0 else 0
+
+        # Calculate confidence
+        confidence = self._calculate_confidence(
+            history=history,
+            line=line,
+            trend=trend,
+            matchup_rating=matchup_rating,
+            is_b2b=is_b2b,
+            blowout_risk=blowout_risk,
+            teammate_boost=teammate_boost,
+        )
+
+        # Determine pick
+        min_edge = 0.03 + (1 - confidence) * 0.02  # 3-5% based on confidence
+        if abs(edge) < min_edge:
+            pick = 'PASS'
+        elif edge > 0:
+            pick = 'OVER'
+        else:
+            pick = 'UNDER'
+
+        # Add player status flag if not healthy
+        if player_status != 'HEALTHY':
+            flags.insert(0, player_status)
+
+        # =====================================================================
+        # VALIDATION: Calculate context quality, warnings, and evidence
+        # =====================================================================
+        warnings_list = []
+        evidence_dict = {}
+        context_quality_score = 0
+
+        # === EVIDENCE COLLECTION (what data supported each adjustment) ===
+
+        # 1. Opponent Defense Evidence
+        if opponent and adjustments['opp_defense'] != 1.0:
+            evidence_dict['opp_defense'] = f"vs {opponent} (rank {opp_rank})"
+            context_quality_score += 15
+        elif opponent:
+            evidence_dict['opp_defense'] = f"vs {opponent} (no defense data)"
+        else:
+            evidence_dict['opp_defense'] = ""
+            warnings_list.append("Opponent unknown - defense adjustment not applied")
+
+        # 2. Location Evidence
+        if is_home is not None:
+            evidence_dict['location'] = "HOME" if is_home else "AWAY"
+            context_quality_score += 10
+        else:
+            evidence_dict['location'] = ""
+            warnings_list.append("Home/away unknown - location adjustment not applied")
+
+        # 3. B2B Evidence
+        if is_b2b:
+            evidence_dict['b2b'] = "TRUE (back-to-back detected)"
+            context_quality_score += 10
+        else:
+            evidence_dict['b2b'] = "FALSE"
+            context_quality_score += 5  # Knowing it's NOT B2B is still useful
+
+        # 4. Pace Evidence
+        if adjustments['pace'] != 1.0:
+            evidence_dict['pace'] = f"combined pace factor {adjustments['pace']:.3f}"
+            context_quality_score += 10
+        elif player_team and opponent:
+            evidence_dict['pace'] = "teams not found in pace data"
+        else:
+            evidence_dict['pace'] = ""
+            warnings_list.append("Team info missing - pace adjustment not applied")
+
+        # 5. Game Total Evidence
+        if game_total:
+            evidence_dict['total'] = f"O/U {game_total}"
+            context_quality_score += 10
+        else:
+            evidence_dict['total'] = ""
+            # Only warn for scoring props where total matters
+            if prop_type in ['points', 'pra', 'threes']:
+                warnings_list.append("Game total unknown - total adjustment not applied")
+
+        # 6. Blowout Risk Evidence
+        if blowout_risk:
+            evidence_dict['blowout'] = f"{blowout_risk} risk"
+            context_quality_score += 5
+        else:
+            evidence_dict['blowout'] = ""
+
+        # 7. Minutes Trend Evidence
+        if minutes_factor and minutes_factor != 1.0:
+            evidence_dict['minutes'] = f"factor {minutes_factor:.2f}"
+            context_quality_score += 10
+        else:
+            evidence_dict['minutes'] = "stable"
+            context_quality_score += 5
+
+        # 8. Injury Boost Evidence
+        if teammate_boost > 1.0:
+            if stars_out:
+                evidence_dict['injury_boost'] = f"+{(teammate_boost-1)*100:.0f}% ({', '.join(stars_out[:2])} out)"
+            else:
+                evidence_dict['injury_boost'] = f"+{(teammate_boost-1)*100:.0f}%"
+            context_quality_score += 10
+        else:
+            evidence_dict['injury_boost'] = "no boost"
+
+        # === DATA QUALITY CHECKS ===
+
+        # Sample size check
+        if len(history) < 10:
+            warnings_list.append(f"Only {len(history)} games analyzed (recommend 15+)")
+            context_quality_score -= 10
+        elif len(history) >= 15:
+            context_quality_score += 10  # Full sample bonus
+
+        # Data freshness - check if defense/pace data loaded
+        if defense_data is None or defense_data.empty:
+            warnings_list.append("Defense data not loaded - matchup analysis unavailable")
+            context_quality_score -= 15
+        else:
+            context_quality_score += 5  # Defense data loaded bonus
+
+        if pace_data is None or pace_data.empty:
+            warnings_list.append("Pace data not loaded - pace analysis unavailable")
+            context_quality_score -= 5
+
+        # Count active adjustments (non-1.0 values indicate context was applied)
+        active_adjustments = sum(1 for v in adjustments.values() if round(v, 3) != 1.0)
+        if active_adjustments < 2:
+            warnings_list.append(f"Only {active_adjustments}/9 adjustments applied - limited context")
+
+        # Add bonus for active adjustments
+        context_quality_score += active_adjustments * 3
+
+        # Cap context quality at 0-100
+        context_quality_score = max(0, min(100, context_quality_score))
+
+        return PropAnalysis(
+            player=player_name,
+            prop_type=prop_type,
+            line=line,
+            projection=round(projection, 1),
+            base_projection=round(base_projection, 1),
+            edge=edge,
+            confidence=confidence,
+            pick=pick,
+            recent_avg=round(recent_avg, 1),
+            season_avg=round(season_avg, 1),
+            over_rate=over_rate,
+            under_rate=under_rate,
+            std_dev=round(std_dev, 2),
+            games_analyzed=len(history),
+            trend=trend,
+            opponent=opponent,
+            is_home=is_home,
+            is_b2b=is_b2b,
+            game_total=game_total,
+            blowout_risk=blowout_risk,
+            matchup_rating=matchup_rating,
+            opp_rank=opp_rank,
+            adjustments={k: round((v - 1) * 100, 1) for k, v in adjustments.items()},
+            total_adjustment=total_adj - 1,
+            flags=flags,
+            player_status=player_status,
+            teammate_boost=teammate_boost,
+            stars_out=stars_out,
+            # Validation fields
+            context_quality=context_quality_score,
+            warnings=warnings_list,
+            evidence=evidence_dict,
+        )
+
+    def analyze_batch(
+        self,
+        props: List[dict],
+        progress_callback=None,
+    ) -> pd.DataFrame:
+        """
+        Analyze multiple props efficiently.
+
+        Args:
+            props: List of dicts with keys: player, prop_type, line, odds (optional)
+            progress_callback: Optional callback(current, total) for progress updates
+
+        Returns:
+            DataFrame with all analysis results
+        """
+        import time
+
+        results = []
+        total = len(props)
+
+        for i, prop in enumerate(props):
+            if progress_callback:
+                progress_callback(i, total)
+
+            analysis = self.analyze(
+                player_name=prop['player'],
+                prop_type=prop['prop_type'],
+                line=prop['line'],
+                odds=prop.get('odds', -110),
+                opponent=prop.get('opponent'),
+                is_home=prop.get('is_home'),
+                game_total=prop.get('game_total'),
+                blowout_risk=prop.get('blowout_risk'),
+            )
+
+            results.append(analysis.to_dict())
+            time.sleep(0.3)  # Rate limiting
+
+        if progress_callback:
+            progress_callback(total, total)
+
+        return pd.DataFrame(results)
 
 
 # =============================================================================

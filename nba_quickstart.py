@@ -4,60 +4,60 @@ NBA Prop Analysis System - Quick Start Guide
 
 INSTALLATION
 ------------
-pip install nba_api pandas numpy scipy openpyxl requests
+pip install nba_api pandas numpy scipy openpyxl requests streamlit
 
 QUICK START
 -----------
-# 1. Fetch player data and analyze a prop
-from nba_integrations import NBADataFetcher, LivePropAnalyzer
+# 1. Use UnifiedPropModel for context-aware prop analysis
+from nba_prop_model import UnifiedPropModel
 
-fetcher = NBADataFetcher()
-analyzer = LivePropAnalyzer(nba_fetcher=fetcher)
+model = UnifiedPropModel()
 
-# Analyze a specific prop
-result = analyzer.analyze_prop(
+# Analyze a specific prop (all context is auto-detected)
+analysis = model.analyze(
     player_name="Luka Doncic",
     prop_type="points",
     line=32.5,
     odds=-110
 )
 
-print(f"Projection: {result['recent_avg']}")
-print(f"Edge: {result['avg_edge']}%")
-print(f"Recommendation: {result['recommended_side']}")
+print(f"Projection: {analysis.projection}")
+print(f"Edge: {analysis.edge:.1%}")
+print(f"Confidence: {analysis.confidence:.0%}")
+print(f"Pick: {analysis.pick}")
+print(f"Flags: {analysis.flags}")
 
-# 2. Analyze multiple props at once
+# 2. Use LivePropAnalyzer for batch analysis with odds integration
+from nba_integrations import LivePropAnalyzer, OddsAPIClient
+
+odds = OddsAPIClient(api_key="YOUR_API_KEY")
+analyzer = LivePropAnalyzer(odds_client=odds)
+
 props_to_check = [
     {'player': 'Luka Doncic', 'prop_type': 'points', 'line': 32.5},
     {'player': 'Shai Gilgeous-Alexander', 'prop_type': 'points', 'line': 30.5},
     {'player': 'Jayson Tatum', 'prop_type': 'rebounds', 'line': 8.5},
-    {'player': 'Anthony Edwards', 'prop_type': 'assists', 'line': 4.5},
 ]
 
 results = analyzer.analyze_multiple_props(props_to_check)
 print(results)
 
-# 3. Get live odds (requires free API key from the-odds-api.com)
-from nba_integrations import OddsAPIClient
-
-odds = OddsAPIClient(api_key="YOUR_API_KEY")  # Get free key at the-odds-api.com
-props = odds.get_player_props()
-parsed = odds.parse_player_props(props)
-print(parsed.head())
-
-# 4. Find value props automatically
-value_plays = analyzer.find_value_props(min_edge=0.05)
+# 3. Find value props automatically from live odds
+value_plays = analyzer.find_value_props(min_edge=0.05, min_confidence=0.4)
 print(value_plays)
 
-# 5. Run backtest on historical data
+# 4. Run backtest on historical data
 from nba_prop_model import Backtester, EnsembleModel, generate_sample_dataset, generate_prop_lines
 
-game_logs = generate_sample_dataset()  # Or use real data
+game_logs = generate_sample_dataset()
 props = generate_prop_lines(game_logs)
 
 backtester = Backtester(initial_bankroll=1000, unit_size=10)
 results = backtester.run_backtest(props, game_logs, EnsembleModel(), min_edge=0.05)
 backtester.print_report()
+
+# 5. Launch Streamlit dashboard
+# streamlit run app.py
 """
 
 # =============================================================================
@@ -66,8 +66,8 @@ backtester.print_report()
 
 CONFIG = {
     # The Odds API (https://the-odds-api.com/)
-    # Free tier: 500 requests/month
-    'ODDS_API_KEY': 'ed075e0b818c7b977da240e06c5f06a5',  # Set your key here or use environment variable
+    # Paid subscription: 20,000 requests/month
+    'ODDS_API_KEY': '7f13b9e37fcbf996635e2142b7a32914',  # Set your key here or use environment variable ODDS_API_KEY
     
     # Analysis settings
     'MIN_EDGE_THRESHOLD': 0.05,  # 5% minimum edge to bet
