@@ -24,10 +24,152 @@ Usage:
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Callable, Tuple, Any
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import time
 import json
+import random
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
+# =============================================================================
+# RESILIENT FETCHER - Retry Logic & Connection Pooling
+# =============================================================================
+
+class ResilientFetcher:
+    """
+    Utility class that wraps API calls with retry logic, exponential backoff,
+    and connection pooling for improved reliability.
+    """
+
+    def __init__(
+        self,
+        max_retries: int = 3,
+        base_delay: float = 1.0,
+        max_delay: float = 30.0,
+        timeout: float = 15.0
+    ):
+        self.max_retries = max_retries
+        self.base_delay = base_delay
+        self.max_delay = max_delay
+        self.timeout = timeout
+        self.consecutive_failures = 0
+
+        # Create session with connection pooling
+        self._session = requests.Session()
+        adapter = HTTPAdapter(
+            pool_connections=5,
+            pool_maxsize=5,
+            max_retries=0  # We handle retries ourselves
+        )
+        self._session.mount('https://', adapter)
+        self._session.mount('http://', adapter)
+
+    def _calculate_delay(self, attempt: int) -> float:
+        """Calculate delay with exponential backoff and jitter."""
+        # Exponential backoff: 1s, 2s, 4s, 8s...
+        delay = self.base_delay * (2 ** attempt)
+        # Add jitter (random 0-30% of delay)
+        jitter = delay * random.uniform(0, 0.3)
+        # Cap at max delay
+        return min(delay + jitter, self.max_delay)
+
+    def _should_retry(self, error: Exception) -> Tuple[bool, float]:
+        """
+        Determine if an error should trigger a retry and how long to wait.
+        Returns (should_retry, delay_multiplier)
+        """
+        error_str = str(error).lower()
+
+        # Rate limiting - back off aggressively
+        if '429' in error_str or 'rate limit' in error_str or 'too many requests' in error_str:
+            return True, 3.0  # Triple the delay
+
+        # Connection errors - retry immediately
+        if any(x in error_str for x in ['connection', 'timeout', 'timed out', 'reset', 'refused']):
+            return True, 1.0
+
+        # Server errors (5xx) - retry with normal backoff
+        if any(x in error_str for x in ['500', '502', '503', '504', 'server error', 'internal error']):
+            return True, 1.5
+
+        # Client errors (4xx except 429) - don't retry
+        if any(x in error_str for x in ['400', '401', '403', '404', 'not found', 'forbidden']):
+            return False, 0
+
+        # JSON decode errors - might be transient, retry once
+        if 'json' in error_str or 'decode' in error_str:
+            return True, 1.0
+
+        # Default: retry with normal backoff
+        return True, 1.0
+
+    def fetch_with_retry(
+        self,
+        fetch_func: Callable,
+        *args,
+        **kwargs
+    ) -> Tuple[Any, bool]:
+        """
+        Execute a fetch function with automatic retry on failure.
+
+        Args:
+            fetch_func: The function to execute
+            *args, **kwargs: Arguments to pass to fetch_func
+
+        Returns:
+            Tuple of (result, success). If all retries fail, result is None.
+        """
+        last_error = None
+
+        for attempt in range(self.max_retries + 1):
+            try:
+                result = fetch_func(*args, **kwargs)
+                self.consecutive_failures = 0  # Reset on success
+                return result, True
+
+            except Exception as e:
+                last_error = e
+                self.consecutive_failures += 1
+
+                should_retry, delay_mult = self._should_retry(e)
+
+                if not should_retry or attempt >= self.max_retries:
+                    logger.warning(
+                        f"Fetch failed after {attempt + 1} attempts: {e}"
+                    )
+                    break
+
+                delay = self._calculate_delay(attempt) * delay_mult
+                # Add extra delay if we've had many consecutive failures
+                if self.consecutive_failures > 3:
+                    delay *= 1.5
+
+                logger.info(
+                    f"Attempt {attempt + 1} failed: {e}. "
+                    f"Retrying in {delay:.1f}s..."
+                )
+                time.sleep(delay)
+
+        return None, False
+
+    @property
+    def session(self) -> requests.Session:
+        """Get the shared session with connection pooling."""
+        return self._session
+
+
+# Global resilient fetcher instance
+_resilient_fetcher = ResilientFetcher()
+
+
+def get_resilient_fetcher() -> ResilientFetcher:
+    """Get the global ResilientFetcher instance."""
+    return _resilient_fetcher
 
 # =============================================================================
 # HELPER FUNCTIONS
@@ -59,23 +201,56 @@ class NBADataFetcher:
     """
     Fetches real NBA data using the nba_api package.
     Includes player game logs, team stats, and schedule data.
+
+    Now includes:
+    - Retry logic with exponential backoff
+    - Connection pooling for better performance
+    - Dynamic rate limiting based on API response
     """
-    
+
     def __init__(self, cache_dir: str = None):
         self.cache_dir = cache_dir
         self._player_id_cache = {}
         self._team_id_cache = {}
-        
+
         # Rate limiting - NBA API can be sensitive
-        self.request_delay = 0.6  # seconds between requests
+        self.base_delay = 1.0  # Base delay between requests (increased from 0.6)
+        self.request_delay = self.base_delay
         self._last_request = 0
-    
+        self._consecutive_failures = 0
+
+        # Get the global resilient fetcher for retry logic
+        self._resilient = get_resilient_fetcher()
+
     def _rate_limit(self):
-        """Enforce rate limiting between API calls."""
+        """
+        Enforce rate limiting between API calls with jitter and dynamic adjustment.
+        Automatically backs off more when experiencing failures.
+        """
+        # Add jitter to avoid thundering herd (random 0-30% of delay)
+        jitter = self.request_delay * random.uniform(0, 0.3)
+        effective_delay = self.request_delay + jitter
+
+        # Increase delay if we've had consecutive failures
+        if self._consecutive_failures > 0:
+            effective_delay *= (1 + 0.5 * min(self._consecutive_failures, 5))
+
         elapsed = time.time() - self._last_request
-        if elapsed < self.request_delay:
-            time.sleep(self.request_delay - elapsed)
+        if elapsed < effective_delay:
+            time.sleep(effective_delay - elapsed)
         self._last_request = time.time()
+
+    def _on_success(self):
+        """Called after a successful API call to reset failure tracking."""
+        self._consecutive_failures = 0
+        self.request_delay = self.base_delay
+
+    def _on_failure(self):
+        """Called after a failed API call to increase backoff."""
+        self._consecutive_failures += 1
+        # Increase delay up to 3x the base
+        self.request_delay = min(self.base_delay * 3,
+                                  self.base_delay * (1.5 ** self._consecutive_failures))
     
     def get_player_id(self, player_name: str) -> Optional[int]:
         """Look up player ID by name."""
@@ -110,7 +285,7 @@ class NBADataFetcher:
     def get_player_game_logs(self, player_name: str, season: str = None,
                              last_n_games: int = None) -> pd.DataFrame:
         """
-        Fetch player game logs for a season.
+        Fetch player game logs for a season with automatic retry on failure.
 
         Args:
             player_name: Full player name (e.g., "Luka Doncic")
@@ -125,79 +300,86 @@ class NBADataFetcher:
 
         player_id = self.get_player_id(player_name)
         if not player_id:
-            print(f"Could not find player: {player_name}")
+            logger.warning(f"Could not find player: {player_name}")
             return pd.DataFrame()
-        
-        try:
+
+        def _fetch_logs():
+            """Inner function to fetch logs - will be retried on failure."""
             from nba_api.stats.endpoints import playergamelog
-            
+
             self._rate_limit()
-            
+
             log = playergamelog.PlayerGameLog(
                 player_id=player_id,
                 season=season,
                 season_type_all_star='Regular Season'
             )
-            
-            df = log.get_data_frames()[0]
-            
-            if df.empty:
-                return df
-            
-            # Standardize column names
-            df = df.rename(columns={
-                'GAME_DATE': 'date',
-                'MATCHUP': 'matchup',
-                'WL': 'result',
-                'MIN': 'minutes',
-                'PTS': 'points',
-                'REB': 'rebounds',
-                'AST': 'assists',
-                'STL': 'steals',
-                'BLK': 'blocks',
-                'TOV': 'turnovers',
-                'FGM': 'fgm',
-                'FGA': 'fga',
-                'FG3M': 'fg3m',
-                'FG3A': 'fg3a',
-                'FTM': 'ftm',
-                'FTA': 'fta',
-                'PLUS_MINUS': 'plus_minus'
-            })
-            
-            # Parse date
-            df['date'] = pd.to_datetime(df['date'])
-            
-            # Add derived stats
-            df['pra'] = df['points'] + df['rebounds'] + df['assists']
-            df['pts_reb'] = df['points'] + df['rebounds']
-            df['pts_ast'] = df['points'] + df['assists']
-            df['reb_ast'] = df['rebounds'] + df['assists']
-            df['fantasy'] = (df['points'] + df['rebounds'] * 1.2 + 
-                           df['assists'] * 1.5 + df['steals'] * 3 + 
-                           df['blocks'] * 3 - df['turnovers'])
-            
-            # Add home/away indicator
-            df['home'] = ~df['matchup'].str.contains('@')
-            
-            # Extract opponent
-            df['opponent'] = df['matchup'].apply(
-                lambda x: x.split(' ')[-1] if '@' in x or 'vs.' in x else x.split(' ')[-1]
-            )
-            
-            # Sort by date (most recent first for analysis)
-            df = df.sort_values('date', ascending=False).reset_index(drop=True)
-            
-            if last_n_games:
-                df = df.head(last_n_games)
-            
-            df['player'] = player_name
-            
-            return df
-            
-        except Exception as e:
-            print(f"Error fetching game logs for {player_name}: {e}")
+
+            return log.get_data_frames()[0]
+
+        # Use resilient fetcher with retry logic
+        df, success = self._resilient.fetch_with_retry(_fetch_logs)
+
+        if not success or df is None:
+            self._on_failure()
+            logger.warning(f"Failed to fetch game logs for {player_name} after retries")
             return pd.DataFrame()
+
+        self._on_success()
+
+        if df.empty:
+            return df
+
+        # Standardize column names
+        df = df.rename(columns={
+            'GAME_DATE': 'date',
+            'MATCHUP': 'matchup',
+            'WL': 'result',
+            'MIN': 'minutes',
+            'PTS': 'points',
+            'REB': 'rebounds',
+            'AST': 'assists',
+            'STL': 'steals',
+            'BLK': 'blocks',
+            'TOV': 'turnovers',
+            'FGM': 'fgm',
+            'FGA': 'fga',
+            'FG3M': 'fg3m',
+            'FG3A': 'fg3a',
+            'FTM': 'ftm',
+            'FTA': 'fta',
+            'PLUS_MINUS': 'plus_minus'
+        })
+
+        # Parse date
+        df['date'] = pd.to_datetime(df['date'])
+
+        # Add derived stats
+        df['pra'] = df['points'] + df['rebounds'] + df['assists']
+        df['pts_reb'] = df['points'] + df['rebounds']
+        df['pts_ast'] = df['points'] + df['assists']
+        df['reb_ast'] = df['rebounds'] + df['assists']
+        df['fantasy'] = (df['points'] + df['rebounds'] * 1.2 +
+                        df['assists'] * 1.5 + df['steals'] * 3 +
+                        df['blocks'] * 3 - df['turnovers'])
+
+        # Add home/away indicator
+        df['home'] = ~df['matchup'].str.contains('@')
+
+        # Extract opponent
+        df['opponent'] = df['matchup'].apply(
+            lambda x: x.split(' ')[-1] if '@' in x or 'vs.' in x else x.split(' ')[-1]
+        )
+
+        # Sort by date (most recent first for analysis)
+        df = df.sort_values('date', ascending=False).reset_index(drop=True)
+
+        if last_n_games:
+            df = df.head(last_n_games)
+
+        df['player'] = player_name
+
+        return df
     
     def get_team_defense_ratings(self, season: str = None) -> pd.DataFrame:
         """Fetch team defensive ratings for matchup analysis."""
@@ -973,6 +1155,285 @@ class InjuryTracker:
             'total_injury_factor': teammate_boost['boost_factor'],
             'flags': flags
         }
+
+
+# =============================================================================
+# BALLDONTLIE API - FALLBACK DATA SOURCE
+# =============================================================================
+
+class BallDontLieFetcher:
+    """
+    Fallback data source using balldontlie.io API.
+    Used when nba_api fails.
+
+    API Docs: https://nba.balldontlie.io
+
+    NOTE: The free tier only provides access to basic endpoints (teams, games).
+    Stats and box_scores endpoints require a paid subscription (ALL-STAR or GOAT tier).
+    If you need fallback stats, upgrade at: https://app.balldontlie.io
+
+    Features (paid tier):
+    - Player stats and game logs
+    - Team information
+    - Historical data back to 1979-80 season
+    """
+
+    BASE_URL = "https://api.balldontlie.io/v1"
+
+    def __init__(self, api_key: str = None):
+        import os
+        self.api_key = api_key or os.environ.get('BALLDONTLIE_API_KEY', 'a1f22400-27d9-4aa7-a015-39e4aaf54131')
+        self._session = requests.Session()
+        self._session.headers['Authorization'] = self.api_key
+        self._player_cache = {}  # Cache player lookups
+        self._resilient = get_resilient_fetcher()
+
+        # Rate limiting
+        self._last_request = 0
+        self.request_delay = 0.5  # 500ms between requests
+
+    def _rate_limit(self):
+        """Enforce rate limiting."""
+        elapsed = time.time() - self._last_request
+        if elapsed < self.request_delay:
+            time.sleep(self.request_delay - elapsed)
+        self._last_request = time.time()
+
+    def get_player_id(self, player_name: str) -> Optional[int]:
+        """Search for player by name and return their ID."""
+        if player_name in self._player_cache:
+            return self._player_cache[player_name]
+
+        def _search():
+            self._rate_limit()
+            # Clean up player name for search
+            search_name = player_name.replace("'", "").strip()
+            resp = self._session.get(
+                f"{self.BASE_URL}/players",
+                params={"search": search_name},
+                timeout=15
+            )
+            resp.raise_for_status()
+            return resp.json()
+
+        result, success = self._resilient.fetch_with_retry(_search)
+
+        if not success or not result:
+            logger.warning(f"BallDontLie: Could not find player {player_name}")
+            return None
+
+        data = result.get('data', [])
+        if not data:
+            # Try just last name
+            last_name = player_name.split()[-1]
+
+            def _search_lastname():
+                self._rate_limit()
+                resp = self._session.get(
+                    f"{self.BASE_URL}/players",
+                    params={"search": last_name},
+                    timeout=15
+                )
+                resp.raise_for_status()
+                return resp.json()
+
+            result, success = self._resilient.fetch_with_retry(_search_lastname)
+            if success and result:
+                data = result.get('data', [])
+
+        if data:
+            # Find best match - prefer exact match or first active player
+            for p in data:
+                full_name = f"{p.get('first_name', '')} {p.get('last_name', '')}"
+                if full_name.lower() == player_name.lower():
+                    self._player_cache[player_name] = p['id']
+                    return p['id']
+            # Take first result if no exact match
+            self._player_cache[player_name] = data[0]['id']
+            return data[0]['id']
+
+        return None
+
+    def _parse_minutes(self, min_str: str) -> float:
+        """Parse minutes string like '32:45' to float 32.75."""
+        if not min_str or min_str == '':
+            return 0.0
+        try:
+            if ':' in str(min_str):
+                parts = str(min_str).split(':')
+                return float(parts[0]) + float(parts[1]) / 60
+            return float(min_str)
+        except (ValueError, IndexError):
+            return 0.0
+
+    def get_player_game_logs(self, player_name: str, season: str = None,
+                             last_n_games: int = None) -> pd.DataFrame:
+        """
+        Fetch player game logs from BallDontLie API.
+
+        Args:
+            player_name: Full player name
+            season: NBA season (e.g., "2024-25") - converted to year format
+            last_n_games: Limit to last N games
+
+        Returns:
+            DataFrame with standardized columns matching NBADataFetcher format
+        """
+        player_id = self.get_player_id(player_name)
+        if not player_id:
+            return pd.DataFrame()
+
+        # Convert season format "2024-25" to BDL year format (2024)
+        if season:
+            season_year = int(season.split('-')[0])
+        else:
+            current_season = get_current_nba_season()
+            season_year = int(current_season.split('-')[0])
+
+        def _fetch_stats():
+            self._rate_limit()
+            resp = self._session.get(
+                f"{self.BASE_URL}/stats",
+                params={
+                    "player_ids[]": player_id,
+                    "seasons[]": season_year,
+                    "per_page": 100  # Max per page
+                },
+                timeout=15
+            )
+            resp.raise_for_status()
+            return resp.json()
+
+        result, success = self._resilient.fetch_with_retry(_fetch_stats)
+
+        if not success or not result:
+            logger.warning(f"BallDontLie: Failed to fetch stats for {player_name}")
+            return pd.DataFrame()
+
+        data = result.get('data', [])
+        if not data:
+            return pd.DataFrame()
+
+        # Convert to DataFrame
+        rows = []
+        for game in data:
+            game_info = game.get('game', {})
+            team = game.get('team', {})
+
+            # Determine home/away and opponent
+            home_team_id = game_info.get('home_team_id')
+            visitor_team_id = game_info.get('visitor_team_id')
+            is_home = (team.get('id') == home_team_id)
+
+            rows.append({
+                'date': game_info.get('date', ''),
+                'minutes': self._parse_minutes(game.get('min', '')),
+                'points': game.get('pts', 0) or 0,
+                'rebounds': game.get('reb', 0) or 0,
+                'assists': game.get('ast', 0) or 0,
+                'steals': game.get('stl', 0) or 0,
+                'blocks': game.get('blk', 0) or 0,
+                'turnovers': game.get('turnover', 0) or 0,
+                'fgm': game.get('fgm', 0) or 0,
+                'fga': game.get('fga', 0) or 0,
+                'fg3m': game.get('fg3m', 0) or 0,
+                'fg3a': game.get('fg3a', 0) or 0,
+                'ftm': game.get('ftm', 0) or 0,
+                'fta': game.get('fta', 0) or 0,
+                'home': is_home,
+                'player': player_name
+            })
+
+        df = pd.DataFrame(rows)
+
+        if df.empty:
+            return df
+
+        # Parse date
+        df['date'] = pd.to_datetime(df['date'])
+
+        # Add derived stats (same as NBADataFetcher)
+        df['pra'] = df['points'] + df['rebounds'] + df['assists']
+        df['pts_reb'] = df['points'] + df['rebounds']
+        df['pts_ast'] = df['points'] + df['assists']
+        df['reb_ast'] = df['rebounds'] + df['assists']
+        df['fantasy'] = (df['points'] + df['rebounds'] * 1.2 +
+                        df['assists'] * 1.5 + df['steals'] * 3 +
+                        df['blocks'] * 3 - df['turnovers'])
+
+        # Sort by date (most recent first)
+        df = df.sort_values('date', ascending=False).reset_index(drop=True)
+
+        if last_n_games:
+            df = df.head(last_n_games)
+
+        return df
+
+
+# =============================================================================
+# HYBRID FETCHER - Orchestrates Multiple Data Sources
+# =============================================================================
+
+class HybridFetcher:
+    """
+    Orchestrates multiple data sources with automatic failover.
+
+    Strategy:
+    1. Try nba_api first (best data quality)
+    2. On failure, fall back to balldontlie.io
+    3. Log which source was used for debugging
+
+    Usage:
+        fetcher = HybridFetcher()
+        logs = fetcher.get_player_game_logs("Luka Doncic")
+    """
+
+    def __init__(self):
+        self.nba_fetcher = NBADataFetcher()
+        self.bdl_fetcher = BallDontLieFetcher()
+        self._last_source = None
+
+    @property
+    def last_source(self) -> str:
+        """Returns which data source was used for the last fetch."""
+        return self._last_source
+
+    def get_player_game_logs(self, player_name: str, season: str = None,
+                             last_n_games: int = None) -> pd.DataFrame:
+        """
+        Fetch player game logs with automatic failover.
+
+        Tries nba_api first, falls back to balldontlie.io on failure.
+        """
+        # Try NBA API first
+        logger.debug(f"Fetching {player_name} from nba_api...")
+        df = self.nba_fetcher.get_player_game_logs(player_name, season, last_n_games)
+
+        if not df.empty:
+            self._last_source = 'nba_api'
+            logger.debug(f"Successfully fetched {len(df)} games from nba_api")
+            return df
+
+        # Fallback to BallDontLie
+        logger.info(f"nba_api failed for {player_name}, trying balldontlie.io...")
+        df = self.bdl_fetcher.get_player_game_logs(player_name, season, last_n_games)
+
+        if not df.empty:
+            self._last_source = 'balldontlie'
+            logger.info(f"Successfully fetched {len(df)} games from balldontlie.io")
+            return df
+
+        # Both failed
+        self._last_source = None
+        logger.warning(f"All data sources failed for {player_name}")
+        return pd.DataFrame()
+
+    def get_player_id(self, player_name: str) -> Optional[int]:
+        """Get player ID, trying nba_api first then balldontlie."""
+        player_id = self.nba_fetcher.get_player_id(player_name)
+        if player_id:
+            return player_id
+        return self.bdl_fetcher.get_player_id(player_name)
 
 
 # =============================================================================

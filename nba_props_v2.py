@@ -1032,18 +1032,62 @@ class NBAGameLogCache:
             conn.commit()
 
     def _is_stale(self, player_name: str, season: str) -> bool:
-        """Check if cached data is older than TTL."""
+        """
+        Smart staleness check that minimizes unnecessary API calls.
+
+        Logic:
+        - Past seasons: NEVER stale (historical data won't change)
+        - Current season with recent data (< 4 hours): NOT stale
+        - Current season with old data: Check if we might have new games
+        """
+        current_season = get_current_nba_season()
+        is_current_season = (season == current_season)
+
         with sqlite3.connect(self.DB_PATH) as conn:
+            # Get both metadata and most recent game date
             result = conn.execute(
-                "SELECT last_fetched FROM cache_metadata WHERE player_name = ? AND season = ?",
-                (player_name, season)
+                """
+                SELECT m.last_fetched, m.games_count,
+                       (SELECT MAX(game_date) FROM game_logs
+                        WHERE player_name = ? AND season = ?) as last_game
+                FROM cache_metadata m
+                WHERE m.player_name = ? AND m.season = ?
+                """,
+                (player_name, season, player_name, season)
             ).fetchone()
 
-            if not result:
+            if not result or not result[0]:
                 return True  # No cached data
 
             last_fetched = datetime.fromisoformat(result[0])
+            games_count = result[1] or 0
+            last_game_date = result[2]
+
             age_hours = (datetime.now() - last_fetched).total_seconds() / 3600
+
+            # RULE 1: Past seasons are NEVER stale (data won't change)
+            if not is_current_season:
+                return False
+
+            # RULE 2: If we fetched recently (< 4 hours), not stale
+            if age_hours < 4:
+                return False
+
+            # RULE 3: If last game in cache is > 2 days old, check for new games
+            # (NBA games happen roughly every 1-3 days for most players)
+            if last_game_date:
+                try:
+                    last_game = datetime.strptime(last_game_date, '%Y-%m-%d')
+                    days_since_last_game = (datetime.now() - last_game).days
+
+                    # If last game is recent (< 2 days), probably no new games yet
+                    if days_since_last_game < 2 and age_hours < 12:
+                        return False
+
+                except (ValueError, TypeError):
+                    pass  # If we can't parse date, fall through to default
+
+            # RULE 4: Default - if older than TTL, consider stale
             return age_hours > self.CACHE_TTL_HOURS
 
     def _get_from_cache(self, player_name: str, season: str) -> Optional[pd.DataFrame]:
@@ -1068,59 +1112,115 @@ class NBAGameLogCache:
 
             return df
 
+    def _validate_game_log(self, row: pd.Series) -> bool:
+        """
+        Validate a game log entry before caching.
+
+        Returns True if valid, False if should skip.
+        """
+        # Required fields that must exist
+        required_fields = ['date', 'points', 'rebounds', 'assists']
+
+        for field in required_fields:
+            if field not in row:
+                logger.debug(f"Missing required field: {field}")
+                return False
+            if pd.isna(row[field]):
+                logger.debug(f"Field {field} is NaN")
+                return False
+
+        # Sanity checks for numeric values
+        points = row.get('points', 0)
+        rebounds = row.get('rebounds', 0)
+        assists = row.get('assists', 0)
+
+        # Points should be in reasonable range (0-100 for NBA)
+        if not isinstance(points, (int, float)) or points < 0 or points > 100:
+            logger.warning(f"Invalid points value: {points}")
+            return False
+
+        # Rebounds and assists should be reasonable
+        if not isinstance(rebounds, (int, float)) or rebounds < 0 or rebounds > 40:
+            logger.warning(f"Invalid rebounds value: {rebounds}")
+            return False
+
+        if not isinstance(assists, (int, float)) or assists < 0 or assists > 35:
+            logger.warning(f"Invalid assists value: {assists}")
+            return False
+
+        return True
+
     def _save_to_cache(self, player_name: str, season: str, df: pd.DataFrame):
-        """Save game logs to cache."""
+        """Save game logs to cache with validation."""
         if df.empty:
             return
 
+        saved_count = 0
+        skipped_count = 0
+
         with sqlite3.connect(self.DB_PATH) as conn:
             for _, row in df.iterrows():
+                # Validate before saving
+                if not self._validate_game_log(row):
+                    skipped_count += 1
+                    continue
+
                 # Convert numpy types to Python native for SQLite
                 def to_native(val):
                     if hasattr(val, 'item'):
                         return val.item()
+                    if pd.isna(val):
+                        return 0
                     return val
 
-                conn.execute("""
-                    INSERT OR REPLACE INTO game_logs (
-                        player_name, season, game_date, opponent, home,
-                        minutes, points, rebounds, assists, threes, pra,
-                        steals, blocks, turnovers, fgm, fga, ftm, fta,
-                        plus_minus, matchup, result
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    player_name,
-                    season,
-                    row['date'].strftime('%Y-%m-%d') if hasattr(row['date'], 'strftime') else str(row['date']),
-                    row.get('opponent', ''),
-                    1 if row.get('home', False) else 0,
-                    to_native(row.get('minutes', 0)),
-                    to_native(row.get('points', 0)),
-                    to_native(row.get('rebounds', 0)),
-                    to_native(row.get('assists', 0)),
-                    to_native(row.get('threes', 0)),
-                    to_native(row.get('pra', 0)),
-                    to_native(row.get('steals', 0)),
-                    to_native(row.get('blocks', 0)),
-                    to_native(row.get('turnovers', 0)),
-                    to_native(row.get('fgm', 0)),
-                    to_native(row.get('fga', 0)),
-                    to_native(row.get('ftm', 0)),
-                    to_native(row.get('fta', 0)),
-                    to_native(row.get('plus_minus', 0)),
-                    row.get('matchup', ''),
-                    row.get('result', '')
-                ))
+                try:
+                    conn.execute("""
+                        INSERT OR REPLACE INTO game_logs (
+                            player_name, season, game_date, opponent, home,
+                            minutes, points, rebounds, assists, threes, pra,
+                            steals, blocks, turnovers, fgm, fga, ftm, fta,
+                            plus_minus, matchup, result
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        player_name,
+                        season,
+                        row['date'].strftime('%Y-%m-%d') if hasattr(row['date'], 'strftime') else str(row['date']),
+                        row.get('opponent', ''),
+                        1 if row.get('home', False) else 0,
+                        to_native(row.get('minutes', 0)),
+                        to_native(row.get('points', 0)),
+                        to_native(row.get('rebounds', 0)),
+                        to_native(row.get('assists', 0)),
+                        to_native(row.get('threes', row.get('fg3m', 0))),
+                        to_native(row.get('pra', 0)),
+                        to_native(row.get('steals', 0)),
+                        to_native(row.get('blocks', 0)),
+                        to_native(row.get('turnovers', 0)),
+                        to_native(row.get('fgm', 0)),
+                        to_native(row.get('fga', 0)),
+                        to_native(row.get('ftm', 0)),
+                        to_native(row.get('fta', 0)),
+                        to_native(row.get('plus_minus', 0)),
+                        row.get('matchup', ''),
+                        row.get('result', '')
+                    ))
+                    saved_count += 1
+                except Exception as e:
+                    logger.warning(f"Failed to save game log: {e}")
+                    skipped_count += 1
 
-            # Update metadata
+            # Update metadata with actual saved count
             conn.execute("""
                 INSERT OR REPLACE INTO cache_metadata (player_name, season, last_fetched, games_count)
                 VALUES (?, ?, ?, ?)
-            """, (player_name, season, datetime.now().isoformat(), len(df)))
+            """, (player_name, season, datetime.now().isoformat(), saved_count))
 
             conn.commit()
 
-        logger.info(f"Cached {len(df)} games for {player_name} ({season})")
+        if skipped_count > 0:
+            logger.warning(f"Cached {saved_count} games for {player_name} ({season}), skipped {skipped_count} invalid entries")
+        else:
+            logger.info(f"Cached {saved_count} games for {player_name} ({season})")
 
     def get_player_logs(
         self,
