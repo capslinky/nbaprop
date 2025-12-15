@@ -37,6 +37,19 @@ import logging
 logger = logging.getLogger(__name__)
 
 # =============================================================================
+# IMPORTS FROM CORE MODULE (consolidated utilities)
+# =============================================================================
+
+from core.constants import (
+    TEAM_ABBREVIATIONS,
+    STAR_PLAYERS,
+    STAR_OUT_BOOST,
+    normalize_team_abbrev,
+    get_current_nba_season as _core_get_current_nba_season,
+)
+from core.config import CONFIG as _CORE_CONFIG
+
+# =============================================================================
 # RESILIENT FETCHER - Retry Logic & Connection Pooling
 # =============================================================================
 
@@ -89,12 +102,16 @@ class ResilientFetcher:
         if '429' in error_str or 'rate limit' in error_str or 'too many requests' in error_str:
             return True, 3.0  # Triple the delay
 
+        # 529 Site Overloaded - NBA API specific, back off very aggressively
+        if '529' in error_str or 'site overloaded' in error_str or 'overloaded' in error_str:
+            return True, 4.0  # Quadruple the delay for site overload
+
         # Connection errors - retry immediately
         if any(x in error_str for x in ['connection', 'timeout', 'timed out', 'reset', 'refused']):
             return True, 1.0
 
         # Server errors (5xx) - retry with normal backoff
-        if any(x in error_str for x in ['500', '502', '503', '504', 'server error', 'internal error']):
+        if any(x in error_str for x in ['500', '502', '503', '504', '529', 'server error', 'internal error']):
             return True, 1.5
 
         # Client errors (4xx except 429) - don't retry
@@ -181,17 +198,10 @@ def get_current_nba_season() -> str:
     NBA seasons run from October to June.
     - Oct-Dec 2025 = "2025-26"
     - Jan-Sep 2026 = "2025-26"
-    """
-    today = datetime.now()
-    year = today.year
-    month = today.month
 
-    # If we're in Oct-Dec, season is current year to next year
-    if month >= 10:
-        return f"{year}-{str(year + 1)[-2:]}"
-    # If we're in Jan-Sep, season started last year
-    else:
-        return f"{year - 1}-{str(year)[-2:]}"
+    Note: Now delegates to core.constants.get_current_nba_season
+    """
+    return _core_get_current_nba_season()
 
 # =============================================================================
 # NBA STATS API INTEGRATION
@@ -213,8 +223,8 @@ class NBADataFetcher:
         self._player_id_cache = {}
         self._team_id_cache = {}
 
-        # Rate limiting - NBA API can be sensitive
-        self.base_delay = 1.0  # Base delay between requests (increased from 0.6)
+        # Rate limiting - NBA API can be sensitive to rapid requests (529 errors)
+        self.base_delay = 1.5  # Base delay between requests (increased to avoid 529 errors)
         self.request_delay = self.base_delay
         self._last_request = 0
         self._consecutive_failures = 0
@@ -431,20 +441,9 @@ class NBADataFetcher:
 
             df = stats.get_data_frames()[0]
 
-            # Map team names to abbreviations (only NBA teams)
-            team_abbrev_map = {
-                'Atlanta Hawks': 'ATL', 'Boston Celtics': 'BOS', 'Brooklyn Nets': 'BKN',
-                'Charlotte Hornets': 'CHA', 'Chicago Bulls': 'CHI', 'Cleveland Cavaliers': 'CLE',
-                'Dallas Mavericks': 'DAL', 'Denver Nuggets': 'DEN', 'Detroit Pistons': 'DET',
-                'Golden State Warriors': 'GSW', 'Houston Rockets': 'HOU', 'Indiana Pacers': 'IND',
-                'LA Clippers': 'LAC', 'Los Angeles Clippers': 'LAC',
-                'Los Angeles Lakers': 'LAL', 'Memphis Grizzlies': 'MEM',
-                'Miami Heat': 'MIA', 'Milwaukee Bucks': 'MIL', 'Minnesota Timberwolves': 'MIN',
-                'New Orleans Pelicans': 'NOP', 'New York Knicks': 'NYK', 'Oklahoma City Thunder': 'OKC',
-                'Orlando Magic': 'ORL', 'Philadelphia 76ers': 'PHI', 'Phoenix Suns': 'PHX',
-                'Portland Trail Blazers': 'POR', 'Sacramento Kings': 'SAC', 'San Antonio Spurs': 'SAS',
-                'Toronto Raptors': 'TOR', 'Utah Jazz': 'UTA', 'Washington Wizards': 'WAS'
-            }
+            # Use imported TEAM_ABBREVIATIONS from core.constants
+            # Filter to only entries where key is a full team name (contains space)
+            team_abbrev_map = {k: v for k, v in TEAM_ABBREVIATIONS.items() if ' ' in k}
 
             # Filter to only NBA teams
             df = df[df['TEAM_NAME'].isin(team_abbrev_map.keys())].copy()
@@ -791,48 +790,10 @@ class InjuryTracker:
         boost = tracker.get_teammate_boost("Anthony Davis", "LAL")
     """
 
-    # Star players by team - their absence significantly impacts teammates
-    STAR_PLAYERS = {
-        'ATL': ['Trae Young', 'Dejounte Murray'],
-        'BOS': ['Jayson Tatum', 'Jaylen Brown'],
-        'BKN': ['Mikal Bridges', 'Cameron Johnson'],
-        'CHA': ['LaMelo Ball', 'Brandon Miller'],
-        'CHI': ['Zach LaVine', 'DeMar DeRozan', 'Coby White'],
-        'CLE': ['Donovan Mitchell', 'Darius Garland', 'Evan Mobley'],
-        'DAL': ['Luka Doncic', 'Kyrie Irving'],
-        'DEN': ['Nikola Jokic', 'Jamal Murray'],
-        'DET': ['Cade Cunningham', 'Jaden Ivey'],
-        'GSW': ['Stephen Curry', 'Klay Thompson', 'Draymond Green'],
-        'HOU': ['Jalen Green', 'Alperen Sengun', 'Fred VanVleet'],
-        'IND': ['Tyrese Haliburton', 'Pascal Siakam', 'Myles Turner'],
-        'LAC': ['Kawhi Leonard', 'Paul George', 'James Harden'],
-        'LAL': ['LeBron James', 'Anthony Davis'],
-        'MEM': ['Ja Morant', 'Desmond Bane', 'Jaren Jackson Jr.'],
-        'MIA': ['Jimmy Butler', 'Bam Adebayo', 'Tyler Herro'],
-        'MIL': ['Giannis Antetokounmpo', 'Damian Lillard', 'Khris Middleton'],
-        'MIN': ['Anthony Edwards', 'Karl-Anthony Towns', 'Rudy Gobert'],
-        'NOP': ['Zion Williamson', 'Brandon Ingram', 'CJ McCollum'],
-        'NYK': ['Jalen Brunson', 'Julius Randle', 'RJ Barrett'],
-        'OKC': ['Shai Gilgeous-Alexander', 'Chet Holmgren', 'Jalen Williams'],
-        'ORL': ['Paolo Banchero', 'Franz Wagner', 'Jalen Suggs'],
-        'PHI': ['Joel Embiid', 'Tyrese Maxey'],
-        'PHX': ['Kevin Durant', 'Devin Booker', 'Bradley Beal'],
-        'POR': ['Anfernee Simons', 'Jerami Grant', 'Scoot Henderson'],
-        'SAC': ['De\'Aaron Fox', 'Domantas Sabonis', 'Keegan Murray'],
-        'SAS': ['Victor Wembanyama', 'Devin Vassell', 'Keldon Johnson'],
-        'TOR': ['Scottie Barnes', 'Pascal Siakam', 'OG Anunoby'],
-        'UTA': ['Lauri Markkanen', 'Jordan Clarkson', 'Collin Sexton'],
-        'WAS': ['Jordan Poole', 'Kyle Kuzma', 'Deni Avdija'],
-    }
-
-    # Usage boost when star is out (by stat type)
-    STAR_OUT_BOOST = {
-        'points': 1.08,    # 8% boost to scoring
-        'assists': 1.06,   # 6% boost to assists
-        'rebounds': 1.04,  # 4% boost to rebounds
-        'pra': 1.07,       # 7% boost to PRA
-        'threes': 1.05,    # 5% boost to threes
-    }
+    # Use imported constants from core.constants (single source of truth)
+    # These are class attributes for backward compatibility
+    STAR_PLAYERS = STAR_PLAYERS  # From core.constants import at top of file
+    STAR_OUT_BOOST = STAR_OUT_BOOST  # From core.constants import at top of file
 
     def __init__(self):
         self._injury_cache = {}
@@ -1959,7 +1920,29 @@ class LivePropAnalyzer:
 
         # Get best odds per prop
         best_odds = self.odds.get_best_odds(props_df)
-        unique_props = best_odds.groupby(['player', 'prop_type', 'line']).first().reset_index()
+
+        # FIX #1: Properly pair OVER and UNDER odds instead of using .first()
+        # Split into over and under, then merge to get both odds in same row
+        overs = best_odds[best_odds['side'] == 'over'].copy()
+        unders = best_odds[best_odds['side'] == 'under'].copy()
+
+        # Rename odds columns to distinguish over vs under
+        overs = overs.rename(columns={'odds': 'over_odds'})
+        unders = unders.rename(columns={'odds': 'under_odds'})
+
+        # Merge to get both odds in same row
+        unique_props = overs.merge(
+            unders[['player', 'prop_type', 'line', 'under_odds', 'bookmaker']].rename(
+                columns={'bookmaker': 'under_bookmaker'}
+            ),
+            on=['player', 'prop_type', 'line'],
+            how='outer'
+        )
+
+        # Fill missing odds with standard -110
+        unique_props['over_odds'] = unique_props['over_odds'].fillna(-110).astype(int)
+        unique_props['under_odds'] = unique_props['under_odds'].fillna(-110).astype(int)
+
         print(f"Found {len(unique_props)} unique props across {max_events} games", flush=True)
 
         # =================================================================
@@ -2175,34 +2158,74 @@ class LivePropAnalyzer:
 
                 # =============================================================
                 # STEP 3: EDGE CALCULATION WITH VIG ADJUSTMENT
+                # FIX #1: Use correct odds based on side (over_odds vs under_odds)
+                # FIX #2: Conservative probability estimation
                 # =============================================================
                 line = row['line']
-                odds = row.get('odds', -110)
+                over_odds = row.get('over_odds', -110)
+                under_odds = row.get('under_odds', -110)
 
-                # Raw edge
+                # Raw edge (projection vs line)
                 raw_edge = (final_projection - line) / line if line > 0 else 0
 
-                # Calculate implied probability from odds (accounts for vig)
-                if odds < 0:
-                    implied_prob = abs(odds) / (abs(odds) + 100)
-                else:
-                    implied_prob = 100 / (odds + 100)
-
-                # Break-even win rate needed
-                breakeven = implied_prob
-
-                # Our estimated probability based on projection
-                # Use historical hit rate as base, adjusted for projection vs line
+                # Historical hit rates
                 historical_over = (history > line).mean()
                 historical_under = (history < line).mean()
 
-                # Adjust hit rate based on projection movement
+                # FIX #1: Calculate no-vig true probabilities from BOTH sides
+                def american_to_implied(odds):
+                    if odds < 0:
+                        return abs(odds) / (abs(odds) + 100)
+                    return 100 / (odds + 100)
+
+                over_implied = american_to_implied(over_odds)
+                under_implied = american_to_implied(under_odds)
+
+                # Remove vig by normalizing
+                total_implied = over_implied + under_implied
+                true_over_prob = over_implied / total_implied
+                true_under_prob = under_implied / total_implied
+
+                # Determine pick direction based on raw edge
+                pick_over = raw_edge > 0
+
+                # FIX #2: Conservative probability estimation
+                # Use market probability as anchor, adjust based on:
+                # 1. Historical hit rate deviation from market
+                # 2. Projection deviation from line
+                # Cap total adjustment at ±15% from market
                 proj_vs_line = (final_projection - line) / line if line > 0 else 0
 
-                if raw_edge > 0:  # OVER pick
-                    our_prob = min(0.95, historical_over + (proj_vs_line * 0.5))
-                else:  # UNDER pick
-                    our_prob = min(0.95, historical_under + (abs(proj_vs_line) * 0.5))
+                if pick_over:
+                    # Use OVER odds for implied probability
+                    implied_prob = over_implied
+                    breakeven = over_implied
+                    market_prob = true_over_prob
+
+                    # Historical edge over market
+                    hist_edge = historical_over - market_prob
+
+                    # Projection edge (capped)
+                    proj_adjustment = min(0.10, max(-0.10, proj_vs_line * 0.3))
+
+                    # Combined adjustment (capped at ±15%)
+                    total_adjustment = min(0.15, max(-0.15, hist_edge * 0.5 + proj_adjustment))
+                    our_prob = min(0.85, max(0.15, market_prob + total_adjustment))
+                else:
+                    # Use UNDER odds for implied probability
+                    implied_prob = under_implied
+                    breakeven = under_implied
+                    market_prob = true_under_prob
+
+                    # Historical edge over market
+                    hist_edge = historical_under - market_prob
+
+                    # Projection edge (capped)
+                    proj_adjustment = min(0.10, max(-0.10, abs(proj_vs_line) * 0.3))
+
+                    # Combined adjustment (capped at ±15%)
+                    total_adjustment = min(0.15, max(-0.15, hist_edge * 0.5 + proj_adjustment))
+                    our_prob = min(0.85, max(0.15, market_prob + total_adjustment))
 
                 # VIG-ADJUSTED EDGE = our probability - breakeven probability
                 vig_adjusted_edge = (our_prob - breakeven) * 100
@@ -2247,13 +2270,27 @@ class LivePropAnalyzer:
                 # =============================================================
                 trend = 'HOT' if recent_avg > season_avg * 1.05 else 'COLD' if recent_avg < season_avg * 0.95 else 'NEUTRAL'
 
+                # FIX #4: Filter out nan values from adjustment_notes
+                clean_adjustments = [
+                    note for note in adjustment_notes
+                    if note and 'nan' not in str(note).lower()
+                ]
+
+                # Store the odds for the recommended side
+                pick_odds = over_odds if pick == 'OVER' else under_odds
+
+                # Build game matchup string
+                home_team = row.get('home_team', '')
+                away_team = row.get('away_team', '')
+                game_matchup = f"{away_team} @ {home_team}" if home_team and away_team else 'Unknown'
+
                 value_props.append({
                     'player': player,
                     'prop_type': prop_type,
                     'line': line,
                     'projection': round(final_projection, 1),
                     'raw_edge': round(raw_edge * 100, 1),
-                    'avg_edge': round(vig_adjusted_edge, 1),  # VIG-ADJUSTED
+                    'avg_edge': round(vig_adjusted_edge, 1),  # VIG-ADJUSTED PROBABILITY EDGE
                     'confidence': round(confidence * 100, 0),
                     'recommended_side': pick,
                     'recent_avg': round(recent_avg, 1),
@@ -2262,13 +2299,19 @@ class LivePropAnalyzer:
                     'hit_rate_under': round(historical_under * 100, 0),
                     'trend': trend,
                     'games_analyzed': len(history),
-                    'bookmaker': row['bookmaker'],
-                    'odds': odds,
-                    'implied_prob': round(implied_prob * 100, 1),
+                    'bookmaker': row.get('bookmaker', 'unknown'),
+                    'odds': pick_odds,  # Odds for the recommended side
+                    'over_odds': over_odds,
+                    'under_odds': under_odds,
+                    'implied_prob': round(implied_prob * 100, 1),  # Breakeven for recommended side
+                    'market_prob': round(market_prob * 100, 1),  # No-vig probability
                     'our_prob': round(our_prob * 100, 1),
-                    'adjustments': ' | '.join(adjustment_notes) if adjustment_notes else 'None',
+                    'adjustments': ' | '.join(clean_adjustments) if clean_adjustments else 'None',
                     'is_b2b': context.get('is_b2b', False),
                     'minutes_factor': round(context.get('minutes_factor', 1.0), 2),
+                    'game': game_matchup,
+                    'home_team': home_team,
+                    'away_team': away_team,
                 })
 
                 # Track for correlation filtering
@@ -2282,13 +2325,13 @@ class LivePropAnalyzer:
         print(f"\nSkipped: {skipped}", flush=True)
 
         # =================================================================
-        # PHASE 5: CORRELATION FILTERING
+        # PHASE 5: CORRELATION FILTERING + ALT LINE DEDUPLICATION
         # =================================================================
         if value_props:
             df = pd.DataFrame(value_props)
             original_count = len(df)
 
-            # Remove highly correlated picks (keep best edge per player per game)
+            # Step 1: Remove highly correlated props (points vs pra, etc.)
             # If player has both 'points' and 'pra', keep only the higher edge one
             correlated_pairs = [('points', 'pra'), ('rebounds', 'pra'), ('assists', 'pra')]
 
@@ -2306,12 +2349,23 @@ class LivePropAnalyzer:
                             rows_to_drop.extend(p1.index.tolist())
 
             df = df.drop(index=list(set(rows_to_drop)))
-            skipped['correlation'] = original_count - len(df)
+            correlation_removed = original_count - len(df)
+
+            # FIX #3: Alt Line Deduplication
+            # Keep only ONE line per player per prop type (the one with highest edge)
+            # This prevents picks like: Garland UNDER 23.5, 22.5, 21.5 all appearing
+            before_alt_dedup = len(df)
+            df = df.sort_values('avg_edge', ascending=False)
+            df = df.drop_duplicates(subset=['player', 'prop_type'], keep='first')
+            alt_lines_removed = before_alt_dedup - len(df)
+
+            skipped['correlation'] = correlation_removed
+            skipped['alt_lines'] = alt_lines_removed
 
             # Sort by vig-adjusted edge
             df = df.sort_values('avg_edge', ascending=False)
 
-            print(f"\nPHASE 5: Correlation filtering removed {skipped['correlation']} picks", flush=True)
+            print(f"\nPHASE 5: Filtering removed {correlation_removed} correlated + {alt_lines_removed} alt lines", flush=True)
             print(f"\n{'='*60}", flush=True)
             print(f"FINAL: {len(df)} value props (min {min_edge*100:.0f}% edge after vig)", flush=True)
             print(f"{'='*60}", flush=True)

@@ -14,16 +14,17 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from nba_integrations import NBADataFetcher, OddsAPIClient, InjuryTracker
-from nba_prop_model import UnifiedPropModel
-from nba_quickstart import CONFIG
+# Use new modular imports
+from data import NBADataFetcher, OddsAPIClient, InjuryTracker, TEAM_ABBREVIATIONS
+from models import UnifiedPropModel
+from core.config import CONFIG
 
 st.set_page_config(page_title="NBA Props", page_icon="🏀", layout="wide")
 
 # Cache resources
 @st.cache_resource
 def get_odds_client():
-    api_key = CONFIG.get('ODDS_API_KEY') or os.environ.get('ODDS_API_KEY')
+    api_key = CONFIG.ODDS_API_KEY or os.environ.get('ODDS_API_KEY')
     return OddsAPIClient(api_key=api_key) if api_key else None
 
 @st.cache_resource
@@ -109,20 +110,8 @@ with tab1:
         all_results = []
         progress = st.progress(0, text="Loading props...")
 
-        # Team name to abbreviation mapping
-        team_abbrev_map = {
-            'Atlanta Hawks': 'ATL', 'Boston Celtics': 'BOS', 'Brooklyn Nets': 'BKN',
-            'Charlotte Hornets': 'CHA', 'Chicago Bulls': 'CHI', 'Cleveland Cavaliers': 'CLE',
-            'Dallas Mavericks': 'DAL', 'Denver Nuggets': 'DEN', 'Detroit Pistons': 'DET',
-            'Golden State Warriors': 'GSW', 'Houston Rockets': 'HOU', 'Indiana Pacers': 'IND',
-            'LA Clippers': 'LAC', 'Los Angeles Clippers': 'LAC',
-            'Los Angeles Lakers': 'LAL', 'Memphis Grizzlies': 'MEM',
-            'Miami Heat': 'MIA', 'Milwaukee Bucks': 'MIL', 'Minnesota Timberwolves': 'MIN',
-            'New Orleans Pelicans': 'NOP', 'New York Knicks': 'NYK', 'Oklahoma City Thunder': 'OKC',
-            'Orlando Magic': 'ORL', 'Philadelphia 76ers': 'PHI', 'Phoenix Suns': 'PHX',
-            'Portland Trail Blazers': 'POR', 'Sacramento Kings': 'SAC', 'San Antonio Spurs': 'SAS',
-            'Toronto Raptors': 'TOR', 'Utah Jazz': 'UTA', 'Washington Wizards': 'WAS'
-        }
+        # Team name to abbreviation mapping (imported from core.constants)
+        team_abbrev_map = TEAM_ABBREVIATIONS
 
         for i, event in enumerate(events):
             game_name = f"{event['away_team']} @ {event['home_team']}"

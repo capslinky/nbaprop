@@ -153,8 +153,10 @@ class DailyRunner:
             return True, None, 0
 
         try:
-            from nba_integrations import NBADataFetcher, OddsAPIClient, LivePropAnalyzer
-            from nba_quickstart import CONFIG
+            # Use new modular imports
+            from data import NBADataFetcher, OddsAPIClient
+            from analysis import LivePropAnalyzer
+            from core.config import CONFIG
             from datetime import datetime
             import pandas as pd
 
@@ -162,7 +164,7 @@ class DailyRunner:
             self.log("Initializing data fetchers...")
             fetcher = NBADataFetcher()
 
-            api_key = CONFIG.get('ODDS_API_KEY') or os.environ.get('ODDS_API_KEY')
+            api_key = CONFIG.ODDS_API_KEY or os.environ.get('ODDS_API_KEY')
             if not api_key:
                 self.log("No Odds API key configured", "ERROR")
                 return False, None, 0
@@ -177,9 +179,9 @@ class DailyRunner:
 
             # Run analysis
             self.log("Fetching live odds and analyzing props...")
-            self.log(f"Min edge threshold: {CONFIG['MIN_EDGE_THRESHOLD']*100}%")
+            self.log(f"Min edge threshold: {CONFIG.MIN_EDGE_THRESHOLD*100}%")
 
-            value_props = analyzer.find_value_props(min_edge=CONFIG['MIN_EDGE_THRESHOLD'])
+            value_props = analyzer.find_value_props(min_edge=CONFIG.MIN_EDGE_THRESHOLD)
 
             if value_props is None or value_props.empty:
                 self.log("No value plays found meeting criteria", "WARN")
@@ -320,7 +322,7 @@ class DailyRunner:
 
         try:
             from pick_tracker import PickTracker
-            from nba_integrations import NBADataFetcher
+            from data import NBADataFetcher
 
             tracker = PickTracker()
             fetcher = NBADataFetcher()

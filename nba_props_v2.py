@@ -62,7 +62,8 @@ class Config:
     MAX_BET_PERCENT: float = 0.03     # Max 3% of bankroll per bet
 
     # API Rate Limits
-    NBA_API_DELAY: float = 0.6        # Seconds between NBA API calls
+    # Increased to 1.5s to avoid 529 "Site Overloaded" errors from stats.nba.com
+    NBA_API_DELAY: float = 1.5        # Seconds between NBA API calls
     ODDS_API_DELAY: float = 0.1       # Seconds between Odds API calls
 
     # Bookmakers (in order of preference)
