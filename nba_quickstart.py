@@ -9,7 +9,7 @@ pip install nba_api pandas numpy scipy openpyxl requests streamlit
 QUICK START
 -----------
 # 1. Use UnifiedPropModel for context-aware prop analysis
-from nba_prop_model import UnifiedPropModel
+from models import UnifiedPropModel
 
 model = UnifiedPropModel()
 
@@ -28,7 +28,8 @@ print(f"Pick: {analysis.pick}")
 print(f"Flags: {analysis.flags}")
 
 # 2. Use LivePropAnalyzer for batch analysis with odds integration
-from nba_integrations import LivePropAnalyzer, OddsAPIClient
+from analysis import LivePropAnalyzer
+from data import OddsAPIClient
 
 odds = OddsAPIClient(api_key="YOUR_API_KEY")
 analyzer = LivePropAnalyzer(odds_client=odds)
@@ -47,7 +48,8 @@ value_plays = analyzer.find_value_props(min_edge=0.05, min_confidence=0.4)
 print(value_plays)
 
 # 4. Run backtest on historical data
-from nba_prop_model import Backtester, EnsembleModel, generate_sample_dataset, generate_prop_lines
+from models import Backtester, EnsembleModel
+from models import generate_sample_dataset, generate_prop_lines
 
 game_logs = generate_sample_dataset()
 props = generate_prop_lines(game_logs)
@@ -72,7 +74,7 @@ from core.config import CONFIG as _CORE_CONFIG
 CONFIG = {
     # The Odds API (https://the-odds-api.com/)
     # Note: API key now preferably set via ODDS_API_KEY environment variable
-    'ODDS_API_KEY': _CORE_CONFIG.ODDS_API_KEY or '7f13b9e37fcbf996635e2142b7a32914',
+    'ODDS_API_KEY': _CORE_CONFIG.ODDS_API_KEY,  # Set via ODDS_API_KEY environment variable
 
     # Analysis settings (from core.config)
     'MIN_EDGE_THRESHOLD': _CORE_CONFIG.MIN_EDGE_THRESHOLD,
