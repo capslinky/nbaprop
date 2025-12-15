@@ -2070,6 +2070,7 @@ class LivePropAnalyzer:
             stat_column = prop_to_column.get(prop_type, prop_type)
 
             if stat_column not in logs.columns:
+                logger.warning(f"Column '{stat_column}' not found for {player} - skipping {prop_type} prop")
                 continue
 
             history = logs[stat_column]
@@ -2355,7 +2356,7 @@ class LivePropAnalyzer:
             # Keep only ONE line per player per prop type (the one with highest edge)
             # This prevents picks like: Garland UNDER 23.5, 22.5, 21.5 all appearing
             before_alt_dedup = len(df)
-            df = df.sort_values('avg_edge', ascending=False)
+            df = df.sort_values(['avg_edge', 'confidence'], ascending=[False, False])
             df = df.drop_duplicates(subset=['player', 'prop_type'], keep='first')
             alt_lines_removed = before_alt_dedup - len(df)
 
