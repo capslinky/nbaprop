@@ -24,28 +24,97 @@ python nba_quickstart.py --backtest
 # Launch web dashboard
 streamlit run app.py
 
-# Run v2 analysis (Bayesian models, Kelly sizing)
-python nba_props_v2.py --daily
-python nba_props_v2.py --validate
+# Run daily automation
+python daily_runner.py --pre-game
+python daily_runner.py --post-game
 ```
 
 ## Architecture
 
+### Module Structure (Refactored)
+
+```
+nbaprop/
+├── core/                      # Shared foundations
+│   ├── config.py             # Centralized Config dataclass
+│   ├── constants.py          # Team maps, star players
+│   ├── odds_utils.py         # Odds math, Kelly, EV calculations
+│   └── exceptions.py         # Custom error types
+│
+├── data/                      # Data layer
+│   └── __init__.py           # Re-exports: NBADataFetcher, OddsAPIClient, InjuryTracker
+│
+├── models/                    # Prediction models
+│   ├── __init__.py           # Re-exports all models
+│   └── base.py               # BaseModel interface, StandardPrediction
+│
+├── analysis/                  # Analysis orchestration
+│   └── __init__.py           # Re-exports: LivePropAnalyzer, Backtester
+│
+├── app.py                    # Streamlit dashboard
+├── nba_quickstart.py         # CLI entry point
+├── daily_runner.py           # Daily automation
+├── nba_prop_model.py         # Model implementations (legacy location)
+└── nba_integrations.py       # Data fetchers (legacy location)
+```
+
+### Recommended Imports
+
+```python
+# New modular imports (preferred)
+from core.config import CONFIG
+from core.constants import TEAM_ABBREVIATIONS, normalize_team_abbrev
+from core.odds_utils import kelly_criterion, calculate_ev
+
+from data import NBADataFetcher, OddsAPIClient, InjuryTracker
+from models import UnifiedPropModel, PropAnalysis
+from analysis import LivePropAnalyzer, Backtester
+
+# Legacy imports still work (for backward compatibility)
+from nba_prop_model import UnifiedPropModel
+from nba_integrations import NBADataFetcher
+from nba_quickstart import CONFIG  # Returns dict for backward compat
+```
+
 ### Entry Points
 | File | Purpose |
 |------|---------|
-| `nba_quickstart.py` | CLI entry point with config (API keys, thresholds) |
-| `app.py` | Streamlit web dashboard with 3 tabs: Find Best Plays, Single Game, Player Lookup |
-| `nba_props_v2.py` | V2 analysis with Bayesian models, Kelly sizing, CLV tracking (separate research tool) |
+| `nba_quickstart.py` | CLI entry point with config |
+| `app.py` | Streamlit web dashboard with 3 tabs |
+| `daily_runner.py` | Automated pre-game/post-game workflow |
 
-### Model Layer (`nba_prop_model.py`)
+### Core Module (`core/`)
+
+**`core/config.py`** - Centralized configuration:
+```python
+from core.config import CONFIG
+
+CONFIG.MIN_EDGE_THRESHOLD  # 0.03 (3%)
+CONFIG.MIN_CONFIDENCE      # 0.40
+CONFIG.KELLY_FRACTION      # 0.25
+CONFIG.PREFERRED_BOOKS     # ['pinnacle', 'draftkings', ...]
+```
+
+**`core/constants.py`** - Single source of truth for:
+- `TEAM_ABBREVIATIONS` - All team name variants
+- `STAR_PLAYERS` - Star players by team
+- `normalize_team_abbrev()` - Normalize any team reference
+
+**`core/odds_utils.py`** - Betting math:
+- `american_to_decimal()`, `american_to_implied_prob()`
+- `calculate_ev()`, `calculate_edge()`
+- `kelly_criterion()`, `calculate_confidence()`
+
+**`core/exceptions.py`** - Custom exceptions:
+- `NBAPropError`, `DataFetchError`, `PlayerNotFoundError`
+- `InsufficientDataError`, `OddsAPIError`, `RateLimitError`
+
+### Model Layer (`models/`)
 
 **Primary Model: `UnifiedPropModel`**
 
-The unified model combines all contextual factors into a single, consistent analysis:
-
 ```python
-from nba_prop_model import UnifiedPropModel
+from models import UnifiedPropModel
 
 model = UnifiedPropModel()
 analysis = model.analyze("Luka Doncic", "points", 32.5)
@@ -67,26 +136,45 @@ print(f"Flags: {analysis.flags}")
 8. **Minutes Trend** - Recent minutes trends (capped ±10%)
 9. **Injury Boost** - Usage increase when teammates are out (capped +15%)
 
-**Legacy Models (for backtesting):**
+**Available Models:**
+- `UnifiedPropModel` - Production model with 9 contextual adjustments
 - `WeightedAverageModel` - Recency-weighted last 10 games
 - `MedianModel` - Outlier-resistant median
 - `SituationalModel` - Basic home/away and B2B adjustments
 - `EnsembleModel` - Combines weighted average + median
 
-### Data Layer (`nba_integrations.py`)
+### Data Layer (`data/`)
 
 **Data Fetchers:**
 - `NBADataFetcher` - Player game logs, team defense/pace ratings via `nba_api`
-- `BallDontLieFetcher` - Fallback data source when nba_api fails
-- `HybridFetcher` - Orchestrates sources with automatic failover
-- `ResilientFetcher` - Retry logic with exponential backoff
-
-**Odds & Context:**
 - `OddsAPIClient` - Live betting lines from The Odds API
 - `InjuryTracker` - Player injuries, teammate usage boosts when stars are out
 
-**Integration:**
-- `LivePropAnalyzer` - Combines all data sources with `UnifiedPropModel` for live analysis
+**Usage:**
+```python
+from data import NBADataFetcher, OddsAPIClient, InjuryTracker
+
+fetcher = NBADataFetcher()
+logs = fetcher.get_player_game_logs("Luka Doncic", last_n_games=15)
+
+odds = OddsAPIClient(api_key="YOUR_KEY")
+props = odds.get_player_props(event_id, markets=["player_points"])
+
+injuries = InjuryTracker()
+status = injuries.get_player_status("LeBron James")
+```
+
+### Analysis Layer (`analysis/`)
+
+```python
+from analysis import LivePropAnalyzer, Backtester
+
+analyzer = LivePropAnalyzer()
+picks = analyzer.find_value_props(min_edge=0.05, min_confidence=0.4)
+
+backtester = Backtester(initial_bankroll=1000)
+results = backtester.run_backtest(props_df, game_logs, model)
+```
 
 ### Data Flow
 
@@ -125,20 +213,36 @@ User Request (CLI/Streamlit/API)
 
 ## Configuration
 
-Edit `CONFIG` dict in `nba_quickstart.py`:
-- `ODDS_API_KEY`: Your The Odds API key
-- `MIN_EDGE_THRESHOLD`: Minimum edge to bet (default 0.05 = 5%)
-- `MIN_CONFIDENCE`: Minimum confidence (default 0.40)
-- `LOOKBACK_GAMES`: Games to analyze (default 15)
+Configuration is centralized in `core/config.py`. Access via:
+
+```python
+from core.config import CONFIG
+
+# Analysis settings
+CONFIG.MIN_EDGE_THRESHOLD  # 0.03 (3% minimum edge)
+CONFIG.MIN_CONFIDENCE      # 0.40 (40% minimum confidence)
+CONFIG.LOOKBACK_GAMES      # 15 games to analyze
+
+# Bankroll settings
+CONFIG.KELLY_FRACTION      # 0.25 (quarter Kelly)
+CONFIG.MAX_BET_PERCENT     # 0.03 (3% max bet)
+
+# API settings
+CONFIG.ODDS_API_KEY        # Set via environment variable
+CONFIG.NBA_API_DELAY       # 1.0 second between calls
+```
+
+For backward compatibility, `nba_quickstart.py` exports a dict-style CONFIG.
 
 ## Key Classes
 
-| Class | File | Purpose |
-|-------|------|---------|
-| `UnifiedPropModel` | `nba_prop_model.py` | Primary prediction model with all context |
-| `PropAnalysis` | `nba_prop_model.py` | Dataclass with full analysis results |
-| `LivePropAnalyzer` | `nba_integrations.py` | Batch analysis with odds integration |
-| `NBADataFetcher` | `nba_integrations.py` | NBA stats data fetching |
-| `OddsAPIClient` | `nba_integrations.py` | Betting odds fetching |
-| `InjuryTracker` | `nba_integrations.py` | Injury tracking and usage boosts |
-| `Backtester` | `nba_prop_model.py` | Historical betting simulation |
+| Class | Module | Purpose |
+|-------|--------|---------|
+| `UnifiedPropModel` | `models` | Primary prediction model with all context |
+| `PropAnalysis` | `models` | Dataclass with full analysis results |
+| `LivePropAnalyzer` | `analysis` | Batch analysis with odds integration |
+| `NBADataFetcher` | `data` | NBA stats data fetching |
+| `OddsAPIClient` | `data` | Betting odds fetching |
+| `InjuryTracker` | `data` | Injury tracking and usage boosts |
+| `Backtester` | `analysis` | Historical betting simulation |
+| `Config` | `core.config` | Centralized configuration |

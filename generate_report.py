@@ -149,10 +149,12 @@ class PicksReportGenerator:
         • Extra rest (3+ days): +3% boost<br/>
         • Minutes trend: adjusts if recent minutes differ from average<br/><br/>
 
-        <b>4. Vig-Adjusted Edge</b><br/>
-        • Calculates implied probability from odds (accounts for juice)<br/>
+        <b>4. Vig-Adjusted Edge (Conservative Model)</b><br/>
+        • Calculates no-vig market probability from BOTH over and under odds<br/>
+        • Our probability = market probability + adjustment (capped at ±15%)<br/>
+        • Adjustment based on: historical hit rate edge + projection movement<br/>
         • Edge = Our estimated probability - Breakeven probability<br/>
-        • Example: -130 odds requires 56.5% to break even<br/><br/>
+        • Example: -110/-110 odds = 50% market, +5% adjustment = 55% our prob, +2.6% edge<br/><br/>
 
         <b>5. Confidence Score (Multi-Factor)</b><br/>
         • 40% consistency (low variance = higher confidence)<br/>
@@ -164,8 +166,9 @@ class PicksReportGenerator:
         • Points: 10 games | Rebounds: 12 | Assists: 15<br/>
         • 3-Pointers: 20 games (high variance stat)<br/><br/>
 
-        <b>7. Correlation Filtering</b><br/>
+        <b>7. Correlation + Alt Line Filtering</b><br/>
         • Removes redundant picks (e.g., if both Points and PRA picked, keeps best)<br/>
+        • Removes duplicate alt lines (e.g., UNDER 23.5, 22.5, 21.5 → keeps best)<br/>
         • Prevents over-exposure to single player outcomes<br/>
         """
 
@@ -271,6 +274,52 @@ class PicksReportGenerator:
         elements.append(Spacer(1, 20))
         return elements
 
+    def _create_by_game_section(self):
+        """Create picks organized by game."""
+        elements = []
+
+        elements.append(PageBreak())
+        elements.append(Paragraph("PICKS BY GAME", self.styles['SectionHeader']))
+
+        # Check if game column exists
+        if 'game' not in self.df.columns:
+            elements.append(Paragraph("Game data not available in picks.", self.styles['Explanation']))
+            return elements
+
+        # Get unique games
+        games = self.df['game'].unique()
+
+        for game in games:
+            game_df = self.df[self.df['game'] == game].nlargest(10, 'avg_edge')
+
+            if game_df.empty:
+                continue
+
+            elements.append(Spacer(1, 15))
+            elements.append(Paragraph(
+                f"<b>{game}</b> ({len(self.df[self.df['game'] == game])} total picks, top 10 shown)",
+                ParagraphStyle('GameHeader', parent=self.styles['Normal'], fontSize=12,
+                              spaceAfter=8, textColor=colors.HexColor('#1a1a2e'))
+            ))
+
+            for _, row in game_df.iterrows():
+                hit_rate = row['hit_rate_over'] if row['recommended_side'] == 'OVER' else row['hit_rate_under']
+
+                pick_line = f"<b>{row['player']}</b> - {row['prop_type'].upper()} {row['recommended_side']} {row['line']} | Edge: +{row['avg_edge']:.0f}% | Conf: {row['confidence']:.0f}% | Proj: {row['projection']:.1f}"
+                elements.append(Paragraph(pick_line, ParagraphStyle(
+                    'GamePick',
+                    parent=self.styles['Normal'],
+                    fontSize=9,
+                    spaceBefore=2,
+                    spaceAfter=2,
+                    textColor=colors.HexColor('#333333'),
+                    leftIndent=10,
+                )))
+
+            elements.append(Spacer(1, 10))
+
+        return elements
+
     def _create_by_prop_type_section(self):
         """Create picks organized by prop type with explanations."""
         elements = []
@@ -322,19 +371,27 @@ class PicksReportGenerator:
         elements.append(Paragraph("KEY TERMS & DEFINITIONS", self.styles['SectionHeader']))
 
         terms = """
-        <b>Edge:</b> The percentage difference between our projection and the betting line.
-        A +20% edge means we project the player to exceed the line by 20%.<br/><br/>
+        <b>Edge (Probability Edge):</b> The difference between our estimated win probability and the
+        breakeven probability implied by the odds. A +5% edge means we estimate a 5% higher chance of
+        winning than what the odds suggest. Example: If odds imply 52% breakeven and we estimate 57%,
+        the edge is +5%.<br/><br/>
+
+        <b>Implied Probability:</b> The breakeven win rate required by the odds. At -110 odds, you need
+        to win 52.4% to break even after juice.<br/><br/>
+
+        <b>Market Probability:</b> The no-vig (true) probability derived from both over and under odds.<br/><br/>
 
         <b>Confidence:</b> A measure of how consistent the player has been. Higher confidence means
-        the player's stats have low variance and are more predictable.<br/><br/>
+        the player's stats have low variance and are more predictable. Capped at 85%.<br/><br/>
 
-        <b>Projection:</b> Our predicted stat total for the player, based on weighted recent performance.<br/><br/>
+        <b>Projection:</b> Our predicted stat total, based on weighted recent performance with
+        contextual adjustments (home/away, B2B, minutes trend).<br/><br/>
 
-        <b>Hit Rate:</b> The percentage of recent games where the player would have covered this line.<br/><br/>
+        <b>Hit Rate:</b> The percentage of recent games where the player exceeded/missed this line.<br/><br/>
 
         <b>PRA:</b> Points + Rebounds + Assists combined.<br/><br/>
 
-        <b>Trend:</b> HOT = recent games above average, COLD = recent games below average.<br/><br/>
+        <b>Trend:</b> HOT = recent 5 games above season average, COLD = below average.<br/><br/>
 
         <b>OVER/UNDER:</b> The recommended bet direction. OVER means bet the player exceeds the line.
         """
@@ -387,6 +444,7 @@ class PicksReportGenerator:
         elements.extend(self._create_summary_section())
         elements.extend(self._create_methodology_section())
         elements.extend(self._create_top_picks_section(25))
+        elements.extend(self._create_by_game_section())
         elements.extend(self._create_by_prop_type_section())
         elements.extend(self._create_key_terms_section())
         elements.extend(self._create_disclaimer_section())

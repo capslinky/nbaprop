@@ -64,23 +64,28 @@ backtester.print_report()
 # CONFIGURATION
 # =============================================================================
 
+# Import centralized config from core module
+from core.config import CONFIG as _CORE_CONFIG
+
+# Backward-compatible CONFIG dict that reads from core.config
+# This allows existing code to use CONFIG['MIN_EDGE_THRESHOLD'] syntax
 CONFIG = {
     # The Odds API (https://the-odds-api.com/)
-    # Paid subscription: 20,000 requests/month
-    'ODDS_API_KEY': '7f13b9e37fcbf996635e2142b7a32914',  # Set your key here or use environment variable ODDS_API_KEY
-    
-    # Analysis settings
-    'MIN_EDGE_THRESHOLD': 0.05,  # 5% minimum edge to bet
-    'MIN_CONFIDENCE': 0.40,      # 40% minimum confidence
-    'LOOKBACK_GAMES': 15,        # Games to analyze
-    
-    # Bankroll settings
-    'INITIAL_BANKROLL': 1000,
-    'UNIT_SIZE': 10,
-    'MAX_UNITS_PER_BET': 3,
-    
-    # Preferred sportsbooks (in order)
-    'PREFERRED_BOOKS': ['draftkings', 'fanduel', 'betmgm', 'caesars'],
+    # Note: API key now preferably set via ODDS_API_KEY environment variable
+    'ODDS_API_KEY': _CORE_CONFIG.ODDS_API_KEY or '7f13b9e37fcbf996635e2142b7a32914',
+
+    # Analysis settings (from core.config)
+    'MIN_EDGE_THRESHOLD': _CORE_CONFIG.MIN_EDGE_THRESHOLD,
+    'MIN_CONFIDENCE': _CORE_CONFIG.MIN_CONFIDENCE,
+    'LOOKBACK_GAMES': _CORE_CONFIG.LOOKBACK_GAMES,
+
+    # Bankroll settings (from core.config)
+    'INITIAL_BANKROLL': _CORE_CONFIG.INITIAL_BANKROLL,
+    'UNIT_SIZE': _CORE_CONFIG.UNIT_SIZE,
+    'MAX_UNITS_PER_BET': _CORE_CONFIG.MAX_UNITS_PER_BET,
+
+    # Preferred sportsbooks (from core.config)
+    'PREFERRED_BOOKS': _CORE_CONFIG.PREFERRED_BOOKS,
 }
 
 
@@ -95,90 +100,315 @@ def run_daily_analysis():
     """
     Complete daily prop analysis workflow.
     Run this each day before games start.
-    Saves results to Excel and caches API response.
+
+    Output format:
+    - Breaks down each game individually
+    - Shows top 5 picks per game with explanations
+    - Uses FanDuel odds only
+    - Saves full results to Excel/CSV
     """
     # Add parent directory to path for imports
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-    from nba_integrations import NBADataFetcher, OddsAPIClient, LivePropAnalyzer
+    from data import NBADataFetcher, OddsAPIClient, InjuryTracker, TEAM_ABBREVIATIONS
+    from models import UnifiedPropModel
     from datetime import datetime
-    import json
+    import pandas as pd
 
-    print("🏀 NBA PROP ANALYSIS - DAILY RUN")
-    print("=" * 50)
+    print("=" * 70)
+    print("        NBA PROP ANALYSIS - DAILY BREAKDOWN BY GAME")
+    print("        FanDuel Odds Only | Top 5 Picks Per Game")
+    print("=" * 70)
 
     # Initialize components
     fetcher = NBADataFetcher()
+    injury_tracker = InjuryTracker()
 
     api_key = CONFIG['ODDS_API_KEY'] or os.environ.get('ODDS_API_KEY')
-    odds_client = OddsAPIClient(api_key=api_key) if api_key else None
+    if not api_key:
+        print("\n*** No Odds API key configured ***")
+        print("Set ODDS_API_KEY in config or environment variable")
+        print("Get key at: https://the-odds-api.com/")
+        return
 
-    analyzer = LivePropAnalyzer(nba_fetcher=fetcher, odds_client=odds_client)
+    odds_client = OddsAPIClient(api_key=api_key)
+    model = UnifiedPropModel(
+        data_fetcher=fetcher,
+        injury_tracker=injury_tracker,
+        odds_client=odds_client
+    )
 
     # Output filename with today's date
     today = datetime.now().strftime('%Y-%m-%d')
     excel_file = f"nba_daily_picks_{today}.xlsx"
-    cache_file = f"nba_odds_cache_{today}.json"
 
-    if odds_client:
-        print("\n📊 Fetching live odds...")
-        value_props = analyzer.find_value_props(min_edge=CONFIG['MIN_EDGE_THRESHOLD'])
+    print(f"\nDate: {today}")
+    print(f"Min Edge: {CONFIG['MIN_EDGE_THRESHOLD']*100:.0f}%")
+    print(f"Min Confidence: {CONFIG['MIN_CONFIDENCE']*100:.0f}%")
 
-        if not value_props.empty:
-            print(f"\n🎯 Found {len(value_props)} value plays")
+    # =================================================================
+    # FETCH GAMES AND PROPS (FanDuel Only)
+    # =================================================================
+    print("\n" + "-" * 70)
+    print("Fetching games and FanDuel odds...")
 
-            # Save to Excel
+    events = odds_client.get_events()
+    if not events:
+        print("No games found today.")
+        return
+
+    print(f"Found {len(events)} games today\n")
+
+    # Props we want to analyze
+    markets = [
+        'player_points',
+        'player_rebounds',
+        'player_assists',
+        'player_points_rebounds_assists',
+        'player_threes'
+    ]
+
+    all_picks = []  # Store all picks for export
+    game_count = 0
+
+    for event in events:
+        game_count += 1
+        event_id = event.get('id')
+        home_team = event.get('home_team', 'Unknown')
+        away_team = event.get('away_team', 'Unknown')
+        commence_time = event.get('commence_time', '')
+
+        # Parse game time
+        try:
+            game_time = datetime.fromisoformat(commence_time.replace('Z', '+00:00'))
+            time_str = game_time.strftime('%I:%M %p ET')
+        except:
+            time_str = ''
+
+        # Get team abbreviations
+        home_abbrev = TEAM_ABBREVIATIONS.get(home_team, home_team[:3].upper())
+        away_abbrev = TEAM_ABBREVIATIONS.get(away_team, away_team[:3].upper())
+
+        print("=" * 70)
+        print(f"GAME {game_count}: {away_team} @ {home_team}")
+        print(f"         {away_abbrev} @ {home_abbrev} | {time_str}")
+        print("=" * 70)
+
+        # Get props for this game
+        props_data = odds_client.get_player_props(event_id, markets)
+        props_df = odds_client.parse_player_props(props_data)
+
+        if props_df.empty:
+            print("  No props available for this game\n")
+            continue
+
+        # FILTER TO FANDUEL ONLY
+        fanduel_props = props_df[props_df['bookmaker'] == 'fanduel'].copy()
+
+        if fanduel_props.empty:
+            print("  No FanDuel odds available for this game\n")
+            continue
+
+        # Get unique props (over side only - we'll determine direction)
+        overs = fanduel_props[fanduel_props['side'] == 'over']
+
+        print(f"  Analyzing {len(overs)} props from FanDuel...")
+
+        # Analyze each prop
+        game_results = []
+
+        for _, row in overs.iterrows():
+            player = row['player']
+            prop_type = row['prop_type']
+            line = row['line']
+            over_odds = row['odds']
+
+            # Get under odds
+            under_row = fanduel_props[
+                (fanduel_props['player'] == player) &
+                (fanduel_props['prop_type'] == prop_type) &
+                (fanduel_props['line'] == line) &
+                (fanduel_props['side'] == 'under')
+            ]
+            under_odds = under_row['odds'].values[0] if len(under_row) > 0 else -110
+
             try:
-                value_props.to_excel(excel_file, index=False, sheet_name='Value Plays')
-                print(f"✅ Results saved to: {excel_file}")
+                # Use UnifiedPropModel for full contextual analysis
+                analysis = model.analyze(
+                    player_name=player,
+                    prop_type=prop_type,
+                    line=line,
+                    odds=over_odds if over_odds else -110,
+                    opponent=home_abbrev if player in str(away_team) else away_abbrev,
+                    is_home=player not in str(away_team)
+                )
+
+                if analysis and analysis.projection > 0:
+                    # Use the model's pick direction
+                    pick_side = analysis.pick
+                    edge = analysis.edge
+
+                    # Get the correct odds based on recommended side
+                    display_odds = over_odds if pick_side == 'OVER' else under_odds
+
+                    game_results.append({
+                        'player': player,
+                        'prop_type': prop_type,
+                        'line': line,
+                        'pick': pick_side,
+                        'odds': display_odds,
+                        'projection': analysis.projection,
+                        'edge': edge,
+                        'confidence': analysis.confidence,
+                        'recent_avg': analysis.recent_avg,
+                        'season_avg': analysis.season_avg,
+                        'over_rate': analysis.over_rate,
+                        'trend': analysis.trend,
+                        'matchup_rating': analysis.matchup_rating,
+                        'is_b2b': analysis.is_b2b,
+                        'total_adjustment': analysis.total_adjustment,
+                        'adjustments': analysis.adjustments,
+                        'flags': analysis.flags,
+                        'context_quality': analysis.context_quality,
+                        'game': f"{away_abbrev} @ {home_abbrev}",
+                        'home_team': home_team,
+                        'away_team': away_team,
+                    })
             except Exception as e:
-                print(f"⚠️ Could not save Excel: {e}")
-                # Fallback to CSV
-                csv_file = f"nba_daily_picks_{today}.csv"
-                value_props.to_csv(csv_file, index=False)
-                print(f"✅ Results saved to: {csv_file}")
+                pass  # Skip props that fail analysis
 
-            # Print summary of top plays
-            print("\n" + "=" * 60)
-            print("                 TOP VALUE PLAYS")
-            print("=" * 60)
+        if not game_results:
+            print("  No analyzable props found\n")
+            continue
 
-            # Sort by confidence and edge
-            top_plays = value_props.copy()
-            top_plays['abs_edge'] = top_plays['avg_edge'].abs()
-            top_plays = top_plays.sort_values(['confidence', 'abs_edge'], ascending=[False, False])
+        # Filter by minimum edge and confidence
+        min_edge = CONFIG['MIN_EDGE_THRESHOLD']
+        min_conf = CONFIG['MIN_CONFIDENCE']
 
-            # Show top 20 plays
-            display_cols = ['player', 'prop_type', 'line', 'recommended_side', 'avg_edge', 'confidence', 'recent_avg', 'hit_rate_over', 'bookmaker']
-            available_cols = [c for c in display_cols if c in top_plays.columns]
-            print(top_plays[available_cols].head(20).to_string(index=False))
+        qualified = [r for r in game_results
+                     if abs(r['edge']) >= min_edge
+                     and r['confidence'] >= min_conf
+                     and r['pick'] != 'PASS']
 
-            print(f"\n📁 Full results ({len(value_props)} plays) saved to: {excel_file}")
-        else:
-            print("No value plays found meeting criteria")
+        if not qualified:
+            print(f"  No picks meet criteria (edge >= {min_edge*100:.0f}%, conf >= {min_conf*100:.0f}%)\n")
+            continue
+
+        # Sort by edge * confidence (best overall value)
+        qualified.sort(key=lambda x: abs(x['edge']) * x['confidence'], reverse=True)
+
+        # Take top 5
+        top_5 = qualified[:5]
+
+        print(f"\n  TOP {len(top_5)} PICKS:\n")
+        print("  " + "-" * 66)
+
+        for i, pick in enumerate(top_5, 1):
+            # Format the pick display
+            edge_pct = pick['edge'] * 100
+            conf_pct = pick['confidence'] * 100
+            odds_str = f"+{pick['odds']}" if pick['odds'] > 0 else str(pick['odds'])
+
+            print(f"  {i}. {pick['player']}")
+            print(f"     {pick['prop_type'].upper()} {pick['pick']} {pick['line']} ({odds_str})")
+            print(f"     Projection: {pick['projection']:.1f} | Edge: {edge_pct:+.1f}% | Confidence: {conf_pct:.0f}%")
+
+            # Explanation
+            reasons = []
+
+            # Recent performance
+            if pick['recent_avg'] > pick['line'] and pick['pick'] == 'OVER':
+                reasons.append(f"L5 avg {pick['recent_avg']:.1f} (above line)")
+            elif pick['recent_avg'] < pick['line'] and pick['pick'] == 'UNDER':
+                reasons.append(f"L5 avg {pick['recent_avg']:.1f} (below line)")
+
+            # Hit rate
+            if pick['pick'] == 'OVER' and pick['over_rate'] >= 0.6:
+                reasons.append(f"Hit over {pick['over_rate']*100:.0f}% of games")
+            elif pick['pick'] == 'UNDER' and (1 - pick['over_rate']) >= 0.6:
+                reasons.append(f"Hit under {(1-pick['over_rate'])*100:.0f}% of games")
+
+            # Trend
+            if pick['trend'] == 'HOT' and pick['pick'] == 'OVER':
+                reasons.append("HOT streak")
+            elif pick['trend'] == 'COLD' and pick['pick'] == 'UNDER':
+                reasons.append("COLD streak")
+
+            # Matchup
+            if pick['matchup_rating'] in ['SMASH', 'GOOD']:
+                reasons.append(f"{pick['matchup_rating']} matchup")
+            elif pick['matchup_rating'] in ['TOUGH', 'HARD']:
+                reasons.append(f"{pick['matchup_rating']} matchup")
+
+            # B2B
+            if pick['is_b2b']:
+                reasons.append("B2B game (-8%)")
+
+            # Key adjustments
+            adj = pick['adjustments']
+            if adj.get('opp_defense', 0) > 2:
+                reasons.append(f"Weak opp defense (+{adj['opp_defense']:.0f}%)")
+            elif adj.get('opp_defense', 0) < -2:
+                reasons.append(f"Strong opp defense ({adj['opp_defense']:.0f}%)")
+
+            if adj.get('injury_boost', 0) > 0:
+                reasons.append(f"Injury boost (+{adj['injury_boost']:.0f}%)")
+
+            # Print explanation
+            if reasons:
+                print(f"     Why: {' | '.join(reasons[:4])}")
+
+            # Flags
+            if pick['flags']:
+                print(f"     Flags: {', '.join(pick['flags'][:3])}")
+
+            print()
+
+        # Add to all picks
+        all_picks.extend(top_5)
+
+    # =================================================================
+    # SUMMARY AND EXPORT
+    # =================================================================
+    print("\n" + "=" * 70)
+    print("                         DAILY SUMMARY")
+    print("=" * 70)
+
+    if all_picks:
+        print(f"\nTotal Games: {game_count}")
+        print(f"Total Top Picks: {len(all_picks)}")
+
+        # Best overall picks
+        all_picks.sort(key=lambda x: abs(x['edge']) * x['confidence'], reverse=True)
+
+        print("\nBEST OVERALL PICKS TODAY:")
+        print("-" * 40)
+        for i, pick in enumerate(all_picks[:10], 1):
+            edge_pct = pick['edge'] * 100
+            odds_str = f"+{pick['odds']}" if pick['odds'] > 0 else str(pick['odds'])
+            print(f"  {i}. {pick['player']} {pick['prop_type'].upper()} {pick['pick']} {pick['line']} ({odds_str})")
+            print(f"     Game: {pick['game']} | Edge: {edge_pct:+.1f}% | Proj: {pick['projection']:.1f}")
+
+        # Save to Excel
+        try:
+            export_df = pd.DataFrame(all_picks)
+            export_cols = ['game', 'player', 'prop_type', 'pick', 'line', 'odds',
+                          'projection', 'edge', 'confidence', 'recent_avg', 'trend',
+                          'matchup_rating', 'context_quality']
+            available_cols = [c for c in export_cols if c in export_df.columns]
+            export_df = export_df[available_cols]
+            export_df['edge'] = (export_df['edge'] * 100).round(1)
+            export_df['confidence'] = (export_df['confidence'] * 100).round(0)
+            export_df.to_excel(excel_file, index=False, sheet_name='Top Picks')
+            print(f"\nResults saved to: {excel_file}")
+        except Exception as e:
+            csv_file = f"nba_daily_picks_{today}.csv"
+            export_df.to_csv(csv_file, index=False)
+            print(f"\nResults saved to: {csv_file}")
     else:
-        print("\n⚠️ No Odds API key configured")
-        print("Set ODDS_API_KEY in config or environment variable")
-        print("Get free key at: https://the-odds-api.com/")
+        print("\nNo qualified picks found today.")
 
-        # Run manual analysis instead
-        print("\n📊 Running manual analysis on sample props...")
-
-        sample_props = [
-            {'player': 'Luka Doncic', 'prop_type': 'points', 'line': 32.5},
-            {'player': 'Shai Gilgeous-Alexander', 'prop_type': 'points', 'line': 30.5},
-            {'player': 'Giannis Antetokounmpo', 'prop_type': 'rebounds', 'line': 11.5},
-            {'player': 'Tyrese Haliburton', 'prop_type': 'assists', 'line': 10.5},
-            {'player': 'Nikola Jokic', 'prop_type': 'pra', 'line': 47.5},
-        ]
-
-        results = analyzer.analyze_multiple_props(sample_props)
-
-        if not results.empty:
-            print("\n" + "=" * 60)
-            print("                 ANALYSIS RESULTS")
-            print("=" * 60)
-            print(results.to_string(index=False))
+    print("\n" + "=" * 70)
 
 
 def analyze_custom_props(props_list: list):

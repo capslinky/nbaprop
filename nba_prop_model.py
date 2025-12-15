@@ -19,88 +19,22 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # =============================================================================
-# TEAM ABBREVIATION NORMALIZER
+# IMPORTS FROM CORE MODULE (consolidated utilities)
 # =============================================================================
 
-# Standard NBA team abbreviations mapping - handles full names, partial names, and variants
-TEAM_ABBREV_MAP = {
-    # Full names -> Standard abbreviation
-    'Atlanta Hawks': 'ATL', 'Boston Celtics': 'BOS', 'Brooklyn Nets': 'BKN',
-    'Charlotte Hornets': 'CHA', 'Chicago Bulls': 'CHI', 'Cleveland Cavaliers': 'CLE',
-    'Dallas Mavericks': 'DAL', 'Denver Nuggets': 'DEN', 'Detroit Pistons': 'DET',
-    'Golden State Warriors': 'GSW', 'Houston Rockets': 'HOU', 'Indiana Pacers': 'IND',
-    'LA Clippers': 'LAC', 'Los Angeles Clippers': 'LAC',
-    'Los Angeles Lakers': 'LAL', 'LA Lakers': 'LAL',
-    'Memphis Grizzlies': 'MEM', 'Miami Heat': 'MIA', 'Milwaukee Bucks': 'MIL',
-    'Minnesota Timberwolves': 'MIN', 'New Orleans Pelicans': 'NOP',
-    'New York Knicks': 'NYK', 'Oklahoma City Thunder': 'OKC',
-    'Orlando Magic': 'ORL', 'Philadelphia 76ers': 'PHI', 'Phoenix Suns': 'PHX',
-    'Portland Trail Blazers': 'POR', 'Sacramento Kings': 'SAC',
-    'San Antonio Spurs': 'SAS', 'Toronto Raptors': 'TOR',
-    'Utah Jazz': 'UTA', 'Washington Wizards': 'WAS',
-    # Common variants and typos
-    'Spurs': 'SAS', 'Clippers': 'LAC', 'Lakers': 'LAL', 'Warriors': 'GSW',
-    'Pelicans': 'NOP', '76ers': 'PHI', 'Sixers': 'PHI', 'Blazers': 'POR',
-    'Timberwolves': 'MIN', 'T-Wolves': 'MIN',
-    # First 3 letter fallbacks that don't match standard abbrevs
-    'SAN': 'SAS',  # San Antonio -> SAS
-    'NEW': 'NOP',  # Could be New Orleans or New York - default to NOP
-    'GOL': 'GSW',  # Golden State
-    'LOS': 'LAL',  # Los Angeles - default to Lakers
-    'POR': 'POR',  # Portland
-    'PHO': 'PHX',  # Phoenix (PHO vs PHX)
-    'BRO': 'BKN',  # Brooklyn
-    # Standard abbreviations map to themselves
-    'ATL': 'ATL', 'BOS': 'BOS', 'BKN': 'BKN', 'CHA': 'CHA', 'CHI': 'CHI',
-    'CLE': 'CLE', 'DAL': 'DAL', 'DEN': 'DEN', 'DET': 'DET', 'GSW': 'GSW',
-    'HOU': 'HOU', 'IND': 'IND', 'LAC': 'LAC', 'LAL': 'LAL', 'MEM': 'MEM',
-    'MIA': 'MIA', 'MIL': 'MIL', 'MIN': 'MIN', 'NOP': 'NOP', 'NYK': 'NYK',
-    'OKC': 'OKC', 'ORL': 'ORL', 'PHI': 'PHI', 'PHX': 'PHX', 'POR': 'POR',
-    'SAC': 'SAC', 'SAS': 'SAS', 'TOR': 'TOR', 'UTA': 'UTA', 'WAS': 'WAS',
-}
+# Import from core module - single source of truth
+from core.constants import (
+    TEAM_ABBREVIATIONS,
+    normalize_team_abbrev,
+)
+from core.odds_utils import (
+    american_to_decimal,
+    american_to_implied_prob,
+    calculate_ev,
+)
 
-
-def normalize_team_abbrev(team_input: str) -> str:
-    """
-    Normalize any team reference to standard 3-letter NBA abbreviation.
-
-    Handles:
-    - Full team names: "San Antonio Spurs" -> "SAS"
-    - Partial names: "Spurs" -> "SAS"
-    - Non-standard abbrevs: "SAN" -> "SAS", "PHO" -> "PHX"
-    - Already standard: "SAS" -> "SAS"
-
-    Args:
-        team_input: Team name, abbreviation, or variant
-
-    Returns:
-        Standard 3-letter NBA abbreviation, or original if not found
-    """
-    if not team_input:
-        return team_input
-
-    team_str = str(team_input).strip()
-
-    # Direct lookup
-    if team_str in TEAM_ABBREV_MAP:
-        return TEAM_ABBREV_MAP[team_str]
-
-    # Case-insensitive lookup
-    team_upper = team_str.upper()
-    if team_upper in TEAM_ABBREV_MAP:
-        return TEAM_ABBREV_MAP[team_upper]
-
-    # Try matching by first 3 characters
-    if len(team_str) >= 3:
-        first_three = team_str[:3].upper()
-        if first_three in TEAM_ABBREV_MAP:
-            return TEAM_ABBREV_MAP[first_three]
-
-    # If 3-letter code, check if it's already standard
-    if len(team_str) == 3:
-        return team_str.upper()
-
-    return team_str
+# Backward compatibility alias
+TEAM_ABBREV_MAP = TEAM_ABBREVIATIONS
 
 
 # =============================================================================
@@ -831,52 +765,9 @@ class SmartModel:
 
 # =============================================================================
 # EXPECTED VALUE CALCULATION
+# Note: american_to_implied_prob, american_to_decimal, calculate_ev
+# are now imported from core.odds_utils at the top of this file
 # =============================================================================
-
-def american_to_implied_prob(odds: int) -> float:
-    """Convert American odds to implied probability."""
-    if odds > 0:
-        return 100 / (odds + 100)
-    else:
-        return abs(odds) / (abs(odds) + 100)
-
-
-def american_to_decimal(odds: int) -> float:
-    """Convert American odds to decimal odds."""
-    if odds > 0:
-        return (odds / 100) + 1
-    else:
-        return (100 / abs(odds)) + 1
-
-
-def calculate_ev(projection: float, line: float, std: float, 
-                 over_odds: int, under_odds: int) -> dict:
-    """
-    Calculate expected value for over/under bets.
-    Uses normal distribution assumption.
-    """
-    from scipy import stats
-    
-    # Probability of going over the line
-    z_score = (line - projection) / std if std > 0 else 0
-    prob_over = 1 - stats.norm.cdf(z_score)
-    prob_under = stats.norm.cdf(z_score)
-    
-    # Calculate EV
-    decimal_over = american_to_decimal(over_odds)
-    decimal_under = american_to_decimal(under_odds)
-    
-    ev_over = (prob_over * (decimal_over - 1)) - (1 - prob_over)
-    ev_under = (prob_under * (decimal_under - 1)) - (1 - prob_under)
-    
-    return {
-        'prob_over': round(prob_over, 4),
-        'prob_under': round(prob_under, 4),
-        'ev_over': round(ev_over, 4),
-        'ev_under': round(ev_under, 4),
-        'best_bet': 'over' if ev_over > ev_under else 'under',
-        'best_ev': max(ev_over, ev_under)
-    }
 
 
 # =============================================================================
