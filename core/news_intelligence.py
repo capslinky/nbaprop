@@ -57,6 +57,67 @@ def create_perplexity_search(perplexity_fn: Callable) -> Callable[[str], str]:
     return search
 
 
+def create_perplexity_api_search(api_key: str) -> Callable[[str], str]:
+    """
+    Create a search function using Perplexity API directly.
+
+    Args:
+        api_key: Perplexity API key
+
+    Returns:
+        Callable that takes a query string and returns search results as text
+
+    Usage:
+        search_fn = create_perplexity_api_search(os.environ.get('PERPLEXITY_API_KEY'))
+        news_intel = NewsIntelligence(search_fn=search_fn)
+    """
+    def search(query: str) -> str:
+        """Execute search via Perplexity API."""
+        import requests
+
+        if not api_key:
+            return ""
+
+        try:
+            response = requests.post(
+                "https://api.perplexity.ai/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": "sonar",
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": "You are an NBA injury and news reporter. Provide concise, factual updates about player status, injuries, and lineup news. Focus on today's games."
+                        },
+                        {
+                            "role": "user",
+                            "content": query
+                        }
+                    ],
+                    "temperature": 0.1,
+                    "max_tokens": 500,
+                },
+                timeout=15
+            )
+
+            if response.status_code == 200:
+                data = response.json()
+                content = data.get('choices', [{}])[0].get('message', {}).get('content', '')
+                return content
+            else:
+                logger.warning(f"Perplexity API error: {response.status_code}")
+                return ""
+
+        except Exception as e:
+            logger.warning(f"Perplexity API search failed for '{query}': {e}")
+            return ""
+
+    return search
+
+
 # Source trust hierarchy - beat writers > official reports (more accurate close to game time)
 SOURCE_CONFIDENCE = {
     # Beat writers (trust most)
