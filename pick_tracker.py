@@ -53,6 +53,10 @@ class PickRecord:
     matchup_rating: str = 'NEUTRAL'
     bookmaker: Optional[str] = None
     odds: int = -110
+    # CLV (Closing Line Value) fields - populated post-game
+    closing_line: Optional[float] = None
+    closing_odds: Optional[int] = None
+    clv: Optional[float] = None  # (closing_line - our_line) / our_line
 
 
 @dataclass
@@ -100,10 +104,16 @@ class PickTracker:
                     matchup_rating TEXT,
                     bookmaker TEXT,
                     odds INTEGER DEFAULT -110,
+                    closing_line REAL,
+                    closing_odds INTEGER,
+                    clv REAL,
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     UNIQUE(date, player, prop_type, line)
                 )
             """)
+
+            # Migrate existing database: add CLV columns if they don't exist
+            self._migrate_add_clv_columns(conn)
 
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS results (
@@ -117,7 +127,8 @@ class PickTracker:
                 )
             """)
 
-            # Create view for joined data
+            # Create view for joined data (drop and recreate to ensure CLV columns)
+            conn.execute("DROP VIEW IF EXISTS picks_with_results")
             conn.execute("""
                 CREATE VIEW IF NOT EXISTS picks_with_results AS
                 SELECT
@@ -128,7 +139,14 @@ class PickTracker:
                         WHEN p.pick = 'UNDER' AND r.actual < p.line THEN 1
                         WHEN r.actual = p.line THEN NULL  -- Push
                         ELSE 0
-                    END as hit
+                    END as hit,
+                    CASE
+                        WHEN p.closing_line IS NOT NULL AND p.pick = 'OVER' THEN
+                            CASE WHEN p.closing_line > p.line THEN 1 ELSE 0 END
+                        WHEN p.closing_line IS NOT NULL AND p.pick = 'UNDER' THEN
+                            CASE WHEN p.closing_line < p.line THEN 1 ELSE 0 END
+                        ELSE NULL
+                    END as beat_closing_line
                 FROM picks p
                 LEFT JOIN results r ON
                     p.date = r.date AND
@@ -137,6 +155,20 @@ class PickTracker:
             """)
 
             conn.commit()
+
+    def _migrate_add_clv_columns(self, conn):
+        """Add CLV columns to existing database if needed."""
+        # Check if columns exist
+        cursor = conn.execute("PRAGMA table_info(picks)")
+        columns = [row[1] for row in cursor.fetchall()]
+
+        # Add missing CLV columns
+        if 'closing_line' not in columns:
+            conn.execute("ALTER TABLE picks ADD COLUMN closing_line REAL")
+        if 'closing_odds' not in columns:
+            conn.execute("ALTER TABLE picks ADD COLUMN closing_odds INTEGER")
+        if 'clv' not in columns:
+            conn.execute("ALTER TABLE picks ADD COLUMN clv REAL")
 
     def record_pick(self, pick: PickRecord) -> bool:
         """Record a single pick. Returns True if successful."""
@@ -217,6 +249,89 @@ class PickTracker:
         except Exception as e:
             print(f"Error recording result: {e}")
             return False
+
+    def update_clv(self, date_str: str, player: str, prop_type: str, line: float,
+                   closing_line: float, closing_odds: int = None) -> bool:
+        """
+        Update the closing line value for an existing pick.
+
+        CLV = (closing_line - our_line) / our_line for OVER picks
+        CLV = (our_line - closing_line) / our_line for UNDER picks
+
+        Positive CLV means we got a better line than the market settled at.
+        """
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                # Get the pick direction to calculate CLV correctly
+                cursor = conn.execute("""
+                    SELECT pick FROM picks
+                    WHERE date = ? AND player = ? AND prop_type = ? AND line = ?
+                """, (date_str, player, prop_type.lower(), line))
+                row = cursor.fetchone()
+
+                if not row:
+                    print(f"Pick not found: {player} {prop_type} {line} on {date_str}")
+                    return False
+
+                pick = row[0]
+
+                # Calculate CLV based on pick direction
+                # For OVER: positive CLV if closing line moved up (we got favorable early line)
+                # For UNDER: positive CLV if closing line moved down
+                if pick == 'OVER':
+                    clv = (closing_line - line) / line if line != 0 else 0
+                else:  # UNDER
+                    clv = (line - closing_line) / line if line != 0 else 0
+
+                conn.execute("""
+                    UPDATE picks
+                    SET closing_line = ?, closing_odds = ?, clv = ?
+                    WHERE date = ? AND player = ? AND prop_type = ? AND line = ?
+                """, (closing_line, closing_odds, clv, date_str, player, prop_type.lower(), line))
+                conn.commit()
+
+            return True
+        except Exception as e:
+            print(f"Error updating CLV: {e}")
+            return False
+
+    def update_clv_batch(self, clv_data: List[Dict]) -> int:
+        """
+        Batch update CLV for multiple picks.
+
+        Args:
+            clv_data: List of dicts with keys: date, player, prop_type, line, closing_line, closing_odds
+
+        Returns:
+            Number of picks updated
+        """
+        count = 0
+        for item in clv_data:
+            if self.update_clv(
+                date_str=item['date'],
+                player=item['player'],
+                prop_type=item['prop_type'],
+                line=item['line'],
+                closing_line=item['closing_line'],
+                closing_odds=item.get('closing_odds')
+            ):
+                count += 1
+        return count
+
+    def get_picks_missing_clv(self, date_str: str = None) -> pd.DataFrame:
+        """Get picks that don't have closing line data yet."""
+        query = """
+            SELECT date, player, prop_type, line, pick, bookmaker
+            FROM picks
+            WHERE closing_line IS NULL
+        """
+        if date_str:
+            query += f" AND date = '{date_str}'"
+
+        query += " ORDER BY date DESC, player"
+
+        with sqlite3.connect(self.db_path) as conn:
+            return pd.read_sql_query(query, conn)
 
     def get_picks_awaiting_results(self, date_str: str = None) -> pd.DataFrame:
         """Get picks that don't have results yet."""
@@ -330,6 +445,38 @@ class PickTracker:
                 ORDER BY edge_tier DESC
             """, conn)
 
+            # CLV (Closing Line Value) metrics
+            clv_stats = pd.read_sql_query(f"""
+                SELECT
+                    COUNT(*) as total_with_clv,
+                    AVG(clv) as avg_clv,
+                    SUM(CASE WHEN clv > 0 THEN 1 ELSE 0 END) as positive_clv_count,
+                    AVG(CASE WHEN clv > 0 THEN clv ELSE NULL END) as avg_positive_clv,
+                    AVG(CASE WHEN clv < 0 THEN clv ELSE NULL END) as avg_negative_clv,
+                    SUM(CASE WHEN beat_closing_line = 1 THEN 1 ELSE 0 END) as beat_close_count,
+                    AVG(CASE WHEN clv IS NOT NULL THEN beat_closing_line ELSE NULL END) as beat_close_rate
+                FROM picks_with_results
+                WHERE date >= '{cutoff}' AND clv IS NOT NULL
+            """, conn)
+
+            # CLV vs Win Rate correlation
+            clv_win_correlation = pd.read_sql_query(f"""
+                SELECT
+                    CASE
+                        WHEN clv > 0.02 THEN 'STRONG POSITIVE (>2%)'
+                        WHEN clv > 0 THEN 'SLIGHT POSITIVE (0-2%)'
+                        WHEN clv > -0.02 THEN 'SLIGHT NEGATIVE (-2-0%)'
+                        ELSE 'STRONG NEGATIVE (<-2%)'
+                    END as clv_tier,
+                    COUNT(*) as total,
+                    AVG(CASE WHEN hit IS NOT NULL THEN hit ELSE NULL END) as win_rate,
+                    AVG(clv) as avg_clv
+                FROM picks_with_results
+                WHERE date >= '{cutoff}' AND actual IS NOT NULL AND clv IS NOT NULL
+                GROUP BY clv_tier
+                ORDER BY avg_clv DESC
+            """, conn)
+
         return {
             'overall': overall.to_dict('records')[0] if len(overall) > 0 else {},
             'by_quality': by_quality.to_dict('records'),
@@ -338,6 +485,8 @@ class PickTracker:
             'by_side': by_side.to_dict('records'),
             'by_prop': by_prop.to_dict('records'),
             'by_edge': by_edge.to_dict('records'),
+            'clv_stats': clv_stats.to_dict('records')[0] if len(clv_stats) > 0 else {},
+            'clv_win_correlation': clv_win_correlation.to_dict('records'),
             'days': days,
         }
 
@@ -398,6 +547,37 @@ class PickTracker:
             wr = (row.get('win_rate', 0) or 0) * 100
             print(f"  {row['edge_tier']:15} {row['total']:4} picks  {wr:5.1f}%")
 
+        # CLV (Closing Line Value) Report
+        clv_stats = report.get('clv_stats', {})
+        if clv_stats and clv_stats.get('total_with_clv', 0) > 0:
+            print(f"\nCLOSING LINE VALUE (CLV)")
+            print("-" * 40)
+            print("  CLV measures if you beat the closing line.")
+            print("  Positive CLV = got better odds than market close.")
+            print()
+
+            total_clv = clv_stats.get('total_with_clv', 0)
+            avg_clv = (clv_stats.get('avg_clv', 0) or 0) * 100
+            positive_count = clv_stats.get('positive_clv_count', 0) or 0
+            beat_rate = (clv_stats.get('beat_close_rate', 0) or 0) * 100
+
+            print(f"  Picks with CLV:    {total_clv}")
+            print(f"  Average CLV:       {'+' if avg_clv >= 0 else ''}{avg_clv:.2f}%")
+            print(f"  Beat Close Rate:   {beat_rate:.1f}% ({positive_count}/{total_clv})")
+
+            # CLV vs Win Rate correlation
+            clv_correlation = report.get('clv_win_correlation', [])
+            if clv_correlation:
+                print(f"\n  CLV TIER             PICKS   WIN%    AVG CLV")
+                print("  " + "-" * 45)
+                for row in clv_correlation:
+                    tier = row.get('clv_tier', 'UNKNOWN')[:25]
+                    total = row.get('total', 0)
+                    wr = (row.get('win_rate', 0) or 0) * 100
+                    clv = (row.get('avg_clv', 0) or 0) * 100
+                    clv_str = f"{'+' if clv >= 0 else ''}{clv:.2f}%"
+                    print(f"  {tier:25} {total:4}  {wr:5.1f}%  {clv_str:>8}")
+
         print("\n" + "=" * 60 + "\n")
 
     def analyze_adjustment_impact(self, days: int = 30) -> pd.DataFrame:
@@ -438,7 +618,7 @@ class PickTracker:
                         inactive_total += 1
                         if row['hit']:
                             inactive_wins += 1
-                except:
+                except (KeyError, ValueError, TypeError):
                     continue
 
             if active_total > 0 and inactive_total > 0:
@@ -505,6 +685,8 @@ def main():
     parser.add_argument('--analyze', action='store_true', help='Analyze adjustment impact')
     parser.add_argument('--days', type=int, default=30, help='Days to analyze (default 30)')
     parser.add_argument('--pending', action='store_true', help='Show picks awaiting results')
+    parser.add_argument('--missing-clv', action='store_true', help='Show picks missing closing line data')
+    parser.add_argument('--clv-summary', action='store_true', help='Show CLV summary statistics')
 
     args = parser.parse_args()
 
@@ -556,6 +738,48 @@ def main():
         else:
             print(f"\n{len(pending)} picks awaiting results:")
             print(pending.to_string(index=False))
+
+    elif args.missing_clv:
+        missing = tracker.get_picks_missing_clv(args.date)
+        if missing.empty:
+            print("No picks missing CLV data")
+        else:
+            print(f"\n{len(missing)} picks missing closing line data:")
+            print(missing.to_string(index=False))
+
+    elif args.clv_summary:
+        report = tracker.get_accuracy_report(args.days)
+        clv_stats = report.get('clv_stats', {})
+
+        print("\n" + "=" * 60)
+        print(f"     CLOSING LINE VALUE (CLV) SUMMARY (Last {args.days} Days)")
+        print("=" * 60)
+
+        if not clv_stats or clv_stats.get('total_with_clv', 0) == 0:
+            print("\nNo CLV data available yet.")
+            print("Use update_clv() after games to track closing lines.")
+        else:
+            total = clv_stats.get('total_with_clv', 0)
+            avg_clv = (clv_stats.get('avg_clv', 0) or 0) * 100
+            positive = clv_stats.get('positive_clv_count', 0) or 0
+            beat_rate = (clv_stats.get('beat_close_rate', 0) or 0) * 100
+
+            print(f"\n  Picks with CLV data:  {total}")
+            print(f"  Average CLV:          {'+' if avg_clv >= 0 else ''}{avg_clv:.2f}%")
+            print(f"  Beat Closing Rate:    {beat_rate:.1f}% ({positive}/{total})")
+
+            # Interpretation
+            print("\n  INTERPRETATION:")
+            if avg_clv > 0:
+                print("  Your model is beating the closing line on average.")
+                print("  This is a strong indicator of long-term profitability.")
+            elif avg_clv < 0:
+                print("  Your model is behind the closing line on average.")
+                print("  Consider refining your edge calculation.")
+            else:
+                print("  CLV is neutral - you're tracking with the market.")
+
+        print("\n" + "=" * 60 + "\n")
 
     else:
         parser.print_help()

@@ -38,6 +38,7 @@ class MockNBADataFetcher:
             'rebounds': base_rebounds[:n],
             'assists': base_assists[:n],
             'fg3m': base_fg3m[:n],
+            'threes': base_fg3m[:n],  # Alias for fg3m to support both column names
             'minutes': base_minutes[:n],
             'matchup': ['DAL @ LAL'] * n,
             'home': home_values,

@@ -6,9 +6,7 @@ This module provides access to:
 - OddsAPIClient: Live betting lines from The Odds API
 - InjuryTracker: Player injury status and teammate boosts
 - ResilientFetcher: Retry logic with exponential backoff
-
-Re-exports from nba_integrations.py for backward compatibility.
-Classes will be incrementally migrated to individual files.
+- AsyncDataFetcher: Async parallel data fetching for improved performance
 
 Usage:
     from data import NBADataFetcher, OddsAPIClient, InjuryTracker
@@ -21,12 +19,24 @@ Usage:
 
     injuries = InjuryTracker()
     status = injuries.get_player_status("LeBron James")
+
+Async Usage:
+    import asyncio
+    from data import AsyncDataFetcher, run_parallel_analysis
+
+    # Option 1: Use convenience function
+    results = run_parallel_analysis(props_list, model)
+
+    # Option 2: Use async/await directly
+    async def main():
+        fetcher = AsyncDataFetcher(odds_api_key="YOUR_KEY")
+        contexts = await fetcher.fetch_multi_player_context(players)
+    asyncio.run(main())
 """
 
-# Re-export from nba_integrations.py
-# This maintains backward compatibility while establishing the new module structure
-from nba_integrations import (
-    # Data fetchers
+# Import from the new modular fetchers package
+from data.fetchers import (
+    # Sync data fetchers
     NBADataFetcher,
     ResilientFetcher,
     get_resilient_fetcher,
@@ -37,9 +47,16 @@ from nba_integrations import (
     # Injury tracking
     InjuryTracker,
 
-    # Helper functions
-    get_current_nba_season,
+    # Async fetchers
+    AsyncDataFetcher,
+    PlayerContext,
+    BatchAnalysisResult,
+    analyze_props_parallel,
+    run_parallel_analysis,
 )
+
+# Import helper function from core
+from core.constants import get_current_nba_season
 
 # Also import from core for consolidated utilities
 from core.constants import (
@@ -50,7 +67,7 @@ from core.constants import (
 )
 
 __all__ = [
-    # Data fetchers
+    # Sync data fetchers
     'NBADataFetcher',
     'ResilientFetcher',
     'get_resilient_fetcher',
@@ -60,6 +77,13 @@ __all__ = [
 
     # Injuries
     'InjuryTracker',
+
+    # Async fetchers
+    'AsyncDataFetcher',
+    'PlayerContext',
+    'BatchAnalysisResult',
+    'analyze_props_parallel',
+    'run_parallel_analysis',
 
     # Helpers
     'get_current_nba_season',

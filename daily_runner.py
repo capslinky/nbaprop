@@ -31,6 +31,15 @@ Usage:
     # Show what would run without executing
     python daily_runner.py --pre-game --dry-run
 
+    # Real-time line monitoring with alerts
+    python daily_runner.py --monitor
+
+    # Monitor with custom settings
+    python daily_runner.py --monitor --interval 60 --threshold 0.03 --duration 120
+
+    # Monitor with Slack webhook
+    python daily_runner.py --monitor --webhook https://hooks.slack.com/...
+
 Cron Setup:
     # Add to crontab (crontab -e):
     # Pre-game at 10:00 AM daily
@@ -747,6 +756,220 @@ class DailyRunner:
         return results
 
     # =========================================================================
+    # LINE MONITORING WORKFLOW
+    # =========================================================================
+
+    def run_line_monitor(
+        self,
+        interval_seconds: int = 300,
+        alert_threshold: float = 0.05,
+        duration_minutes: int = 0,
+        console_alerts: bool = True,
+        webhook_url: str = None
+    ) -> dict:
+        """
+        Run continuous line monitoring with real-time alerts.
+
+        Args:
+            interval_seconds: Polling interval (default 5 minutes)
+            alert_threshold: Minimum movement to trigger alert (default 5%)
+            duration_minutes: How long to run (0 = indefinitely)
+            console_alerts: Print alerts to console
+            webhook_url: Optional webhook URL for Slack/Discord alerts
+
+        Returns:
+            Summary dict with stats
+        """
+        self.log_section("LINE MONITOR")
+        self.log(f"Polling interval: {interval_seconds}s")
+        self.log(f"Alert threshold: {alert_threshold*100}%")
+        if duration_minutes > 0:
+            self.log(f"Duration: {duration_minutes} minutes")
+        else:
+            self.log("Duration: Indefinite (Ctrl+C to stop)")
+
+        if self.dry_run:
+            self.log("Would start line monitoring", "DRY-RUN")
+            return {'dry_run': True}
+
+        try:
+            from core.line_monitor import LineMonitor
+            from core.alerts import AlertManager, ConsoleAlert, SlackWebhookAlert, WebhookAlert
+            from data import OddsAPIClient
+            from core.config import CONFIG
+            import pandas as pd
+
+            # Initialize components
+            api_key = CONFIG.ODDS_API_KEY or os.environ.get('ODDS_API_KEY')
+            if not api_key:
+                self.log("No Odds API key configured", "ERROR")
+                return {'error': 'No API key'}
+
+            odds_client = OddsAPIClient(api_key=api_key)
+            monitor = LineMonitor(alert_threshold=alert_threshold)
+
+            # Setup alert handlers
+            alert_manager = AlertManager()
+            if console_alerts:
+                alert_manager.add_handler(ConsoleAlert())
+
+            if webhook_url:
+                if 'slack' in webhook_url.lower():
+                    alert_manager.add_handler(SlackWebhookAlert(webhook_url))
+                else:
+                    alert_manager.add_handler(WebhookAlert(webhook_url))
+
+            self.log(f"Alert handlers: {alert_manager.handler_names}")
+
+            # Stats tracking
+            stats = {
+                'polls': 0,
+                'movements_detected': 0,
+                'steam_moves': 0,
+                'start_time': datetime.now(),
+                'errors': 0,
+            }
+
+            end_time = None
+            if duration_minutes > 0:
+                end_time = datetime.now() + timedelta(minutes=duration_minutes)
+
+            self.log("")
+            self.log("Starting line monitor... (Ctrl+C to stop)")
+            self.log("")
+
+            try:
+                while True:
+                    # Check if we should stop
+                    if end_time and datetime.now() >= end_time:
+                        self.log("Duration reached, stopping monitor")
+                        break
+
+                    try:
+                        # Fetch current odds
+                        odds_df = self._fetch_all_current_odds(odds_client)
+                        stats['polls'] += 1
+
+                        if odds_df is None or odds_df.empty:
+                            self.log("No odds data available", "WARN")
+                        else:
+                            # Check for movements
+                            movements = monitor.check_for_alerts(odds_df)
+
+                            if movements:
+                                stats['movements_detected'] += len(movements)
+                                for movement in movements:
+                                    alert_manager.send_line_movement(
+                                        movement,
+                                        priority='high' if movement.is_significant else 'normal'
+                                    )
+
+                            # Check for steam moves (multi-book coordinated)
+                            steam_moves = monitor.get_steam_moves(min_books=3)
+                            if steam_moves:
+                                for steam in steam_moves:
+                                    # Only alert if not already alerted
+                                    if steam not in getattr(self, '_alerted_steam', set()):
+                                        stats['steam_moves'] += 1
+                                        alert_manager.send_steam_move(steam)
+                                        if not hasattr(self, '_alerted_steam'):
+                                            self._alerted_steam = set()
+                                        # Store enough info to identify this steam move
+                                        steam_key = f"{steam['player']}|{steam['prop_type']}|{steam['direction']}"
+                                        self._alerted_steam.add(steam_key)
+
+                            # Periodic status
+                            if stats['polls'] % 12 == 0:  # Every hour at 5min intervals
+                                runtime = datetime.now() - stats['start_time']
+                                self.log(
+                                    f"[Status] Polls: {stats['polls']} | "
+                                    f"Movements: {stats['movements_detected']} | "
+                                    f"Steam: {stats['steam_moves']} | "
+                                    f"Runtime: {runtime}"
+                                )
+
+                    except Exception as e:
+                        stats['errors'] += 1
+                        self.log(f"Poll error: {e}", "ERROR")
+
+                    # Wait for next poll
+                    time.sleep(interval_seconds)
+
+            except KeyboardInterrupt:
+                self.log("\nMonitor stopped by user")
+
+            # Final summary
+            runtime = datetime.now() - stats['start_time']
+            stats['runtime_seconds'] = runtime.total_seconds()
+
+            self.log_section("MONITOR SUMMARY")
+            self.log(f"Runtime: {runtime}")
+            self.log(f"Total polls: {stats['polls']}")
+            self.log(f"Movements detected: {stats['movements_detected']}")
+            self.log(f"Steam moves: {stats['steam_moves']}")
+            self.log(f"Errors: {stats['errors']}")
+
+            return stats
+
+        except Exception as e:
+            self.log(f"Monitor error: {e}", "ERROR")
+            import traceback
+            self.log(traceback.format_exc(), "DEBUG")
+            return {'error': str(e)}
+
+    def _fetch_all_current_odds(self, odds_client) -> 'pd.DataFrame':
+        """
+        Fetch all current player prop odds.
+        Returns DataFrame with columns: player, prop_type, line, odds, bookmaker, event_id
+        """
+        import pandas as pd
+
+        try:
+            # Get today's events
+            events = odds_client.get_todays_events()
+
+            if not events:
+                return pd.DataFrame()
+
+            all_props = []
+            for event in events:
+                event_id = event.get('id')
+                if not event_id:
+                    continue
+
+                # Fetch props for this event
+                props_data = odds_client.get_player_props(event_id)
+
+                if not props_data:
+                    continue
+
+                # Parse props into rows
+                for prop in props_data:
+                    player = prop.get('player', prop.get('description', ''))
+                    prop_type = prop.get('market', prop.get('prop_type', ''))
+                    line = prop.get('point', prop.get('line', 0))
+                    odds = prop.get('price', prop.get('odds', -110))
+                    bookmaker = prop.get('bookmaker', 'unknown')
+
+                    all_props.append({
+                        'player': player,
+                        'prop_type': prop_type,
+                        'line': line,
+                        'odds': odds,
+                        'bookmaker': bookmaker,
+                        'event_id': event_id,
+                    })
+
+                # Rate limit between events
+                time.sleep(0.5)
+
+            return pd.DataFrame(all_props)
+
+        except Exception as e:
+            self.log(f"Error fetching odds: {e}", "WARN")
+            return pd.DataFrame()
+
+    # =========================================================================
     # NOTIFICATIONS (Optional)
     # =========================================================================
 
@@ -794,10 +1017,20 @@ Examples:
                        help='Just show accuracy report')
     parser.add_argument('--injury-report', action='store_true',
                        help='Generate daily NBA injury report (PDF + CSV)')
+    parser.add_argument('--monitor', action='store_true',
+                       help='Run continuous line monitoring with alerts')
     parser.add_argument('--date', type=str,
                        help='Date for results (YYYY-MM-DD), default: today for pre-game, yesterday for post-game')
     parser.add_argument('--days', type=int, default=30,
                        help='Days for accuracy report (default: 30)')
+    parser.add_argument('--interval', type=int, default=300,
+                       help='Monitor polling interval in seconds (default: 300 = 5 min)')
+    parser.add_argument('--duration', type=int, default=0,
+                       help='Monitor duration in minutes (default: 0 = indefinite)')
+    parser.add_argument('--threshold', type=float, default=0.05,
+                       help='Line movement alert threshold as decimal (default: 0.05 = 5%%)')
+    parser.add_argument('--webhook', type=str,
+                       help='Webhook URL for Slack/Discord alerts')
     parser.add_argument('--dry-run', action='store_true',
                        help='Show what would run without executing')
     parser.add_argument('--quiet', '-q', action='store_true',
@@ -843,12 +1076,22 @@ Examples:
                 print(f"  PDF: {pdf_path}")
             print(f"  CSV: {csv_path}")
 
+    elif args.monitor:
+        runner.run_line_monitor(
+            interval_seconds=args.interval,
+            alert_threshold=args.threshold,
+            duration_minutes=args.duration,
+            console_alerts=not args.quiet,
+            webhook_url=args.webhook
+        )
+
     else:
         parser.print_help()
         print("\n" + "=" * 60)
         print("Quick Start:")
         print("  1. Before games:  python daily_runner.py --pre-game")
         print("  2. After games:   python daily_runner.py --post-game")
+        print("  3. Line monitor:  python daily_runner.py --monitor")
         print("=" * 60)
 
 

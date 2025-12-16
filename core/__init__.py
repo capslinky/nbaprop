@@ -51,6 +51,23 @@ from .rosters import (
     is_player_starter,
     get_player_avg_minutes,
 )
+from .line_monitor import (
+    LineMonitor,
+    LineMovement,
+    OddsSnapshot,
+)
+from .alerts import (
+    Alert,
+    AlertHandler,
+    AlertManager,
+    ConsoleAlert,
+    LoggingAlert,
+    WebhookAlert,
+    SlackWebhookAlert,
+    FileAlert,
+    CallbackAlert,
+    create_default_manager,
+)
 
 __all__ = [
     # Config
@@ -99,4 +116,19 @@ __all__ = [
     'get_team_stars',
     'is_player_starter',
     'get_player_avg_minutes',
+    # Line Monitor
+    'LineMonitor',
+    'LineMovement',
+    'OddsSnapshot',
+    # Alerts
+    'Alert',
+    'AlertHandler',
+    'AlertManager',
+    'ConsoleAlert',
+    'LoggingAlert',
+    'WebhookAlert',
+    'SlackWebhookAlert',
+    'FileAlert',
+    'CallbackAlert',
+    'create_default_manager',
 ]
