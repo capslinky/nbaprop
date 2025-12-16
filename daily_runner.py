@@ -52,6 +52,13 @@ import json
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from core.logging_config import setup_logging, get_logger
+from core.constants import get_current_nba_season
+
+# Setup logging for daily runner
+setup_logging(level="INFO")
+_module_logger = get_logger(__name__)
+
 
 class DailyRunner:
     """Orchestrates the full daily prop analysis workflow."""
@@ -63,12 +70,11 @@ class DailyRunner:
         self.start_time = datetime.now()
 
     def log(self, message: str, level: str = "INFO"):
-        """Log a message with timestamp."""
-        timestamp = datetime.now().strftime("%H:%M:%S")
-        formatted = f"[{timestamp}] [{level}] {message}"
-        self.log_lines.append(formatted)
-        if self.verbose:
-            print(formatted, flush=True)
+        """Log a message with timestamp using standard logging."""
+        self.log_lines.append(f"[{level}] {message}")
+        # Use standard logging
+        log_method = getattr(_module_logger, level.lower(), _module_logger.info)
+        log_method(message)
 
     def log_section(self, title: str):
         """Log a section header."""
@@ -141,10 +147,13 @@ class DailyRunner:
             self.log(f"Validation error: {e}", "ERROR")
             return False, {'error': str(e)}
 
-    def run_daily_analysis(self) -> Tuple[bool, Optional[str], int]:
+    def run_daily_analysis(self, bookmakers: list = None) -> Tuple[bool, Optional[str], int]:
         """
         Run daily analysis and save results.
         Returns (success, output_file, pick_count).
+
+        Args:
+            bookmakers: List of bookmaker keys to filter (e.g., ['fanduel']). None = all books.
         """
         self.log_section("DAILY ANALYSIS")
 
@@ -180,8 +189,10 @@ class DailyRunner:
             # Run analysis
             self.log("Fetching live odds and analyzing props...")
             self.log(f"Min edge threshold: {CONFIG.MIN_EDGE_THRESHOLD*100}%")
+            if bookmakers:
+                self.log(f"Bookmaker filter: {', '.join(bookmakers)}")
 
-            value_props = analyzer.find_value_props(min_edge=CONFIG.MIN_EDGE_THRESHOLD)
+            value_props = analyzer.find_value_props(min_edge=CONFIG.MIN_EDGE_THRESHOLD, bookmakers=bookmakers)
 
             if value_props is None or value_props.empty:
                 self.log("No value plays found meeting criteria", "WARN")
@@ -212,6 +223,46 @@ class DailyRunner:
             import traceback
             self.log(traceback.format_exc(), "DEBUG")
             return False, None, 0
+
+    def generate_pdf_report(self, df=None, date_str: str = None) -> Optional[str]:
+        """
+        Generate PDF report from picks.
+        Returns path to PDF file or None if failed.
+        """
+        self.log_section("GENERATE PDF REPORT")
+
+        if self.dry_run:
+            self.log("Would generate PDF report", "DRY-RUN")
+            return None
+
+        try:
+            from generate_report import PicksReportGenerator
+
+            # Use stored analysis or provided DataFrame
+            if df is None:
+                df = getattr(self, '_last_analysis', None)
+            if date_str is None:
+                date_str = getattr(self, '_last_date', datetime.now().strftime('%Y-%m-%d'))
+
+            if df is None or df.empty:
+                self.log("No picks to generate report from", "WARN")
+                return None
+
+            # Generate PDF
+            output_path = f"nba_picks_{date_str}.pdf"
+            generator = PicksReportGenerator(df, date_str)
+            result = generator.generate(output_path)
+
+            self.log(f"PDF report saved to: {result}")
+            return result
+
+        except ImportError as e:
+            self.log(f"PDF generation requires reportlab: {e}", "WARN")
+            self.log("Install with: pip install reportlab", "WARN")
+            return None
+        except Exception as e:
+            self.log(f"Error generating PDF: {e}", "ERROR")
+            return None
 
     def record_picks(self, df=None, date_str: str = None) -> int:
         """
@@ -247,12 +298,16 @@ class DailyRunner:
             self.log(f"Error recording picks: {e}", "ERROR")
             return 0
 
-    def run_pre_game(self) -> dict:
+    def run_pre_game(self, bookmakers: list = None) -> dict:
         """
         Full pre-game workflow:
         1. Validate system
         2. Run analysis
         3. Record picks
+        4. Generate PDF report
+
+        Args:
+            bookmakers: List of bookmaker keys to filter (e.g., ['fanduel']). None = all books.
         """
         self.log_section("PRE-GAME WORKFLOW")
         self.log(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
@@ -262,6 +317,7 @@ class DailyRunner:
             'analysis': False,
             'picks_recorded': 0,
             'output_file': None,
+            'pdf_file': None,
         }
 
         # Step 1: Validate
@@ -274,7 +330,7 @@ class DailyRunner:
             return results
 
         # Step 2: Run analysis
-        success, output_file, pick_count = self.run_daily_analysis()
+        success, output_file, pick_count = self.run_daily_analysis(bookmakers=bookmakers)
         results['analysis'] = success
         results['output_file'] = output_file
         results['pick_count'] = pick_count
@@ -288,6 +344,11 @@ class DailyRunner:
             recorded = self.record_picks()
             results['picks_recorded'] = recorded
 
+        # Step 4: Generate PDF report
+        if pick_count > 0:
+            pdf_file = self.generate_pdf_report()
+            results['pdf_file'] = pdf_file
+
         # Summary
         self.log_section("PRE-GAME SUMMARY")
         self.log(f"Validation: {'PASS' if results['validation'] else 'FAIL'}")
@@ -295,9 +356,191 @@ class DailyRunner:
         self.log(f"Picks found: {results.get('pick_count', 0)}")
         self.log(f"Picks recorded: {results['picks_recorded']}")
         if results['output_file']:
-            self.log(f"Output file: {results['output_file']}")
+            self.log(f"Data file: {results['output_file']}")
+        if results['pdf_file']:
+            self.log(f"PDF report: {results['pdf_file']}")
 
         return results
+
+    # =========================================================================
+    # INJURY REPORT WORKFLOW
+    # =========================================================================
+
+    def generate_injury_report(self, perplexity_fn=None, output_dir: str = ".") -> Tuple[Optional[str], Optional[str]]:
+        """
+        Generate daily NBA injury report (PDF + CSV).
+
+        Args:
+            perplexity_fn: Optional Perplexity MCP function for real-time data
+            output_dir: Directory to save reports
+
+        Returns:
+            Tuple of (pdf_path, csv_path) or (None, None) if failed
+        """
+        self.log_section("GENERATE INJURY REPORT")
+
+        if self.dry_run:
+            self.log("Would generate injury report", "DRY-RUN")
+            return None, None
+
+        try:
+            from nba_integrations import InjuryTracker
+            from core.rosters import TEAM_ROSTERS, get_team_stars
+            import pandas as pd
+            from datetime import date
+
+            today = date.today()
+            date_str = today.strftime('%Y-%m-%d')
+
+            # Initialize tracker with optional Perplexity
+            tracker = InjuryTracker(perplexity_fn=perplexity_fn)
+
+            self.log("Fetching injury data from all sources...")
+            injuries = tracker.get_all_injuries(force_refresh=True)
+
+            if injuries.empty:
+                self.log("No injury data available", "WARN")
+                return None, None
+
+            self.log(f"Found {len(injuries)} injury records")
+
+            # Enrich with star player info
+            injuries = injuries.copy()
+            if 'team' in injuries.columns:
+                injuries['is_star'] = injuries.apply(
+                    lambda row: row['player'] in get_team_stars(row.get('team', '')),
+                    axis=1
+                )
+                injuries['impact'] = injuries['is_star'].apply(
+                    lambda x: 'STAR' if x else 'ROTATION'
+                )
+            else:
+                injuries['impact'] = 'UNKNOWN'
+
+            # Sort by team and impact
+            sort_cols = ['team', 'impact', 'status'] if 'team' in injuries.columns else ['status']
+            injuries = injuries.sort_values(sort_cols)
+
+            # Generate CSV
+            csv_path = os.path.join(output_dir, f"nba_injury_report_{date_str}.csv")
+            injuries.to_csv(csv_path, index=False)
+            self.log(f"CSV saved to: {csv_path}")
+
+            # Generate PDF
+            pdf_path = os.path.join(output_dir, f"nba_injury_report_{date_str}.pdf")
+            pdf_result = self._generate_injury_pdf(injuries, pdf_path, date_str)
+
+            if pdf_result:
+                self.log(f"PDF saved to: {pdf_path}")
+            else:
+                pdf_path = None
+                self.log("PDF generation failed - CSV only", "WARN")
+
+            # Summary statistics
+            by_status = injuries['status'].value_counts().to_dict()
+            self.log(f"By status: {by_status}")
+
+            if 'is_star' in injuries.columns:
+                star_count = injuries['is_star'].sum()
+                self.log(f"Star players affected: {star_count}")
+
+            return pdf_path, csv_path
+
+        except Exception as e:
+            self.log(f"Error generating injury report: {e}", "ERROR")
+            import traceback
+            self.log(traceback.format_exc(), "DEBUG")
+            return None, None
+
+    def _generate_injury_pdf(self, injuries: 'pd.DataFrame', output_path: str, date_str: str) -> bool:
+        """
+        Generate PDF injury report.
+
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            from reportlab.lib.pagesizes import letter
+            from reportlab.lib import colors
+            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+            from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+            from reportlab.lib.units import inch
+
+            doc = SimpleDocTemplate(output_path, pagesize=letter,
+                                   topMargin=0.5*inch, bottomMargin=0.5*inch)
+            elements = []
+            styles = getSampleStyleSheet()
+
+            # Title
+            title_style = ParagraphStyle(
+                'CustomTitle',
+                parent=styles['Heading1'],
+                fontSize=18,
+                spaceAfter=12,
+                alignment=1  # Center
+            )
+            elements.append(Paragraph(f"NBA Injury Report - {date_str}", title_style))
+            elements.append(Spacer(1, 12))
+
+            # Summary
+            total = len(injuries)
+            out_count = len(injuries[injuries['status'].str.upper() == 'OUT'])
+            gtd_count = len(injuries[injuries['status'].str.upper().isin(['GTD', 'GAME TIME DECISION'])])
+            questionable_count = len(injuries[injuries['status'].str.upper() == 'QUESTIONABLE'])
+
+            summary_text = f"Total: {total} | OUT: {out_count} | GTD: {gtd_count} | Questionable: {questionable_count}"
+            elements.append(Paragraph(summary_text, styles['Normal']))
+            elements.append(Spacer(1, 12))
+
+            # Table data
+            cols = ['player', 'team', 'status', 'injury', 'source']
+            available_cols = [c for c in cols if c in injuries.columns]
+
+            table_data = [['Player', 'Team', 'Status', 'Injury', 'Source'][:len(available_cols)]]
+            for _, row in injuries.iterrows():
+                table_data.append([str(row.get(c, ''))[:30] for c in available_cols])
+
+            # Create table
+            table = Table(table_data, repeatRows=1)
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                ('FONTSIZE', (0, 1), (-1, -1), 8),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ]))
+
+            # Highlight OUT players
+            for i, row in enumerate(table_data[1:], start=1):
+                if len(row) >= 3 and row[2].upper() == 'OUT':
+                    table.setStyle(TableStyle([
+                        ('BACKGROUND', (0, i), (-1, i), colors.Color(1, 0.9, 0.9)),
+                    ]))
+
+            elements.append(table)
+            elements.append(Spacer(1, 12))
+
+            # Footer
+            footer = Paragraph(
+                f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')} | Sources: Perplexity AI, NBA API, CBS Sports, Rotowire",
+                ParagraphStyle('Footer', parent=styles['Normal'], fontSize=8, textColor=colors.grey)
+            )
+            elements.append(footer)
+
+            doc.build(elements)
+            return True
+
+        except ImportError:
+            self.log("reportlab not installed - skipping PDF generation", "WARN")
+            return False
+        except Exception as e:
+            self.log(f"PDF generation error: {e}", "ERROR")
+            return False
 
     # =========================================================================
     # POST-GAME WORKFLOW
@@ -549,6 +792,8 @@ Examples:
                        help='Just fetch and record results from NBA API')
     parser.add_argument('--accuracy', action='store_true',
                        help='Just show accuracy report')
+    parser.add_argument('--injury-report', action='store_true',
+                       help='Generate daily NBA injury report (PDF + CSV)')
     parser.add_argument('--date', type=str,
                        help='Date for results (YYYY-MM-DD), default: today for pre-game, yesterday for post-game')
     parser.add_argument('--days', type=int, default=30,
@@ -557,18 +802,29 @@ Examples:
                        help='Show what would run without executing')
     parser.add_argument('--quiet', '-q', action='store_true',
                        help='Minimal output')
+    parser.add_argument('--book', type=str,
+                       help='Filter to specific bookmaker (e.g., fanduel, draftkings, betmgm)')
 
     args = parser.parse_args()
 
+    # Parse bookmaker filter
+    bookmakers = [args.book] if args.book else None
+
     runner = DailyRunner(verbose=not args.quiet, dry_run=args.dry_run)
 
+    # Log current date context for debugging
+    from datetime import date
+    current_season = get_current_nba_season()
+    print(f"Running analysis for {date.today()} (Season: {current_season})")
+    _module_logger.info(f"Session started: {date.today()} | Season: {current_season}")
+
     if args.full:
-        runner.run_pre_game()
+        runner.run_pre_game(bookmakers=bookmakers)
         print()
         runner.run_post_game(args.date)
 
     elif args.pre_game:
-        runner.run_pre_game()
+        runner.run_pre_game(bookmakers=bookmakers)
 
     elif args.post_game:
         runner.run_post_game(args.date)
@@ -578,6 +834,14 @@ Examples:
 
     elif args.accuracy:
         runner.generate_accuracy_report(args.days)
+
+    elif args.injury_report:
+        pdf_path, csv_path = runner.generate_injury_report()
+        if csv_path:
+            print(f"\nInjury report generated:")
+            if pdf_path:
+                print(f"  PDF: {pdf_path}")
+            print(f"  CSV: {csv_path}")
 
     else:
         parser.print_help()

@@ -92,6 +92,14 @@ CONFIG = {
 
 
 # =============================================================================
+# LOGGING SETUP
+# =============================================================================
+
+from core.logging_config import setup_logging, get_logger
+setup_logging(level="INFO")
+logger = get_logger(__name__)
+
+# =============================================================================
 # MAIN ANALYSIS WORKFLOW
 # =============================================================================
 
@@ -128,9 +136,9 @@ def run_daily_analysis():
 
     api_key = CONFIG['ODDS_API_KEY'] or os.environ.get('ODDS_API_KEY')
     if not api_key:
-        print("\n*** No Odds API key configured ***")
-        print("Set ODDS_API_KEY in config or environment variable")
-        print("Get key at: https://the-odds-api.com/")
+        logger.error("No Odds API key configured")
+        logger.error("Set ODDS_API_KEY in config or environment variable")
+        logger.error("Get key at: https://the-odds-api.com/")
         return
 
     odds_client = OddsAPIClient(api_key=api_key)
@@ -156,10 +164,10 @@ def run_daily_analysis():
 
     events = odds_client.get_events()
     if not events:
-        print("No games found today.")
+        logger.warning("No games found today.")
         return
 
-    print(f"Found {len(events)} games today\n")
+    logger.info(f"Found {len(events)} games today")
 
     # Props we want to analyze
     markets = [
@@ -184,7 +192,7 @@ def run_daily_analysis():
         try:
             game_time = datetime.fromisoformat(commence_time.replace('Z', '+00:00'))
             time_str = game_time.strftime('%I:%M %p ET')
-        except:
+        except (ValueError, TypeError):
             time_str = ''
 
         # Get team abbreviations
@@ -201,20 +209,20 @@ def run_daily_analysis():
         props_df = odds_client.parse_player_props(props_data)
 
         if props_df.empty:
-            print("  No props available for this game\n")
+            logger.info("  No props available for this game")
             continue
 
         # FILTER TO FANDUEL ONLY
         fanduel_props = props_df[props_df['bookmaker'] == 'fanduel'].copy()
 
         if fanduel_props.empty:
-            print("  No FanDuel odds available for this game\n")
+            logger.info("  No FanDuel odds available for this game")
             continue
 
         # Get unique props (over side only - we'll determine direction)
         overs = fanduel_props[fanduel_props['side'] == 'over']
 
-        print(f"  Analyzing {len(overs)} props from FanDuel...")
+        logger.info(f"  Analyzing {len(overs)} props from FanDuel...")
 
         # Analyze each prop
         game_results = []
@@ -277,10 +285,10 @@ def run_daily_analysis():
                         'away_team': away_team,
                     })
             except Exception as e:
-                pass  # Skip props that fail analysis
+                logger.debug(f"Skipped prop analysis: {e}")
 
         if not game_results:
-            print("  No analyzable props found\n")
+            logger.info("  No analyzable props found")
             continue
 
         # Filter by minimum edge and confidence
@@ -293,7 +301,7 @@ def run_daily_analysis():
                      and r['pick'] != 'PASS']
 
         if not qualified:
-            print(f"  No picks meet criteria (edge >= {min_edge*100:.0f}%, conf >= {min_conf*100:.0f}%)\n")
+            logger.info(f"  No picks meet criteria (edge >= {min_edge*100:.0f}%, conf >= {min_conf*100:.0f}%)")
             continue
 
         # Sort by edge * confidence (best overall value)
@@ -402,13 +410,13 @@ def run_daily_analysis():
             export_df['edge'] = (export_df['edge'] * 100).round(1)
             export_df['confidence'] = (export_df['confidence'] * 100).round(0)
             export_df.to_excel(excel_file, index=False, sheet_name='Top Picks')
-            print(f"\nResults saved to: {excel_file}")
+            logger.info(f"Results saved to: {excel_file}")
         except Exception as e:
             csv_file = f"nba_daily_picks_{today}.csv"
             export_df.to_csv(csv_file, index=False)
-            print(f"\nResults saved to: {csv_file}")
+            logger.info(f"Results saved to: {csv_file}")
     else:
-        print("\nNo qualified picks found today.")
+        logger.warning("No qualified picks found today.")
 
     print("\n" + "=" * 70)
 
@@ -477,7 +485,13 @@ if __name__ == "__main__":
     parser.add_argument('--backtest', action='store_true', help='Run backtest')
     
     args = parser.parse_args()
-    
+
+    # Log current date context for debugging
+    from datetime import date
+    from core.constants import get_current_nba_season
+    current_season = get_current_nba_season()
+    print(f"Running analysis for {date.today()} (Season: {current_season})")
+
     if args.daily:
         run_daily_analysis()
     elif args.player and args.prop and args.line:

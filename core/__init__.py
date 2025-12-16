@@ -37,6 +37,20 @@ from .exceptions import (
     OddsAPIError,
     RateLimitError,
 )
+from .logging_config import setup_logging, get_logger
+from .news_intelligence import NewsIntelligence, NewsContext, create_perplexity_search
+from .rosters import (
+    PlayerRoster,
+    TeamRoster,
+    TEAM_ROSTERS,
+    load_rosters_from_json,
+    save_rosters_to_json,
+    get_player_info,
+    get_team_starters,
+    get_team_stars,
+    is_player_starter,
+    get_player_avg_minutes,
+)
 
 __all__ = [
     # Config
@@ -67,4 +81,22 @@ __all__ = [
     'InsufficientDataError',
     'OddsAPIError',
     'RateLimitError',
+    # Logging
+    'setup_logging',
+    'get_logger',
+    # News Intelligence
+    'NewsIntelligence',
+    'NewsContext',
+    'create_perplexity_search',
+    # Rosters
+    'PlayerRoster',
+    'TeamRoster',
+    'TEAM_ROSTERS',
+    'load_rosters_from_json',
+    'save_rosters_to_json',
+    'get_player_info',
+    'get_team_starters',
+    'get_team_stars',
+    'is_player_starter',
+    'get_player_avg_minutes',
 ]

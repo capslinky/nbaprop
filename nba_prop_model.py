@@ -13,10 +13,14 @@ Key Features:
 import pandas as pd
 import numpy as np
 from dataclasses import dataclass, field
-from typing import Optional, List
+from typing import Optional, List, Dict, Any, Tuple
 from datetime import datetime, timedelta
 import warnings
+import logging
 warnings.filterwarnings('ignore')
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 # =============================================================================
 # IMPORTS FROM CORE MODULE (consolidated utilities)
@@ -26,6 +30,7 @@ warnings.filterwarnings('ignore')
 from core.constants import (
     TEAM_ABBREVIATIONS,
     normalize_team_abbrev,
+    get_current_nba_season,
 )
 from core.odds_utils import (
     american_to_decimal,
@@ -43,11 +48,17 @@ TEAM_ABBREV_MAP = TEAM_ABBREVIATIONS
 
 def generate_player_season_data(player_name: str, team: str, position: str,
                                  base_stats: dict, games: int = 82,
-                                 season: str = "2023-24") -> pd.DataFrame:
+                                 season: str = None) -> pd.DataFrame:
     """Generate realistic player game logs with natural variance."""
+    if season is None:
+        season = get_current_nba_season()
+
     np.random.seed(hash(player_name) % 2**32)
-    
-    dates = pd.date_range(start='2023-10-24', periods=games, freq='2D')
+
+    # Calculate season start date dynamically
+    season_start_year = int(season.split('-')[0])
+    season_start = f'{season_start_year}-10-24'
+    dates = pd.date_range(start=season_start, periods=games, freq='2D')
     
     data = []
     for i, date in enumerate(dates):
@@ -596,8 +607,12 @@ class SmartModel:
                     'threes': 'threes_rank'
                 }
 
-                factor_col = factor_map.get(prop_type, 'pts_factor')
-                rank_col = rank_map.get(prop_type, 'pts_rank')
+                factor_col = factor_map.get(prop_type)
+                rank_col = rank_map.get(prop_type)
+                if factor_col is None:
+                    logger.warning(f"Unknown prop_type '{prop_type}' for defense factor, using pts_factor")
+                    factor_col = 'pts_factor'
+                    rank_col = 'pts_rank'
 
                 adjustments['opp_defense'] = float(opp_row[factor_col].values[0])
                 opp_rank = int(opp_row[rank_col].values[0])
@@ -1286,14 +1301,20 @@ class UnifiedPropModel:
         self._injuries = injury_tracker
         self._odds = odds_client
 
-        # Cached context data with timestamps
-        self._defense_cache = {'data': None, 'timestamp': None}
-        self._pace_cache = {'data': None, 'timestamp': None}
-        self._game_lines_cache = {'data': None, 'timestamp': None}
-        self._cache_ttl = 3600  # 1 hour cache TTL
+        # Cached context data with timestamps and type-specific TTLs from CONFIG
+        from core.config import CONFIG
+        self._defense_cache = {
+            'data': None, 'timestamp': None, 'ttl': CONFIG.DEFENSE_CACHE_TTL
+        }
+        self._pace_cache = {
+            'data': None, 'timestamp': None, 'ttl': CONFIG.PACE_CACHE_TTL
+        }
+        self._game_lines_cache = {
+            'data': None, 'timestamp': None, 'ttl': CONFIG.GAME_LOG_CACHE_TTL
+        }
 
     @property
-    def fetcher(self):
+    def fetcher(self) -> 'NBADataFetcher':
         """Lazy load data fetcher."""
         if self._fetcher is None:
             from nba_integrations import NBADataFetcher
@@ -1301,7 +1322,7 @@ class UnifiedPropModel:
         return self._fetcher
 
     @property
-    def injuries(self):
+    def injuries(self) -> 'InjuryTracker':
         """Lazy load injury tracker."""
         if self._injuries is None:
             from nba_integrations import InjuryTracker
@@ -1309,17 +1330,19 @@ class UnifiedPropModel:
         return self._injuries
 
     @property
-    def odds(self):
+    def odds(self) -> Optional['OddsAPIClient']:
         """Return odds client (may be None)."""
         return self._odds
 
-    def _is_cache_valid(self, cache: dict) -> bool:
-        """Check if cached data is still valid."""
+    def _is_cache_valid(self, cache: Dict[str, Any]) -> bool:
+        """Check if cached data is still valid using cache-specific TTL."""
         if cache['data'] is None or cache['timestamp'] is None:
             return False
         from datetime import datetime
+        from core.config import CONFIG
+        ttl = cache.get('ttl', CONFIG.DEFENSE_CACHE_TTL)  # Default to defense TTL
         age = (datetime.now() - cache['timestamp']).total_seconds()
-        return age < self._cache_ttl
+        return age < ttl
 
     def _get_defense_data(self) -> pd.DataFrame:
         """Get team defense data with caching."""
@@ -1457,8 +1480,12 @@ class UnifiedPropModel:
                     'threes': 'threes_rank',
                     'fg3m': 'threes_rank',
                 }
-                factor_col = factor_map.get(prop_type, 'pts_factor')
-                rank_col = rank_map.get(prop_type, 'pts_rank')
+                factor_col = factor_map.get(prop_type)
+                rank_col = rank_map.get(prop_type)
+                if factor_col is None:
+                    logger.warning(f"Unknown prop_type '{prop_type}' for defense factor, using pts_factor")
+                    factor_col = 'pts_factor'
+                    rank_col = 'pts_rank'
 
                 if factor_col in opp_row.columns:
                     adjustments['opp_defense'] = float(opp_row[factor_col].values[0])
@@ -1634,7 +1661,19 @@ class UnifiedPropModel:
 
         Returns:
             PropAnalysis with projection, edge, confidence, and full context
+
+        Raises:
+            InvalidPropTypeError: If prop_type is not valid
         """
+        # Validate prop_type early
+        from core.config import CONFIG
+        from core.exceptions import InvalidPropTypeError
+
+        prop_type_lower = prop_type.lower()
+        if prop_type_lower not in CONFIG.VALID_PROP_TYPES:
+            raise InvalidPropTypeError(prop_type)
+        prop_type = prop_type_lower  # Normalize to lowercase
+
         # Fetch player game logs
         logs = self.fetcher.get_player_game_logs(player_name, last_n_games=last_n_games)
 

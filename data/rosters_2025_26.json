@@ -1,0 +1,453 @@
+{
+  "ATL": {
+    "team_abbrev": "ATL",
+    "team_name": "Atlanta Hawks",
+    "players": [
+      {"name": "Trae Young", "position": "PG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Dyson Daniels", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Zaccharie Risacher", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Jalen Johnson", "position": "PF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Clint Capela", "position": "C", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Kris Dunn", "position": "PG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Bogdan Bogdanovic", "position": "SG", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "De'Andre Hunter", "position": "SF", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Onyeka Okongwu", "position": "C", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "BOS": {
+    "team_abbrev": "BOS",
+    "team_name": "Boston Celtics",
+    "players": [
+      {"name": "Payton Pritchard", "position": "PG", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Derrick White", "position": "SG", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Jaylen Brown", "position": "SF", "role": "STARTER", "avg_minutes": 36.0, "is_star": true},
+      {"name": "Jayson Tatum", "position": "PF", "role": "STARTER", "avg_minutes": 36.0, "is_star": true},
+      {"name": "Al Horford", "position": "C", "role": "STARTER", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Jrue Holiday", "position": "PG", "role": "ROTATION", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Sam Hauser", "position": "SF", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Luke Kornet", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "BKN": {
+    "team_abbrev": "BKN",
+    "team_name": "Brooklyn Nets",
+    "players": [
+      {"name": "Dennis Schroder", "position": "PG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Cam Thomas", "position": "SG", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Cam Johnson", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Dorian Finney-Smith", "position": "PF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Nic Claxton", "position": "C", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Ben Simmons", "position": "PG", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Lonnie Walker IV", "position": "SG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Day'Ron Sharpe", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "CHA": {
+    "team_abbrev": "CHA",
+    "team_name": "Charlotte Hornets",
+    "players": [
+      {"name": "LaMelo Ball", "position": "PG", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Brandon Miller", "position": "SG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Cody Martin", "position": "SF", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Miles Bridges", "position": "PF", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Mark Williams", "position": "C", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Nick Smith Jr.", "position": "G", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Grant Williams", "position": "PF", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Nick Richards", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "CHI": {
+    "team_abbrev": "CHI",
+    "team_name": "Chicago Bulls",
+    "players": [
+      {"name": "Josh Giddey", "position": "PG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Coby White", "position": "SG", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Zach LaVine", "position": "SF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Patrick Williams", "position": "PF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Nikola Vucevic", "position": "C", "role": "STARTER", "avg_minutes": 31.0, "is_star": false},
+      {"name": "Ayo Dosunmu", "position": "G", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Torrey Craig", "position": "SF", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Andre Drummond", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "CLE": {
+    "team_abbrev": "CLE",
+    "team_name": "Cleveland Cavaliers",
+    "players": [
+      {"name": "Darius Garland", "position": "PG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Donovan Mitchell", "position": "SG", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Max Strus", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Evan Mobley", "position": "PF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Jarrett Allen", "position": "C", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Caris LeVert", "position": "SG", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Isaac Okoro", "position": "SF", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Dean Wade", "position": "PF", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "DAL": {
+    "team_abbrev": "DAL",
+    "team_name": "Dallas Mavericks",
+    "players": [
+      {"name": "Kyrie Irving", "position": "PG", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Klay Thompson", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": true},
+      {"name": "Luka Doncic", "position": "SF", "role": "STARTER", "avg_minutes": 37.0, "is_star": true},
+      {"name": "P.J. Washington", "position": "PF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Dereck Lively II", "position": "C", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Naji Marshall", "position": "SF", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Quentin Grimes", "position": "SG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Daniel Gafford", "position": "C", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "DEN": {
+    "team_abbrev": "DEN",
+    "team_name": "Denver Nuggets",
+    "players": [
+      {"name": "Jamal Murray", "position": "PG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Christian Braun", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Michael Porter Jr.", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": true},
+      {"name": "Aaron Gordon", "position": "PF", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Nikola Jokic", "position": "C", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Reggie Jackson", "position": "PG", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Kentavious Caldwell-Pope", "position": "SG", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Peyton Watson", "position": "SF", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "DET": {
+    "team_abbrev": "DET",
+    "team_name": "Detroit Pistons",
+    "players": [
+      {"name": "Cade Cunningham", "position": "PG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Jaden Ivey", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": true},
+      {"name": "Ausar Thompson", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Tobias Harris", "position": "PF", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Jalen Duren", "position": "C", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Marcus Sasser", "position": "PG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Tim Hardaway Jr.", "position": "SG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Isaiah Stewart", "position": "C", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "GSW": {
+    "team_abbrev": "GSW",
+    "team_name": "Golden State Warriors",
+    "players": [
+      {"name": "Stephen Curry", "position": "PG", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Brandin Podziemski", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Andrew Wiggins", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Jonathan Kuminga", "position": "PF", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Draymond Green", "position": "C", "role": "STARTER", "avg_minutes": 30.0, "is_star": true},
+      {"name": "Buddy Hield", "position": "SG", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Moses Moody", "position": "SG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Kevon Looney", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "HOU": {
+    "team_abbrev": "HOU",
+    "team_name": "Houston Rockets",
+    "players": [
+      {"name": "Fred VanVleet", "position": "PG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Jalen Green", "position": "SG", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Dillon Brooks", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Jabari Smith Jr.", "position": "PF", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Alperen Sengun", "position": "C", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Amen Thompson", "position": "G", "role": "ROTATION", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Tari Eason", "position": "PF", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Steven Adams", "position": "C", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "IND": {
+    "team_abbrev": "IND",
+    "team_name": "Indiana Pacers",
+    "players": [
+      {"name": "Tyrese Haliburton", "position": "PG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Bennedict Mathurin", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Andrew Nembhard", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Pascal Siakam", "position": "PF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Myles Turner", "position": "C", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "T.J. McConnell", "position": "PG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Aaron Nesmith", "position": "SF", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Obi Toppin", "position": "PF", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "LAC": {
+    "team_abbrev": "LAC",
+    "team_name": "Los Angeles Clippers",
+    "players": [
+      {"name": "James Harden", "position": "PG", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Norman Powell", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Derrick Jones Jr.", "position": "SF", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Kawhi Leonard", "position": "PF", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Ivica Zubac", "position": "C", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Terance Mann", "position": "G", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Bones Hyland", "position": "PG", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Mason Plumlee", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "LAL": {
+    "team_abbrev": "LAL",
+    "team_name": "Los Angeles Lakers",
+    "players": [
+      {"name": "D'Angelo Russell", "position": "PG", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Austin Reaves", "position": "SG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "LeBron James", "position": "SF", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Rui Hachimura", "position": "PF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Anthony Davis", "position": "C", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Gabe Vincent", "position": "PG", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Cam Reddish", "position": "SF", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Christian Wood", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "MEM": {
+    "team_abbrev": "MEM",
+    "team_name": "Memphis Grizzlies",
+    "players": [
+      {"name": "Ja Morant", "position": "PG", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Desmond Bane", "position": "SG", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Jaylen Wells", "position": "SF", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Jaren Jackson Jr.", "position": "PF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Zach Edey", "position": "C", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Marcus Smart", "position": "PG", "role": "ROTATION", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Santi Aldama", "position": "PF", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Brandon Clarke", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "MIA": {
+    "team_abbrev": "MIA",
+    "team_name": "Miami Heat",
+    "players": [
+      {"name": "Terry Rozier", "position": "PG", "role": "STARTER", "avg_minutes": 34.0, "is_star": false},
+      {"name": "Tyler Herro", "position": "SG", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Jimmy Butler", "position": "SF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Jaime Jaquez Jr.", "position": "PF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Bam Adebayo", "position": "C", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Duncan Robinson", "position": "SG", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Nikola Jovic", "position": "PF", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Thomas Bryant", "position": "C", "role": "ROTATION", "avg_minutes": 16.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "MIL": {
+    "team_abbrev": "MIL",
+    "team_name": "Milwaukee Bucks",
+    "players": [
+      {"name": "Damian Lillard", "position": "PG", "role": "STARTER", "avg_minutes": 36.0, "is_star": true},
+      {"name": "Gary Trent Jr.", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Khris Middleton", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": true},
+      {"name": "Giannis Antetokounmpo", "position": "PF", "role": "STARTER", "avg_minutes": 37.0, "is_star": true},
+      {"name": "Brook Lopez", "position": "C", "role": "STARTER", "avg_minutes": 29.0, "is_star": false},
+      {"name": "Pat Connaughton", "position": "SG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Bobby Portis", "position": "PF", "role": "ROTATION", "avg_minutes": 25.0, "is_star": false},
+      {"name": "Taurean Prince", "position": "SF", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "MIN": {
+    "team_abbrev": "MIN",
+    "team_name": "Minnesota Timberwolves",
+    "players": [
+      {"name": "Mike Conley", "position": "PG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Anthony Edwards", "position": "SG", "role": "STARTER", "avg_minutes": 36.0, "is_star": true},
+      {"name": "Jaden McDaniels", "position": "SF", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Julius Randle", "position": "PF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Rudy Gobert", "position": "C", "role": "STARTER", "avg_minutes": 31.0, "is_star": true},
+      {"name": "Donte DiVincenzo", "position": "PG", "role": "ROTATION", "avg_minutes": 25.0, "is_star": false},
+      {"name": "Nickeil Alexander-Walker", "position": "SG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Naz Reid", "position": "C", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "NOP": {
+    "team_abbrev": "NOP",
+    "team_name": "New Orleans Pelicans",
+    "players": [
+      {"name": "CJ McCollum", "position": "PG", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Herbert Jones", "position": "SG", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Brandon Ingram", "position": "SF", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Zion Williamson", "position": "PF", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Jonas Valanciunas", "position": "C", "role": "STARTER", "avg_minutes": 27.0, "is_star": false},
+      {"name": "Trey Murphy III", "position": "SF", "role": "ROTATION", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Jose Alvarado", "position": "PG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Larry Nance Jr.", "position": "PF", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "NYK": {
+    "team_abbrev": "NYK",
+    "team_name": "New York Knicks",
+    "players": [
+      {"name": "Jalen Brunson", "position": "PG", "role": "STARTER", "avg_minutes": 36.0, "is_star": true},
+      {"name": "Mikal Bridges", "position": "SG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "OG Anunoby", "position": "SF", "role": "STARTER", "avg_minutes": 33.0, "is_star": false},
+      {"name": "Karl-Anthony Towns", "position": "PF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Mitchell Robinson", "position": "C", "role": "STARTER", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Josh Hart", "position": "SF", "role": "ROTATION", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Miles McBride", "position": "PG", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Precious Achiuwa", "position": "PF", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "OKC": {
+    "team_abbrev": "OKC",
+    "team_name": "Oklahoma City Thunder",
+    "players": [
+      {"name": "Shai Gilgeous-Alexander", "position": "PG", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Cason Wallace", "position": "SG", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Jalen Williams", "position": "SF", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Chet Holmgren", "position": "PF", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Isaiah Hartenstein", "position": "C", "role": "STARTER", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Alex Caruso", "position": "SG", "role": "ROTATION", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Luguentz Dort", "position": "SF", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Aaron Wiggins", "position": "SG", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "ORL": {
+    "team_abbrev": "ORL",
+    "team_name": "Orlando Magic",
+    "players": [
+      {"name": "Jalen Suggs", "position": "PG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Kentavious Caldwell-Pope", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Franz Wagner", "position": "SF", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Paolo Banchero", "position": "PF", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Wendell Carter Jr.", "position": "C", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Cole Anthony", "position": "PG", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Jonathan Isaac", "position": "PF", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Goga Bitadze", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "PHI": {
+    "team_abbrev": "PHI",
+    "team_name": "Philadelphia 76ers",
+    "players": [
+      {"name": "Tyrese Maxey", "position": "PG", "role": "STARTER", "avg_minutes": 36.0, "is_star": true},
+      {"name": "Paul George", "position": "SG", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Kelly Oubre Jr.", "position": "SF", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Caleb Martin", "position": "PF", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Joel Embiid", "position": "C", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Kyle Lowry", "position": "PG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Eric Gordon", "position": "SG", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Andre Drummond", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "PHX": {
+    "team_abbrev": "PHX",
+    "team_name": "Phoenix Suns",
+    "players": [
+      {"name": "Tyus Jones", "position": "PG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Devin Booker", "position": "SG", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Bradley Beal", "position": "SF", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Kevin Durant", "position": "PF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Jusuf Nurkic", "position": "C", "role": "STARTER", "avg_minutes": 27.0, "is_star": false},
+      {"name": "Grayson Allen", "position": "SG", "role": "ROTATION", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Royce O'Neale", "position": "SF", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Mason Plumlee", "position": "C", "role": "ROTATION", "avg_minutes": 16.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "POR": {
+    "team_abbrev": "POR",
+    "team_name": "Portland Trail Blazers",
+    "players": [
+      {"name": "Scoot Henderson", "position": "PG", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Shaedon Sharpe", "position": "SG", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Deni Avdija", "position": "SF", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Jerami Grant", "position": "PF", "role": "STARTER", "avg_minutes": 30.0, "is_star": true},
+      {"name": "Deandre Ayton", "position": "C", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Anfernee Simons", "position": "PG", "role": "ROTATION", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Toumani Camara", "position": "SF", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Robert Williams III", "position": "C", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "SAC": {
+    "team_abbrev": "SAC",
+    "team_name": "Sacramento Kings",
+    "players": [
+      {"name": "De'Aaron Fox", "position": "PG", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Keon Ellis", "position": "SG", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "DeMar DeRozan", "position": "SF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Keegan Murray", "position": "PF", "role": "STARTER", "avg_minutes": 32.0, "is_star": false},
+      {"name": "Domantas Sabonis", "position": "C", "role": "STARTER", "avg_minutes": 35.0, "is_star": true},
+      {"name": "Malik Monk", "position": "SG", "role": "ROTATION", "avg_minutes": 27.0, "is_star": false},
+      {"name": "Kevin Huerter", "position": "SG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Trey Lyles", "position": "PF", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "SAS": {
+    "team_abbrev": "SAS",
+    "team_name": "San Antonio Spurs",
+    "players": [
+      {"name": "Chris Paul", "position": "PG", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Devin Vassell", "position": "SG", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Keldon Johnson", "position": "SF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Jeremy Sochan", "position": "PF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Victor Wembanyama", "position": "C", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Tre Jones", "position": "PG", "role": "ROTATION", "avg_minutes": 22.0, "is_star": false},
+      {"name": "Malaki Branham", "position": "SG", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Zach Collins", "position": "C", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "TOR": {
+    "team_abbrev": "TOR",
+    "team_name": "Toronto Raptors",
+    "players": [
+      {"name": "Immanuel Quickley", "position": "PG", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "RJ Barrett", "position": "SG", "role": "STARTER", "avg_minutes": 33.0, "is_star": true},
+      {"name": "Scottie Barnes", "position": "SF", "role": "STARTER", "avg_minutes": 36.0, "is_star": true},
+      {"name": "Chris Boucher", "position": "PF", "role": "STARTER", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Jakob Poeltl", "position": "C", "role": "STARTER", "avg_minutes": 29.0, "is_star": false},
+      {"name": "Gradey Dick", "position": "SG", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Ochai Agbaji", "position": "SF", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Kelly Olynyk", "position": "C", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "UTA": {
+    "team_abbrev": "UTA",
+    "team_name": "Utah Jazz",
+    "players": [
+      {"name": "Collin Sexton", "position": "PG", "role": "STARTER", "avg_minutes": 31.0, "is_star": false},
+      {"name": "Keyonte George", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": true},
+      {"name": "Lauri Markkanen", "position": "SF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "John Collins", "position": "PF", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Walker Kessler", "position": "C", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Jordan Clarkson", "position": "SG", "role": "ROTATION", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Taylor Hendricks", "position": "PF", "role": "ROTATION", "avg_minutes": 20.0, "is_star": false},
+      {"name": "Brice Sensabaugh", "position": "SF", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  },
+  "WAS": {
+    "team_abbrev": "WAS",
+    "team_name": "Washington Wizards",
+    "players": [
+      {"name": "Jordan Poole", "position": "PG", "role": "STARTER", "avg_minutes": 32.0, "is_star": true},
+      {"name": "Bilal Coulibaly", "position": "SG", "role": "STARTER", "avg_minutes": 30.0, "is_star": false},
+      {"name": "Corey Kispert", "position": "SF", "role": "STARTER", "avg_minutes": 28.0, "is_star": false},
+      {"name": "Kyle Kuzma", "position": "PF", "role": "STARTER", "avg_minutes": 34.0, "is_star": true},
+      {"name": "Jonas Valanciunas", "position": "C", "role": "STARTER", "avg_minutes": 27.0, "is_star": false},
+      {"name": "Malcolm Brogdon", "position": "PG", "role": "ROTATION", "avg_minutes": 24.0, "is_star": false},
+      {"name": "Deni Avdija", "position": "SF", "role": "ROTATION", "avg_minutes": 26.0, "is_star": false},
+      {"name": "Marvin Bagley III", "position": "PF", "role": "ROTATION", "avg_minutes": 18.0, "is_star": false}
+    ],
+    "last_updated": "2025-12-16"
+  }
+}

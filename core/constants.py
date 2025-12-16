@@ -158,37 +158,41 @@ def normalize_team_abbrev(team_input: str) -> str:
 # =============================================================================
 
 # Star players by team - their absence significantly impacts teammates
+# Updated for 2025-26 season (December 16, 2025)
+# Reference: data/nba_rosters_2025_26.md
 STAR_PLAYERS: Dict[str, List[str]] = {
-    'ATL': ['Trae Young', 'Dejounte Murray'],
-    'BOS': ['Jayson Tatum', 'Jaylen Brown'],
-    'BKN': ['Mikal Bridges', 'Cameron Johnson'],
-    'CHA': ['LaMelo Ball', 'Brandon Miller'],
-    'CHI': ['Zach LaVine', 'DeMar DeRozan', 'Coby White'],
+    # Eastern Conference
+    'ATL': ['Trae Young', 'Kristaps Porzingis', 'Jalen Johnson'],  # Porzingis from BOS
+    'BOS': ['Jayson Tatum', 'Jaylen Brown', 'Derrick White'],  # Porzingis traded; Simons acquired
+    'BKN': ['Michael Porter Jr.', 'Cam Thomas', 'Nic Claxton'],  # MPJ from DEN
+    'CHA': ['LaMelo Ball', 'Brandon Miller', 'Miles Bridges'],
+    'CHI': ['Josh Giddey', 'Coby White', 'Nikola Vucevic'],  # LaVine traded to SAC
     'CLE': ['Donovan Mitchell', 'Darius Garland', 'Evan Mobley'],
-    'DAL': ['Luka Doncic', 'Kyrie Irving'],
-    'DEN': ['Nikola Jokic', 'Jamal Murray'],
-    'DET': ['Cade Cunningham', 'Jaden Ivey'],
-    'GSW': ['Stephen Curry', 'Klay Thompson', 'Draymond Green'],
-    'HOU': ['Jalen Green', 'Alperen Sengun', 'Fred VanVleet'],
+    'DET': ['Cade Cunningham', 'Jaden Ivey', 'Jalen Duren'],
     'IND': ['Tyrese Haliburton', 'Pascal Siakam', 'Myles Turner'],
-    'LAC': ['Kawhi Leonard', 'Paul George', 'James Harden'],
-    'LAL': ['LeBron James', 'Anthony Davis'],
-    'MEM': ['Ja Morant', 'Desmond Bane', 'Jaren Jackson Jr.'],
-    'MIA': ['Jimmy Butler', 'Bam Adebayo', 'Tyler Herro'],
+    'MIA': ['Bam Adebayo', 'Tyler Herro', 'Terry Rozier'],  # Butler traded to GSW
     'MIL': ['Giannis Antetokounmpo', 'Damian Lillard', 'Khris Middleton'],
-    'MIN': ['Anthony Edwards', 'Karl-Anthony Towns', 'Rudy Gobert'],
-    'NOP': ['Zion Williamson', 'Brandon Ingram', 'CJ McCollum'],
-    'NYK': ['Jalen Brunson', 'Julius Randle', 'RJ Barrett'],
-    'OKC': ['Shai Gilgeous-Alexander', 'Chet Holmgren', 'Jalen Williams'],
+    'NYK': ['Jalen Brunson', 'Karl-Anthony Towns', 'Mikal Bridges'],  # KAT from MIN
     'ORL': ['Paolo Banchero', 'Franz Wagner', 'Jalen Suggs'],
-    'PHI': ['Joel Embiid', 'Tyrese Maxey'],
-    'PHX': ['Kevin Durant', 'Devin Booker', 'Bradley Beal'],
-    'POR': ['Anfernee Simons', 'Jerami Grant', 'Scoot Henderson'],
-    'SAC': ["De'Aaron Fox", 'Domantas Sabonis', 'Keegan Murray'],
-    'SAS': ['Victor Wembanyama', 'Devin Vassell', 'Keldon Johnson'],
-    'TOR': ['Scottie Barnes', 'Pascal Siakam', 'OG Anunoby'],
-    'UTA': ['Lauri Markkanen', 'Jordan Clarkson', 'Collin Sexton'],
-    'WAS': ['Jordan Poole', 'Kyle Kuzma', 'Deni Avdija'],
+    'PHI': ['Joel Embiid', 'Tyrese Maxey', 'Paul George'],  # PG signed 2024
+    'TOR': ['Scottie Barnes', 'Brandon Ingram', 'Immanuel Quickley'],  # Ingram from NOP
+    'WAS': ['Bilal Coulibaly', 'Alex Sarr', 'Kyle Kuzma'],
+    # Western Conference
+    'DAL': ['Luka Doncic', 'Kyrie Irving', 'Klay Thompson'],  # Klay from GSW
+    'DEN': ['Nikola Jokic', 'Jamal Murray', 'Aaron Gordon'],  # MPJ traded; Cam Johnson acquired
+    'GSW': ['Stephen Curry', 'Jimmy Butler', 'Draymond Green'],  # Butler from MIA Feb 2025
+    'HOU': ['Kevin Durant', 'Alperen Sengun', 'Fred VanVleet'],  # KD from PHX
+    'LAC': ['Kawhi Leonard', 'James Harden', 'Norman Powell'],
+    'LAL': ['LeBron James', 'Anthony Davis', 'Austin Reaves'],
+    'MEM': ['Ja Morant', 'Jaren Jackson Jr.', 'Marcus Smart'],
+    'MIN': ['Anthony Edwards', 'Rudy Gobert', 'Julius Randle'],  # KAT traded to NYK
+    'NOP': ['Zion Williamson', 'Trey Murphy III', 'Jordan Poole'],  # Ingram traded; CJ traded
+    'OKC': ['Shai Gilgeous-Alexander', 'Chet Holmgren', 'Jalen Williams'],
+    'PHX': ['Devin Booker', 'Jalen Green', 'Dillon Brooks'],  # KD traded; Green/Brooks from HOU
+    'POR': ['Jrue Holiday', 'Scoot Henderson', 'Shaedon Sharpe'],  # Holiday from BOS
+    'SAC': ['Domantas Sabonis', 'Zach LaVine', 'DeMar DeRozan'],  # Fox traded to SAS; LaVine from CHI
+    'SAS': ['Victor Wembanyama', "De'Aaron Fox", 'Devin Vassell'],  # Fox from SAC - 18-7 record
+    'UTA': ['Lauri Markkanen', 'Walker Kessler', 'Keyonte George'],
 }
 
 

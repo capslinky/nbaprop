@@ -48,6 +48,162 @@ from core.constants import (
     get_current_nba_season as _core_get_current_nba_season,
 )
 from core.config import CONFIG as _CORE_CONFIG
+from core.exceptions import (
+    NetworkError,
+    AuthenticationError,
+    RateLimitError,
+    OddsAPIError,
+)
+
+# =============================================================================
+# STRING PARSING HELPERS - Robust parsing for player names, matchups, etc.
+# =============================================================================
+
+
+def _extract_last_name(player_name: str) -> str:
+    """Extract searchable last name from player name.
+
+    Handles:
+    - "LeBron James" -> "James"
+    - "Shaquille O'Neal" -> "O'Neal"
+    - "Gary Payton Jr." -> "Payton" (skip suffix)
+    - "Jaren Jackson Jr." -> "Jackson"
+
+    Args:
+        player_name: Full player name
+
+    Returns:
+        Last name suitable for searching
+    """
+    if not player_name:
+        return ''
+
+    suffixes = {'jr.', 'jr', 'sr.', 'sr', 'ii', 'iii', 'iv', 'v'}
+    parts = player_name.split()
+
+    # Remove suffixes from end
+    while parts and parts[-1].lower() in suffixes:
+        parts.pop()
+
+    return parts[-1] if parts else player_name
+
+
+def _extract_opponent(matchup: str) -> str:
+    """Extract opponent team abbreviation from matchup string.
+
+    Handles formats:
+    - 'DAL vs. LAL' -> 'LAL'
+    - 'DAL @ LAL' -> 'LAL'
+    - 'DAL vs. Los Angeles Lakers' -> 'LAL' (via normalize)
+    - 'LALvsBKN' -> '' (malformed, returns empty)
+
+    Args:
+        matchup: Matchup string from NBA API
+
+    Returns:
+        Normalized opponent team abbreviation, or empty string if parsing fails
+    """
+    if not matchup:
+        return ''
+
+    # Split on ' vs. ' or ' @ '
+    if ' vs. ' in matchup:
+        parts = matchup.split(' vs. ')
+        opponent_part = parts[1].strip() if len(parts) > 1 else ''
+    elif ' @ ' in matchup:
+        parts = matchup.split(' @ ')
+        opponent_part = parts[1].strip() if len(parts) > 1 else ''
+    elif 'vs.' in matchup:
+        # Handle 'DALvs.BKN' (no spaces)
+        parts = matchup.split('vs.')
+        opponent_part = parts[1].strip() if len(parts) > 1 else ''
+    elif '@' in matchup:
+        # Handle 'DAL@BKN' (no spaces)
+        parts = matchup.split('@')
+        opponent_part = parts[1].strip() if len(parts) > 1 else ''
+    else:
+        # Fallback - try last word
+        opponent_part = matchup.split()[-1] if matchup.split() else ''
+
+    # Normalize to standard abbreviation
+    return normalize_team_abbrev(opponent_part)
+
+
+def _parse_season_year(season: str) -> int:
+    """Parse season string to starting year.
+
+    Args:
+        season: NBA season format "2024-25" or "2024"
+
+    Returns:
+        Starting year as integer
+
+    Raises:
+        ValueError: If season format is invalid
+    """
+    if not season:
+        season = _core_get_current_nba_season()
+
+    # Handle "2024" format
+    if season.isdigit() and len(season) == 4:
+        return int(season)
+
+    # Handle "2024-25" format
+    if '-' in season:
+        parts = season.split('-')
+        if len(parts) == 2 and parts[0].isdigit():
+            return int(parts[0])
+
+    raise ValueError(f"Invalid season format: '{season}'. Expected '2024-25' or '2024'")
+
+
+def _parse_minutes(min_str) -> float:
+    """Parse minutes string to float with validation.
+
+    Handles:
+    - "32:45" -> 32.75
+    - "32" -> 32.0
+    - None/empty -> 0.0
+    - Invalid -> 0.0 with warning
+
+    Args:
+        min_str: Minutes value (string, int, or float)
+
+    Returns:
+        Minutes as float, 0.0 if invalid
+    """
+    if min_str is None or min_str == '':
+        return 0.0
+
+    try:
+        min_str = str(min_str).strip()
+
+        if ':' in min_str:
+            parts = min_str.split(':')
+            if len(parts) != 2:
+                logger.warning(f"Invalid minutes format: {min_str}")
+                return 0.0
+
+            minutes = float(parts[0])
+            seconds = float(parts[1])
+
+            # Bounds checking
+            if not (0 <= minutes <= 60) or not (0 <= seconds < 60):
+                logger.warning(f"Minutes out of bounds: {min_str}")
+                return 0.0
+
+            return minutes + seconds / 60
+
+        result = float(min_str)
+        if not (0 <= result <= 60):
+            logger.warning(f"Minutes value out of bounds: {result}")
+            return 0.0
+        return result
+
+    except (ValueError, TypeError) as e:
+        logger.warning(f"Failed to parse minutes '{min_str}': {e}")
+        return 0.0
+
 
 # =============================================================================
 # RESILIENT FETCHER - Retry Logic & Connection Pooling
@@ -232,7 +388,7 @@ class NBADataFetcher:
         # Get the global resilient fetcher for retry logic
         self._resilient = get_resilient_fetcher()
 
-    def _rate_limit(self):
+    def _rate_limit(self) -> None:
         """
         Enforce rate limiting between API calls with jitter and dynamic adjustment.
         Automatically backs off more when experiencing failures.
@@ -250,18 +406,29 @@ class NBADataFetcher:
             time.sleep(effective_delay - elapsed)
         self._last_request = time.time()
 
-    def _on_success(self):
+    def _on_success(self) -> None:
         """Called after a successful API call to reset failure tracking."""
         self._consecutive_failures = 0
         self.request_delay = self.base_delay
 
-    def _on_failure(self):
+    def _on_failure(self) -> None:
         """Called after a failed API call to increase backoff."""
         self._consecutive_failures += 1
         # Increase delay up to 3x the base
         self.request_delay = min(self.base_delay * 3,
                                   self.base_delay * (1.5 ** self._consecutive_failures))
-    
+
+    def reset_state(self) -> None:
+        """Reset internal state for new analysis run.
+
+        Call this between independent analysis runs to prevent
+        exponential backoff from compounding across analyses.
+        """
+        self._consecutive_failures = 0
+        self.request_delay = self.base_delay
+        self._last_request = 0
+        logger.debug("NBADataFetcher state reset")
+
     def get_player_id(self, player_name: str) -> Optional[int]:
         """Look up player ID by name."""
         if player_name in self._player_id_cache:
@@ -274,9 +441,9 @@ class NBADataFetcher:
             player_list = players.find_players_by_full_name(player_name)
             
             if not player_list:
-                # Try last name only
-                last_name = player_name.split()[-1]
-                player_list = [p for p in players.get_players() 
+                # Try last name only (handles suffixes like Jr., Sr., II, etc.)
+                last_name = _extract_last_name(player_name)
+                player_list = [p for p in players.get_players()
                               if last_name.lower() in p['full_name'].lower()]
             
             if player_list:
@@ -289,7 +456,7 @@ class NBADataFetcher:
             return None
             
         except Exception as e:
-            print(f"Error finding player {player_name}: {e}")
+            logger.warning(f"Error finding player {player_name}: {e}")
             return None
     
     def get_player_game_logs(self, player_name: str, season: str = None,
@@ -376,10 +543,8 @@ class NBADataFetcher:
         # Add home/away indicator
         df['home'] = ~df['matchup'].str.contains('@')
 
-        # Extract opponent
-        df['opponent'] = df['matchup'].apply(
-            lambda x: x.split(' ')[-1] if '@' in x or 'vs.' in x else x.split(' ')[-1]
-        )
+        # Extract opponent (handles full team names and normalizes to abbreviation)
+        df['opponent'] = df['matchup'].apply(_extract_opponent)
 
         # Sort by date (most recent first for analysis)
         df = df.sort_values('date', ascending=False).reset_index(drop=True)
@@ -409,14 +574,22 @@ class NBADataFetcher:
 
             df = stats.get_data_frames()[0]
 
-            # Extract relevant columns
-            result = df[['TEAM_NAME', 'TEAM_ABBREVIATION', 'DEF_RATING']].copy()
-            result.columns = ['team_name', 'team_abbrev', 'def_rating']
+            # Filter to only entries where team name is a full NBA team name
+            # (contains space and is in our mapping)
+            team_abbrev_map = {k: v for k, v in TEAM_ABBREVIATIONS.items() if ' ' in k}
+            df = df[df['TEAM_NAME'].isin(team_abbrev_map.keys())].copy()
 
-            return result
+            # Map team names to abbreviations (API doesn't return TEAM_ABBREVIATION)
+            result = pd.DataFrame({
+                'team_name': df['TEAM_NAME'],
+                'team_abbrev': df['TEAM_NAME'].map(team_abbrev_map),
+                'def_rating': df['DEF_RATING'],
+            })
+
+            return result.reset_index(drop=True)
 
         except Exception as e:
-            print(f"Error fetching team defense ratings: {e}")
+            logger.warning(f"Error fetching team defense ratings: {e}")
             return pd.DataFrame()
 
     def get_team_defense_vs_position(self, season: str = None) -> pd.DataFrame:
@@ -482,7 +655,7 @@ class NBADataFetcher:
             return result.reset_index(drop=True)
 
         except Exception as e:
-            print(f"Error fetching team defense vs position: {e}")
+            logger.warning(f"Error fetching team defense vs position: {e}")
             return pd.DataFrame()
 
     def get_player_splits(self, player_name: str, season: str = None) -> dict:
@@ -523,7 +696,7 @@ class NBADataFetcher:
         if seasons is None:
             # Dynamically build last 3 seasons
             current = get_current_nba_season()
-            year = int(current.split('-')[0])
+            year = _parse_season_year(current)
             seasons = [
                 f"{year}-{str(year + 1)[-2:]}",
                 f"{year - 1}-{str(year)[-2:]}",
@@ -562,17 +735,20 @@ class NBADataFetcher:
                             'GAME_STATUS_TEXT']].copy()
             
         except Exception as e:
-            print(f"Error fetching today's schedule: {e}")
+            logger.warning(f"Error fetching today's schedule: {e}")
             return pd.DataFrame()
     
     def get_multiple_players_logs(self, player_names: List[str],
-                                   season: str = "2024-25",
+                                   season: str = None,
                                    last_n_games: int = 15) -> pd.DataFrame:
         """Fetch game logs for multiple players."""
+        if season is None:
+            season = get_current_nba_season()
+
         all_logs = []
 
         for name in player_names:
-            print(f"  Fetching: {name}...")
+            logger.info(f"  Fetching: {name}...")
             logs = self.get_player_game_logs(name, season, last_n_games)
             if not logs.empty:
                 all_logs.append(logs)
@@ -635,7 +811,7 @@ class NBADataFetcher:
             return result.reset_index(drop=True)
 
         except Exception as e:
-            print(f"Error fetching team pace: {e}")
+            logger.warning(f"Error fetching team pace: {e}")
             return pd.DataFrame()
 
     def get_team_schedule(self, team_abbrev: str, season: str = None) -> pd.DataFrame:
@@ -672,7 +848,7 @@ class NBADataFetcher:
             return df[['GAME_DATE', 'MATCHUP', 'WL']].head(10)
 
         except Exception as e:
-            print(f"Error fetching team schedule: {e}")
+            logger.warning(f"Error fetching team schedule: {e}")
             return pd.DataFrame()
 
     def check_back_to_back(self, player_logs: pd.DataFrame, game_date: datetime = None) -> dict:
@@ -714,21 +890,15 @@ class NBADataFetcher:
             'last_game_date': last_game
         }
 
-    def get_player_minutes_trend(self, player_logs: pd.DataFrame) -> dict:
+    def get_player_minutes_trend(self, player_logs: pd.DataFrame) -> Dict[str, Any]:
         """Analyze player's recent minutes trend."""
         if player_logs.empty or 'minutes' not in player_logs.columns:
             return {}
 
         logs = player_logs.sort_values('date', ascending=False)
 
-        # Handle minutes that might be strings like "32:15"
-        def parse_minutes(m):
-            if isinstance(m, str) and ':' in m:
-                parts = m.split(':')
-                return float(parts[0]) + float(parts[1]) / 60
-            return float(m) if pd.notna(m) else 0
-
-        mins = logs['minutes'].apply(parse_minutes)
+        # Use robust minutes parser with bounds checking
+        mins = logs['minutes'].apply(_parse_minutes)
 
         recent_5 = mins.head(5).mean()
         season_avg = mins.mean()
@@ -795,11 +965,19 @@ class InjuryTracker:
     STAR_PLAYERS = STAR_PLAYERS  # From core.constants import at top of file
     STAR_OUT_BOOST = STAR_OUT_BOOST  # From core.constants import at top of file
 
-    def __init__(self):
+    def __init__(self, perplexity_fn=None):
+        """Initialize InjuryTracker.
+
+        Args:
+            perplexity_fn: Optional callable for Perplexity MCP queries.
+                          Signature: perplexity_fn(messages: List[Dict]) -> str
+                          If None, Perplexity source is skipped.
+        """
         self._injury_cache = {}
         self._cache_time = None
         self._cache_ttl = 1800  # 30 minutes cache
         self._manual_injuries = {}  # Manual overrides
+        self._perplexity_fn = perplexity_fn
 
     def get_injuries_from_nba_api(self) -> pd.DataFrame:
         """Fetch injury data from NBA API."""
@@ -819,7 +997,7 @@ class InjuryTracker:
             return pd.DataFrame()
 
         except Exception as e:
-            print(f"NBA API injury fetch error: {e}")
+            logger.warning(f"NBA API injury fetch error: {e}")
             return pd.DataFrame()
 
     def get_injuries_from_rotowire(self) -> pd.DataFrame:
@@ -865,7 +1043,7 @@ class InjuryTracker:
                     })
 
         except Exception as e:
-            print(f"CBS Sports scrape error: {e}")
+            logger.warning(f"CBS Sports scrape error: {e}")
 
         # Try Rotowire as backup
         if not injuries:
@@ -898,7 +1076,125 @@ class InjuryTracker:
                         })
 
             except Exception as e:
-                print(f"Rotowire scrape error: {e}")
+                logger.warning(f"Rotowire scrape error: {e}")
+
+        return pd.DataFrame(injuries) if injuries else pd.DataFrame()
+
+    def get_injuries_from_perplexity(self) -> pd.DataFrame:
+        """
+        Fetch breaking injury news via Perplexity AI.
+        Higher priority than web scraping for real-time updates.
+
+        Returns:
+            DataFrame with columns: player, team, status, injury, source
+        """
+        if self._perplexity_fn is None:
+            logger.debug("Perplexity not configured, skipping")
+            return pd.DataFrame()
+
+        try:
+            from datetime import date
+
+            query = (
+                f"NBA injury report for games on {date.today().strftime('%B %d, %Y')}. "
+                "List all players who are OUT, DOUBTFUL, QUESTIONABLE, or GTD (game-time decision). "
+                "Format each player as: PLAYER_NAME | TEAM_ABBREV | STATUS | INJURY_TYPE"
+            )
+
+            messages = [{"role": "user", "content": query}]
+            response = self._perplexity_fn(messages)
+
+            if not response:
+                return pd.DataFrame()
+
+            # Parse the response text
+            return self._parse_perplexity_injuries(response)
+
+        except Exception as e:
+            logger.warning(f"Perplexity injury fetch error: {e}")
+            return pd.DataFrame()
+
+    def _parse_perplexity_injuries(self, response: str) -> pd.DataFrame:
+        """
+        Parse Perplexity response into injury DataFrame.
+
+        Args:
+            response: Text response from Perplexity
+
+        Returns:
+            DataFrame with injury records
+        """
+        injuries = []
+
+        # Handle dict response (MCP format)
+        if isinstance(response, dict):
+            response = response.get('content', str(response))
+
+        # Normalize to string
+        text = str(response)
+
+        # Parse lines looking for injury format: PLAYER | TEAM | STATUS | INJURY
+        lines = text.split('\n')
+        for line in lines:
+            # Skip empty lines and headers
+            line = line.strip()
+            if not line or line.startswith('#') or line.startswith('-'):
+                continue
+
+            # Try pipe-delimited format first
+            if '|' in line:
+                parts = [p.strip() for p in line.split('|')]
+                if len(parts) >= 3:
+                    player = parts[0].strip('* ')
+                    team = parts[1].strip().upper()
+                    status = parts[2].strip().upper()
+                    injury = parts[3] if len(parts) > 3 else ''
+
+                    # Validate team abbreviation (3 letters)
+                    if len(team) == 3 and team.isalpha():
+                        injuries.append({
+                            'player': player,
+                            'team': team,
+                            'status': status,
+                            'injury': injury,
+                            'source': 'Perplexity'
+                        })
+                continue
+
+            # Try to extract from natural language patterns
+            import re
+
+            # Pattern: "Player Name (TEAM) is OUT/QUESTIONABLE..."
+            match = re.match(
+                r'^([A-Za-z\.\'\-\s]+?)\s*\(([A-Z]{3})\)\s*(?:is|-)?\s*(OUT|QUESTIONABLE|DOUBTFUL|GTD|PROBABLE)',
+                line, re.IGNORECASE
+            )
+            if match:
+                injuries.append({
+                    'player': match.group(1).strip(),
+                    'team': match.group(2).upper(),
+                    'status': match.group(3).upper(),
+                    'injury': '',
+                    'source': 'Perplexity'
+                })
+                continue
+
+            # Pattern: "TEAM: Player Name - STATUS (injury)"
+            match = re.match(
+                r'^([A-Z]{3}):\s*([A-Za-z\.\'\-\s]+?)\s*-\s*(OUT|QUESTIONABLE|DOUBTFUL|GTD|PROBABLE)',
+                line, re.IGNORECASE
+            )
+            if match:
+                injuries.append({
+                    'player': match.group(2).strip(),
+                    'team': match.group(1).upper(),
+                    'status': match.group(3).upper(),
+                    'injury': '',
+                    'source': 'Perplexity'
+                })
+
+        if injuries:
+            logger.info(f"Perplexity returned {len(injuries)} injury records")
 
         return pd.DataFrame(injuries) if injuries else pd.DataFrame()
 
@@ -906,6 +1202,13 @@ class InjuryTracker:
         """
         Get combined injury data from all sources.
         Caches results for 30 minutes.
+
+        Priority order (lower = higher priority):
+            0. Manual overrides
+            1. Perplexity AI (real-time breaking news)
+            2. NBA API (official injury reports)
+            3. CBS Sports (web scraping)
+            4. Rotowire (web scraping fallback)
         """
         now = datetime.now()
 
@@ -917,18 +1220,23 @@ class InjuryTracker:
         # Fetch from all sources
         all_injuries = []
 
-        # 1. NBA API
+        # 1. Perplexity AI (real-time, highest priority after manual)
+        perplexity_injuries = self.get_injuries_from_perplexity()
+        if not perplexity_injuries.empty:
+            all_injuries.append(perplexity_injuries)
+
+        # 2. NBA API
         nba_injuries = self.get_injuries_from_nba_api()
         if not nba_injuries.empty:
             nba_injuries['source'] = 'NBA API'
             all_injuries.append(nba_injuries)
 
-        # 2. Web scraping
+        # 3. Web scraping (CBS Sports + Rotowire)
         web_injuries = self.get_injuries_from_rotowire()
         if not web_injuries.empty:
             all_injuries.append(web_injuries)
 
-        # 3. Manual overrides (always included)
+        # 4. Manual overrides (always included, highest priority)
         if self._manual_injuries:
             manual_df = pd.DataFrame(list(self._manual_injuries.values()))
             manual_df['source'] = 'Manual'
@@ -937,8 +1245,14 @@ class InjuryTracker:
         # Combine and deduplicate
         if all_injuries:
             combined = pd.concat(all_injuries, ignore_index=True)
-            # Keep manual entries over others, then NBA API over web
-            combined['priority'] = combined['source'].map({'Manual': 0, 'NBA API': 1, 'CBS Sports': 2, 'Rotowire': 3})
+            # Priority: Manual > Perplexity > NBA API > CBS Sports > Rotowire
+            combined['priority'] = combined['source'].map({
+                'Manual': 0,
+                'Perplexity': 1,
+                'NBA API': 2,
+                'CBS Sports': 3,
+                'Rotowire': 4
+            })
             combined = combined.sort_values('priority').drop_duplicates(subset=['player'], keep='first')
             combined = combined.drop(columns=['priority'])
 
@@ -983,7 +1297,8 @@ class InjuryTracker:
         return {'status': 'HEALTHY', 'is_out': False, 'is_gtd': False,
                 'is_questionable': False, 'source': None}
 
-    def set_manual_injury(self, player_name: str, team: str, status: str, injury: str = ''):
+    def set_manual_injury(self, player_name: str, team: str, status: str,
+                          injury: str = '') -> None:
         """
         Manually set a player's injury status (for late-breaking news).
 
@@ -1002,7 +1317,7 @@ class InjuryTracker:
         # Invalidate cache
         self._cache_time = None
 
-    def clear_manual_injuries(self):
+    def clear_manual_injuries(self) -> None:
         """Clear all manual injury overrides."""
         self._manual_injuries = {}
         self._cache_time = None
@@ -1068,12 +1383,12 @@ class InjuryTracker:
             'reason': f"{len(stars_out)} star(s) OUT: {', '.join(stars_out)}"
         }
 
-    def should_exclude_player(self, player_name: str) -> tuple:
+    def should_exclude_player(self, player_name: str) -> Tuple[bool, Optional[str]]:
         """
         Check if player should be excluded from analysis (OUT status).
 
         Returns:
-            (should_exclude: bool, reason: str)
+            Tuple of (should_exclude: bool, reason: Optional[str])
         """
         status = self.get_player_status(player_name)
 
@@ -1143,9 +1458,12 @@ class BallDontLieFetcher:
 
     def __init__(self, api_key: str = None):
         import os
-        self.api_key = api_key or os.environ.get('BALLDONTLIE_API_KEY', 'a1f22400-27d9-4aa7-a015-39e4aaf54131')
+        self.api_key = api_key or os.environ.get('BALLDONTLIE_API_KEY')
+        if not self.api_key:
+            logger.warning("BallDontLie API key not configured - some features may be limited")
         self._session = requests.Session()
-        self._session.headers['Authorization'] = self.api_key
+        if self.api_key:
+            self._session.headers['Authorization'] = self.api_key
         self._player_cache = {}  # Cache player lookups
         self._resilient = get_resilient_fetcher()
 
@@ -1153,7 +1471,7 @@ class BallDontLieFetcher:
         self._last_request = 0
         self.request_delay = 0.5  # 500ms between requests
 
-    def _rate_limit(self):
+    def _rate_limit(self) -> None:
         """Enforce rate limiting."""
         elapsed = time.time() - self._last_request
         if elapsed < self.request_delay:
@@ -1185,8 +1503,8 @@ class BallDontLieFetcher:
 
         data = result.get('data', [])
         if not data:
-            # Try just last name
-            last_name = player_name.split()[-1]
+            # Try just last name (handles suffixes like Jr., Sr., II, etc.)
+            last_name = _extract_last_name(player_name)
 
             def _search_lastname():
                 self._rate_limit()
@@ -1215,17 +1533,12 @@ class BallDontLieFetcher:
 
         return None
 
-    def _parse_minutes(self, min_str: str) -> float:
-        """Parse minutes string like '32:45' to float 32.75."""
-        if not min_str or min_str == '':
-            return 0.0
-        try:
-            if ':' in str(min_str):
-                parts = str(min_str).split(':')
-                return float(parts[0]) + float(parts[1]) / 60
-            return float(min_str)
-        except (ValueError, IndexError):
-            return 0.0
+    def _parse_minutes_method(self, min_str: str) -> float:
+        """Parse minutes string like '32:45' to float 32.75.
+
+        Delegates to global _parse_minutes helper for robust parsing.
+        """
+        return _parse_minutes(min_str)
 
     def get_player_game_logs(self, player_name: str, season: str = None,
                              last_n_games: int = None) -> pd.DataFrame:
@@ -1246,10 +1559,10 @@ class BallDontLieFetcher:
 
         # Convert season format "2024-25" to BDL year format (2024)
         if season:
-            season_year = int(season.split('-')[0])
+            season_year = _parse_season_year(season)
         else:
             current_season = get_current_nba_season()
-            season_year = int(current_season.split('-')[0])
+            season_year = _parse_season_year(current_season)
 
         def _fetch_stats():
             self._rate_limit()
@@ -1288,7 +1601,7 @@ class BallDontLieFetcher:
 
             rows.append({
                 'date': game_info.get('date', ''),
-                'minutes': self._parse_minutes(game.get('min', '')),
+                'minutes': self._parse_minutes_method(game.get('min', '')),
                 'points': game.get('pts', 0) or 0,
                 'rebounds': game.get('reb', 0) or 0,
                 'assists': game.get('ast', 0) or 0,
@@ -1432,33 +1745,64 @@ class OddsAPIClient:
         ]
     
     def _make_request(self, endpoint: str, params: dict = None) -> dict:
-        """Make API request with error handling."""
+        """Make API request with error handling.
+
+        Raises:
+            AuthenticationError: If API key is missing, invalid, or insufficient permissions
+            RateLimitError: If rate limit exceeded (429)
+            NetworkError: If network connection fails
+            OddsAPIError: For other API errors
+        """
         if not self.api_key:
-            raise ValueError("API key required. Get one at https://the-odds-api.com/")
-        
+            raise AuthenticationError(
+                "OddsAPI",
+                "API key required. Get one at https://the-odds-api.com/",
+                status_code=None
+            )
+
         if params is None:
             params = {}
         params['apiKey'] = self.api_key
-        
+
         url = f"{self.BASE_URL}/{endpoint}"
-        
+
         try:
             response = requests.get(url, params=params, timeout=30)
-            
+
             # Track remaining requests
             self.remaining_requests = response.headers.get('x-requests-remaining')
-            
+
             if response.status_code == 401:
-                raise ValueError("Invalid API key")
+                raise AuthenticationError(
+                    "OddsAPI",
+                    "Invalid API key",
+                    status_code=401
+                )
+            elif response.status_code == 403:
+                raise AuthenticationError(
+                    "OddsAPI",
+                    "Access forbidden - check API key permissions",
+                    status_code=403
+                )
             elif response.status_code == 429:
-                raise ValueError("Rate limit exceeded. Try again later.")
-            
+                retry_after = response.headers.get('Retry-After')
+                raise RateLimitError(
+                    "OddsAPI",
+                    retry_after=int(retry_after) if retry_after else None
+                )
+
             response.raise_for_status()
             return response.json()
-            
+
+        except requests.exceptions.Timeout as e:
+            raise NetworkError("OddsAPI", "Request timeout", original_error=e)
+        except requests.exceptions.ConnectionError as e:
+            raise NetworkError("OddsAPI", "Connection failed", original_error=e)
         except requests.exceptions.RequestException as e:
-            print(f"API request failed: {e}")
-            return {}
+            # Re-raise our custom exceptions, wrap others
+            if isinstance(e, (AuthenticationError, RateLimitError, NetworkError)):
+                raise
+            raise OddsAPIError(f"Request failed: {e}", status_code=None)
     
     def get_upcoming_games(self) -> List[dict]:
         """Get list of upcoming NBA games with odds."""
@@ -1574,7 +1918,7 @@ class OddsAPIClient:
             ]
 
         if not event_id:
-            print("Warning: event_id required for player props. Use get_all_player_props() instead.")
+            logger.warning("event_id required for player props. Use get_all_player_props() instead.")
             return []
 
         endpoint = f"sports/{self.sport}/events/{event_id}/odds"
@@ -1725,8 +2069,8 @@ class FreeOddsSource:
         """
         # Placeholder - in production you'd implement actual scraping
         # or use a different free data source
-        print("Free odds source requires implementation specific to your needs.")
-        print("Consider using The Odds API free tier (500 requests/month)")
+        logger.info("Free odds source requires implementation specific to your needs.")
+        logger.info("Consider using The Odds API free tier (500 requests/month)")
         return pd.DataFrame()
 
 
@@ -1742,7 +2086,8 @@ class LivePropAnalyzer:
 
     def __init__(self, nba_fetcher: NBADataFetcher = None,
                  odds_client: OddsAPIClient = None,
-                 injury_tracker: InjuryTracker = None):
+                 injury_tracker: InjuryTracker = None,
+                 news_search_fn: callable = None):
         self.nba = nba_fetcher or NBADataFetcher()
         self.odds = odds_client
         self.injuries = injury_tracker or InjuryTracker()
@@ -1756,6 +2101,11 @@ class LivePropAnalyzer:
             injury_tracker=self.injuries,
             odds_client=self.odds
         )
+
+        # Initialize news intelligence for real-time context
+        from core.news_intelligence import NewsIntelligence
+        self.news_intel = NewsIntelligence(search_fn=news_search_fn)
+        self._news_cache = {}  # {game_key: {player: NewsContext}}
 
     def analyze_prop(self, player_name: str, prop_type: str,
                      line: float, odds: int = -110,
@@ -1844,7 +2194,7 @@ class LivePropAnalyzer:
         results = []
 
         for prop in props:
-            print(f"  Analyzing: {prop['player']} {prop['prop_type']} {prop['line']}...")
+            logger.info(f"  Analyzing: {prop['player']} {prop['prop_type']} {prop['line']}...")
 
             analysis = self.analyze_prop(
                 player_name=prop['player'],
@@ -1879,7 +2229,7 @@ class LivePropAnalyzer:
         return pd.DataFrame(results)
 
     def find_value_props(self, min_edge: float = 0.05, max_events: int = 5,
-                         min_confidence: float = 0.4) -> pd.DataFrame:
+                         min_confidence: float = 0.4, bookmakers: list = None) -> pd.DataFrame:
         """
         Scan current odds for value props with FULL CONTEXTUAL ANALYSIS.
 
@@ -1897,23 +2247,32 @@ class LivePropAnalyzer:
             min_edge: Minimum vig-adjusted edge threshold (default 5%)
             max_events: Max number of games to scan (saves API calls)
             min_confidence: Minimum confidence threshold (default 40%)
+            bookmakers: List of bookmaker keys to include (e.g., ['fanduel']). None = all books.
         """
         if not self.odds:
-            print("OddsAPIClient required for live odds scanning", flush=True)
+            logger.warning("OddsAPIClient required for live odds scanning")
             return pd.DataFrame()
 
         # =================================================================
         # PHASE 1: DATA COLLECTION
         # =================================================================
-        print("=" * 60, flush=True)
-        print("PHASE 1: Fetching market data...", flush=True)
+        logger.info("=" * 60)
+        logger.info("PHASE 1: Fetching market data...")
 
         raw_props = self.odds.get_all_player_props(max_events=max_events)
         props_df = self.odds.parse_player_props(raw_props)
 
         if props_df.empty:
-            print("No props available", flush=True)
+            logger.info("No props available")
             return pd.DataFrame()
+
+        # Filter to specific bookmakers if requested
+        if bookmakers:
+            props_df = props_df[props_df['bookmaker'].isin(bookmakers)]
+            logger.info(f"Filtered to bookmakers: {', '.join(bookmakers)}")
+            if props_df.empty:
+                logger.info("No props from specified bookmakers")
+                return pd.DataFrame()
 
         # Get game context
         game_lines = self.odds.get_game_lines()
@@ -1943,33 +2302,68 @@ class LivePropAnalyzer:
         unique_props['over_odds'] = unique_props['over_odds'].fillna(-110).astype(int)
         unique_props['under_odds'] = unique_props['under_odds'].fillna(-110).astype(int)
 
-        print(f"Found {len(unique_props)} unique props across {max_events} games", flush=True)
+        logger.info(f"Found {len(unique_props)} unique props across {max_events} games")
 
         # =================================================================
         # PHASE 2: CONTEXTUAL DATA LOADING
         # =================================================================
-        print("\nPHASE 2: Loading contextual data...", flush=True)
+        logger.info("PHASE 2: Loading contextual data...")
 
         # Load defense ratings
         defense_ratings = self.nba.get_team_defense_ratings()
         if defense_ratings is not None:
-            print(f"  ✓ Defense ratings: {len(defense_ratings)} teams", flush=True)
+            logger.info(f"  Defense ratings: {len(defense_ratings)} teams")
         else:
-            print("  ✗ Defense ratings unavailable", flush=True)
+            logger.warning("  Defense ratings unavailable")
             defense_ratings = pd.DataFrame()
 
         # Load pace data
         pace_data = self.nba.get_team_pace()
         if pace_data is not None:
-            print(f"  ✓ Pace data: {len(pace_data)} teams", flush=True)
+            logger.info(f"  Pace data: {len(pace_data)} teams")
         else:
-            print("  ✗ Pace data unavailable", flush=True)
+            logger.warning("  Pace data unavailable")
             pace_data = pd.DataFrame()
+
+        # =================================================================
+        # PHASE 2.5: NEWS INTELLIGENCE (real-time injury/lineup context)
+        # =================================================================
+        logger.info("PHASE 2.5: Fetching news intelligence...")
+
+        # Get unique games from props
+        game_news_cache = {}
+        if 'home_team' in unique_props.columns and 'away_team' in unique_props.columns:
+            games = unique_props[['home_team', 'away_team']].drop_duplicates()
+
+            for _, game in games.iterrows():
+                home_team = game['home_team']
+                away_team = game['away_team']
+                if home_team and away_team:
+                    game_key = f"{away_team}@{home_team}"
+                    try:
+                        # Fetch game-level news (injuries, lineup changes)
+                        game_news = self.news_intel.fetch_game_news(
+                            home_team=home_team,
+                            away_team=away_team,
+                            game_date=datetime.now().strftime('%Y-%m-%d')
+                        )
+                        game_news_cache[game_key] = game_news
+
+                        # Log any breaking news found
+                        for team, context in game_news.items():
+                            if context.flags:
+                                logger.info(f"  News {team}: {', '.join(context.flags)}")
+                    except Exception as e:
+                        logger.debug(f"News fetch failed for {game_key}: {e}")
+
+            logger.info(f"  News scanned for {len(games)} games")
+        else:
+            logger.warning("  Game info not available for news scanning")
 
         # =================================================================
         # PHASE 3: PLAYER DATA FETCHING (with extended history)
         # =================================================================
-        print("\nPHASE 3: Fetching player data (30 games for statistical validity)...", flush=True)
+        logger.info("PHASE 3: Fetching player data (30 games for statistical validity)...")
 
         unique_players = unique_props['player'].unique()
         player_cache = {}
@@ -1977,7 +2371,7 @@ class LivePropAnalyzer:
 
         for i, player in enumerate(unique_players):
             if (i + 1) % 10 == 0 or i == 0:
-                print(f"  Fetching {i+1}/{len(unique_players)}: {player}", flush=True)
+                logger.info(f"  Fetching {i+1}/{len(unique_players)}: {player}")
             try:
                 # Fetch MORE games for better sample size
                 logs = self.nba.get_player_game_logs(player, last_n_games=30)
@@ -2013,14 +2407,14 @@ class LivePropAnalyzer:
                     player_context[player] = context
 
             except Exception as e:
-                pass
+                logger.debug(f"Failed to process player context: {e}")
 
-        print(f"  Cached {len(player_cache)} players with context", flush=True)
+        logger.info(f"  Cached {len(player_cache)} players with context")
 
         # =================================================================
         # PHASE 4: CONTEXTUAL PROP ANALYSIS
         # =================================================================
-        print("\nPHASE 4: Analyzing props with full context...", flush=True)
+        logger.info("PHASE 4: Analyzing props with full context...")
 
         value_props = []
         skipped = {'sample_size': 0, 'no_edge': 0, 'low_confidence': 0, 'correlation': 0}
@@ -2080,6 +2474,55 @@ class LivePropAnalyzer:
             if len(history) < min_required:
                 skipped['sample_size'] += 1
                 continue
+
+            # =============================================================
+            # NEWS CONTEXT LOOKUP (10th adjustment factor)
+            # =============================================================
+            news_context = None
+            news_factor = 1.0
+            news_flags = []
+            news_notes = []
+
+            # Get game key for news lookup
+            home_team = row.get('home_team', '')
+            away_team = row.get('away_team', '')
+            game_key = f"{away_team}@{home_team}" if home_team and away_team else None
+
+            # Check game-level news cache first
+            if game_key and game_key in game_news_cache:
+                # Check if this player has team-level news
+                player_team = context.get('team_abbrev', '')
+                if player_team in game_news_cache[game_key]:
+                    team_news = game_news_cache[game_key][player_team]
+                    if team_news.flags:
+                        news_flags.extend(team_news.flags)
+
+            # Fetch player-specific news if preliminary edge looks promising
+            line = row['line']
+            prelim_avg = history.head(10).mean()
+            preliminary_edge = abs((prelim_avg - line) / line) if line > 0 else 0
+
+            if preliminary_edge > 0.05:  # Only fetch detailed news for promising picks
+                try:
+                    player_news = self.news_intel.fetch_player_news(
+                        player_name=player,
+                        team=context.get('team_abbrev'),
+                        game_date=datetime.now().strftime('%Y-%m-%d')
+                    )
+                    if player_news:
+                        news_context = player_news
+                        news_factor = player_news.adjustment_factor
+                        news_flags = player_news.flags
+                        news_notes = player_news.notes
+
+                        # Skip if player confirmed out or on load management
+                        if player_news.should_skip():
+                            if 'news_out' not in skipped:
+                                skipped['news_out'] = 0
+                            skipped['news_out'] += 1
+                            continue
+                except Exception as e:
+                    logger.debug(f"Player news fetch failed for {player}: {e}")
 
             try:
                 # =============================================================
@@ -2151,6 +2594,16 @@ class LivePropAnalyzer:
                 # --- OPPONENT DEFENSE ADJUSTMENT ---
                 # (would need opponent info from game data - placeholder)
                 # For now, use neutral 1.0
+
+                # --- NEWS INTELLIGENCE ADJUSTMENT (10th factor) ---
+                if news_factor != 1.0:
+                    adjustment_factors.append(news_factor)
+                    news_adj_pct = (news_factor - 1) * 100
+                    adjustment_notes.append(f"News: {news_factor:.2f}x ({news_adj_pct:+.0f}%)")
+
+                # Add news flags to adjustment notes
+                if news_flags:
+                    adjustment_notes.extend(news_flags)
 
                 # Apply all adjustments
                 final_projection = base_projection
@@ -2253,6 +2706,17 @@ class LivePropAnalyzer:
                 confidence = (consistency_score * 0.4) + (sample_factor * 0.3) + (agreement * 0.3)
                 confidence = max(0.2, min(0.85, confidence))  # Cap at 85%
 
+                # NEWS-BASED CONFIDENCE ADJUSTMENT
+                if news_context:
+                    if news_context.status in ('GTD_LEANING_OUT', 'LIKELY_OUT'):
+                        confidence *= 0.85  # -15% confidence for uncertain status
+                    elif news_context.status in ('GTD_UNCERTAIN',):
+                        confidence *= 0.90  # -10% confidence for unknown GTD
+                    elif news_context.status in ('GTD_LEANING_PLAY',):
+                        confidence *= 0.95  # -5% confidence even if likely playing
+                    elif news_context.status == 'RETURNING':
+                        confidence *= 0.90  # -10% confidence for returning players
+
                 # =============================================================
                 # STEP 5: PICK DETERMINATION
                 # =============================================================
@@ -2313,6 +2777,11 @@ class LivePropAnalyzer:
                     'game': game_matchup,
                     'home_team': home_team,
                     'away_team': away_team,
+                    # NEWS INTELLIGENCE COLUMNS
+                    'news_status': news_context.status if news_context else 'NO_NEWS',
+                    'news_adjustment': f"{(news_factor - 1) * 100:+.1f}%" if news_factor != 1.0 else '',
+                    'news_flags': ' | '.join(news_flags) if news_flags else '',
+                    'news_notes': '; '.join(news_notes[:2]) if news_notes else '',  # Limit to 2 notes
                 })
 
                 # Track for correlation filtering
@@ -2321,9 +2790,11 @@ class LivePropAnalyzer:
                 player_picks[player].append(prop_type)
 
             except Exception as e:
+                logger.warning(f"Failed to analyze prop for {player} {prop_type}: {e}")
+                skipped['analysis_error'] = skipped.get('analysis_error', 0) + 1
                 continue
 
-        print(f"\nSkipped: {skipped}", flush=True)
+        logger.info(f"Skipped: {skipped}")
 
         # =================================================================
         # PHASE 5: CORRELATION FILTERING + ALT LINE DEDUPLICATION
@@ -2366,10 +2837,10 @@ class LivePropAnalyzer:
             # Sort by vig-adjusted edge
             df = df.sort_values('avg_edge', ascending=False)
 
-            print(f"\nPHASE 5: Filtering removed {correlation_removed} correlated + {alt_lines_removed} alt lines", flush=True)
-            print(f"\n{'='*60}", flush=True)
-            print(f"FINAL: {len(df)} value props (min {min_edge*100:.0f}% edge after vig)", flush=True)
-            print(f"{'='*60}", flush=True)
+            logger.info(f"PHASE 5: Filtering removed {correlation_removed} correlated + {alt_lines_removed} alt lines")
+            logger.info("=" * 60)
+            logger.info(f"FINAL: {len(df)} value props (min {min_edge*100:.0f}% edge after vig)")
+            logger.info("=" * 60)
 
             return df
 
