@@ -188,7 +188,22 @@ class DailyRunner:
                 return False, None, 0
 
             odds_client = OddsAPIClient(api_key=api_key)
-            analyzer = LivePropAnalyzer(nba_fetcher=fetcher, odds_client=odds_client)
+
+            # Setup news intelligence with Perplexity if available
+            news_search_fn = None
+            perplexity_key = CONFIG.PERPLEXITY_API_KEY or os.environ.get('PERPLEXITY_API_KEY')
+            if perplexity_key:
+                from core.news_intelligence import create_perplexity_api_search
+                news_search_fn = create_perplexity_api_search(perplexity_key)
+                self.log("News intelligence: Perplexity API enabled")
+            else:
+                self.log("News intelligence: Disabled (no PERPLEXITY_API_KEY)")
+
+            analyzer = LivePropAnalyzer(
+                nba_fetcher=fetcher,
+                odds_client=odds_client,
+                news_search_fn=news_search_fn
+            )
 
             # Get today's date for filename
             today = datetime.now().strftime('%Y-%m-%d')
@@ -867,15 +882,15 @@ class DailyRunner:
                             # Check for steam moves (multi-book coordinated)
                             steam_moves = monitor.get_steam_moves(min_books=3)
                             if steam_moves:
+                                if not hasattr(self, '_alerted_steam'):
+                                    self._alerted_steam = set()
                                 for steam in steam_moves:
+                                    # Create key to track which steam moves we've alerted on
+                                    steam_key = f"{steam['player']}|{steam['prop_type']}|{steam['direction']}"
                                     # Only alert if not already alerted
-                                    if steam not in getattr(self, '_alerted_steam', set()):
+                                    if steam_key not in self._alerted_steam:
                                         stats['steam_moves'] += 1
                                         alert_manager.send_steam_move(steam)
-                                        if not hasattr(self, '_alerted_steam'):
-                                            self._alerted_steam = set()
-                                        # Store enough info to identify this steam move
-                                        steam_key = f"{steam['player']}|{steam['prop_type']}|{steam['direction']}"
                                         self._alerted_steam.add(steam_key)
 
                             # Periodic status
