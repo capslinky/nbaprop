@@ -23,6 +23,17 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def _get_current_date_context() -> dict:
+    """Get current date information for queries and validation."""
+    now = datetime.now()
+    return {
+        'date_str': now.strftime('%B %d, %Y'),  # "December 17, 2025"
+        'year': now.year,
+        'month': now.strftime('%B'),
+        'short_date': now.strftime('%Y-%m-%d'),
+    }
+
+
 def create_perplexity_search(perplexity_fn: Callable) -> Callable[[str], str]:
     """
     Create a search function wrapper for Perplexity MCP.
@@ -88,6 +99,10 @@ def create_perplexity_api_search(api_key: str) -> Callable[[str], SearchResult]:
         if not api_key:
             return SearchResult(content="", citations=[])
 
+        # Get current date context for recency enforcement
+        date_ctx = _get_current_date_context()
+        current_year = date_ctx['year']
+
         try:
             response = requests.post(
                 "https://api.perplexity.ai/chat/completions",
@@ -100,7 +115,13 @@ def create_perplexity_api_search(api_key: str) -> Callable[[str], SearchResult]:
                     "messages": [
                         {
                             "role": "system",
-                            "content": "You are an NBA injury and news reporter. Provide concise, factual updates about player status, injuries, and lineup news. Focus on today's games."
+                            "content": (
+                                f"You are an NBA injury reporter. Today is {date_ctx['date_str']}. "
+                                f"CRITICAL: Only report news from the last 3 days (December {current_year}). "
+                                f"Completely ignore any articles from {current_year - 1} or earlier. "
+                                "If no recent news exists, respond with 'No recent injury updates found.' "
+                                "Focus only on current injury status for today's or tomorrow's games."
+                            )
                         },
                         {
                             "role": "user",
@@ -244,6 +265,11 @@ class NewsIntelligence:
 
         results = {}
 
+        # Get current date context for explicit date queries
+        date_ctx = _get_current_date_context()
+        current_date = date_ctx['date_str']
+        current_year = date_ctx['year']
+
         for team in [home_team, away_team]:
             cache_key = f"team_{team}_{game_date}"
 
@@ -251,13 +277,13 @@ class NewsIntelligence:
                 results[team] = self._cache[cache_key]
                 continue
 
-            # Search for team-level news
-            query = f"{team} NBA injury report lineup {game_date}"
+            # Search for team-level news with EXPLICIT date
+            query = f"{team} NBA injury report lineup {current_date}. Only news from December {current_year}."
             search_result = self._search(query)
 
             context = self._parse_team_news(team, search_result.content)
-            # Add source citations
-            context.sources = search_result.citations
+            # Filter and add source citations
+            context.sources = self._filter_recent_citations(search_result.citations)
 
             # Cache result
             self._cache[cache_key] = context
@@ -286,10 +312,15 @@ class NewsIntelligence:
         if self._is_cache_valid(cache_key):
             return self._cache[cache_key]
 
-        # Build search queries prioritizing injury/status info
+        # Get current date context for explicit date queries
+        date_ctx = _get_current_date_context()
+        current_date = date_ctx['date_str']  # e.g., "December 17, 2025"
+        current_year = date_ctx['year']
+
+        # Build search queries with EXPLICIT dates to avoid old articles
         queries = [
-            f"{player_name} NBA injury status today",
-            f"{player_name} questionable GTD game time decision",
+            f"{player_name} NBA injury status {current_date}. Only news from last 3 days.",
+            f"{player_name} questionable GTD game time decision December {current_year}",
         ]
 
         all_content = []
@@ -302,9 +333,22 @@ class NewsIntelligence:
                 all_citations.extend(search_result.citations)
 
         combined_text = '\n'.join(all_content)
-        context = self._parse_player_news(player_name, combined_text)
-        # Add source citations (deduplicated)
-        context.sources = list(dict.fromkeys(all_citations)) if all_citations else context.sources
+
+        # Check for stale content BEFORE parsing
+        if self._detect_stale_content(combined_text, player_name):
+            context = NewsContext(
+                status='NO_NEWS',
+                adjustment_factor=1.0,
+                confidence=0.5,
+                flags=[],
+                notes=['No recent news (filtered outdated articles)']
+            )
+        else:
+            context = self._parse_player_news(player_name, combined_text)
+
+        # Filter citations to only recent ones and deduplicate
+        recent_citations = self._filter_recent_citations(all_citations)
+        context.sources = list(dict.fromkeys(recent_citations)) if recent_citations else context.sources
 
         # Cache result
         self._cache[cache_key] = context
@@ -551,6 +595,95 @@ class NewsIntelligence:
             if source in text:
                 found.append(source)
         return found
+
+    def _filter_recent_citations(self, citations: List[str]) -> List[str]:
+        """Filter out citations with old dates in the URL.
+
+        Removes URLs that contain date patterns from previous years,
+        ensuring we only use recent sources.
+        """
+        if not citations:
+            return []
+
+        current_year = datetime.now().year
+        recent = []
+
+        for url in citations:
+            url_str = str(url).lower()
+
+            # Skip if URL contains old year (2024, 2023, etc.)
+            has_old_year = False
+            for year in range(2020, current_year):
+                if str(year) in url_str:
+                    has_old_year = True
+                    logger.debug(f"Filtering old citation ({year}): {url[:80]}...")
+                    break
+
+            if has_old_year:
+                continue
+
+            # Skip if URL contains old month-year patterns (e.g., 2024-11, 2024-10)
+            old_pattern = re.compile(r'202[0-4]-\d{2}')
+            if old_pattern.search(url_str):
+                logger.debug(f"Filtering old date pattern in citation: {url[:80]}...")
+                continue
+
+            recent.append(url)
+
+        if len(recent) < len(citations):
+            logger.info(f"Filtered {len(citations) - len(recent)} old citations, kept {len(recent)}")
+
+        return recent
+
+    def _detect_stale_content(self, text: str, player_name: str = None) -> bool:
+        """Return True if content references old dates that indicate stale news.
+
+        Checks for:
+        - Old year references (2024, 2023, etc.) without current year context
+        - Old month patterns like "November 2024"
+        - Old specific date patterns
+        """
+        if not text:
+            return False
+
+        text_lower = text.lower()
+        current_year = datetime.now().year
+        current_year_str = str(current_year)
+
+        # If current year is mentioned, content is likely recent enough
+        # (even if it references past events for context)
+        has_current_year = current_year_str in text
+
+        # Check for old year references without current year context
+        old_years = [str(y) for y in range(2020, current_year)]
+        for year in old_years:
+            if year in text_lower:
+                if not has_current_year:
+                    logger.warning(
+                        f"Stale content detected for {player_name or 'player'}: "
+                        f"mentions {year} but not {current_year}"
+                    )
+                    return True
+
+        # Check for old month-year patterns (e.g., "November 2024", "October 2024")
+        old_month_patterns = [
+            rf'(january|february|march|april|may|june|july|august|september|october|november|december)\s+202[0-4]',
+        ]
+        for pattern in old_month_patterns:
+            match = re.search(pattern, text_lower)
+            if match and not has_current_year:
+                logger.warning(
+                    f"Stale content detected for {player_name or 'player'}: "
+                    f"old date pattern '{match.group()}'"
+                )
+                return True
+
+        # Check for "no recent" response from Perplexity (our instruction worked)
+        if 'no recent injury updates' in text_lower or 'no recent updates found' in text_lower:
+            logger.debug(f"No recent news for {player_name or 'player'}")
+            return True  # Treat as stale so we return NO_NEWS
+
+        return False
 
     def clear_cache(self):
         """Clear all cached results."""
