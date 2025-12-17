@@ -32,13 +32,18 @@ from .odds_utils import (
 from .exceptions import (
     NBAPropError,
     DataFetchError,
+    NetworkError,
     PlayerNotFoundError,
     InsufficientDataError,
     OddsAPIError,
     RateLimitError,
+    AuthenticationError,
+    AnalysisError,
+    InvalidPropTypeError,
+    ConfigurationError,
 )
 from .logging_config import setup_logging, get_logger
-from .news_intelligence import NewsIntelligence, NewsContext, create_perplexity_search
+from .news_intelligence import NewsIntelligence, NewsContext, create_perplexity_search, create_perplexity_api_search
 from .rosters import (
     PlayerRoster,
     TeamRoster,
@@ -94,10 +99,15 @@ __all__ = [
     # Exceptions
     'NBAPropError',
     'DataFetchError',
+    'NetworkError',
     'PlayerNotFoundError',
     'InsufficientDataError',
     'OddsAPIError',
     'RateLimitError',
+    'AuthenticationError',
+    'AnalysisError',
+    'InvalidPropTypeError',
+    'ConfigurationError',
     # Logging
     'setup_logging',
     'get_logger',
@@ -105,6 +115,7 @@ __all__ = [
     'NewsIntelligence',
     'NewsContext',
     'create_perplexity_search',
+    'create_perplexity_api_search',
     # Rosters
     'PlayerRoster',
     'TeamRoster',
