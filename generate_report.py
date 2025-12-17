@@ -103,13 +103,17 @@ class PicksReportGenerator:
         # By prop type
         by_prop = self.df.groupby('prop_type').size().to_dict()
 
+        # Calculate percentages safely
+        over_pct = (overs / total_picks * 100) if total_picks > 0 else 0
+        under_pct = (unders / total_picks * 100) if total_picks > 0 else 0
+
         summary_text = f"""
         <b>Overview:</b> This report contains {total_picks} value plays identified from today's NBA slate.
         Each pick has a projected edge of 5% or greater based on recent player performance data.<br/><br/>
 
         <b>Direction Breakdown:</b><br/>
-        • OVER picks: {overs} ({overs/total_picks*100:.0f}%)<br/>
-        • UNDER picks: {unders} ({unders/total_picks*100:.0f}%)<br/><br/>
+        • OVER picks: {overs} ({over_pct:.0f}%)<br/>
+        • UNDER picks: {unders} ({under_pct:.0f}%)<br/><br/>
 
         <b>Average Metrics:</b><br/>
         • Average Edge: {avg_edge:.1f}%<br/>
@@ -147,7 +151,8 @@ class PicksReportGenerator:
         • Home/Away splits (player-specific boost/reduction)<br/>
         • Back-to-back: -7% reduction when fatigued<br/>
         • Extra rest (3+ days): +3% boost<br/>
-        • Minutes trend: adjusts if recent minutes differ from average<br/><br/>
+        • Minutes trend: adjusts if recent minutes differ from average<br/>
+        • News Intelligence: real-time injury reports, GTD status, minutes restrictions<br/><br/>
 
         <b>4. Vig-Adjusted Edge (Conservative Model)</b><br/>
         • Calculates no-vig market probability from BOTH over and under odds<br/>
@@ -188,6 +193,11 @@ class PicksReportGenerator:
         # Build explanation
         parts = []
 
+        # NEWS FLAGS (if present) - show first for visibility
+        news_flags = row.get('news_flags', '')
+        if news_flags and news_flags.strip():
+            parts.append(news_flags)
+
         # Core reasoning: projection vs line
         parts.append(f"Proj {row['projection']:.1f} vs {row['line']} line")
 
@@ -219,6 +229,11 @@ class PicksReportGenerator:
         # Trend if notable
         if trend in ['HOT', 'COLD']:
             parts.append(f"Trend: {trend}")
+
+        # News notes (if present and different from flags)
+        news_notes = row.get('news_notes', '')
+        if news_notes and news_notes.strip() and news_notes not in str(news_flags):
+            parts.append(f"📰 {news_notes}")
 
         return " | ".join(parts)
 
