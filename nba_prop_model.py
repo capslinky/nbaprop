@@ -1276,30 +1276,44 @@ class UnifiedPropModel:
         print(f"Pick: {analysis.pick} (Edge: {analysis.edge:.1%})")
     """
 
-    # Adjustment constants
-    HOME_BOOST = 1.025
-    AWAY_PENALTY = 0.975
-    B2B_PENALTY = 0.92
-    BLOWOUT_HIGH_PENALTY = 0.95
-    BLOWOUT_MED_PENALTY = 0.98
-    LEAGUE_AVG_TOTAL = 225.0
-    TOTAL_WEIGHT = 0.3  # How much game total affects projection
+    # Default adjustment constants (can be overridden by learned weights)
+    _DEFAULT_HOME_BOOST = 1.025
+    _DEFAULT_AWAY_PENALTY = 0.975
+    _DEFAULT_B2B_PENALTY = 0.92
+    _DEFAULT_BLOWOUT_HIGH_PENALTY = 0.95
+    _DEFAULT_BLOWOUT_MED_PENALTY = 0.98
+    _DEFAULT_LEAGUE_AVG_TOTAL = 225.0
+    _DEFAULT_TOTAL_WEIGHT = 0.3  # How much game total affects projection
 
-    # Matchup thresholds
+    # Matchup thresholds (not calibrated)
     SMASH_RANK = 5
     GOOD_RANK = 10
     HARD_RANK = 21
     TOUGH_RANK = 26
 
-    def __init__(self, data_fetcher=None, injury_tracker=None, odds_client=None):
+    def __init__(self, data_fetcher=None, injury_tracker=None, odds_client=None,
+                 use_learned_weights: bool = True):
         """
         Initialize with optional data sources.
         If not provided, will create default instances.
+
+        Args:
+            data_fetcher: Optional NBADataFetcher instance
+            injury_tracker: Optional InjuryTracker instance
+            odds_client: Optional OddsAPIClient instance
+            use_learned_weights: Whether to load and use learned calibration weights.
+                                 Set to False to use CONFIG defaults only.
         """
         # Lazy imports to avoid circular dependencies
         self._fetcher = data_fetcher
         self._injuries = injury_tracker
         self._odds = odds_client
+
+        # Learned weights store (for calibrated factors)
+        self._weights_store = None
+        self._use_learned_weights = use_learned_weights
+        if use_learned_weights:
+            self._weights_store = self._load_learned_weights()
 
         # Cached context data with timestamps and type-specific TTLs from CONFIG
         from core.config import CONFIG
@@ -1312,6 +1326,79 @@ class UnifiedPropModel:
         self._game_lines_cache = {
             'data': None, 'timestamp': None, 'ttl': CONFIG.GAME_LOG_CACHE_TTL
         }
+
+    def _load_learned_weights(self):
+        """Load learned weights if available."""
+        try:
+            from calibration.weight_store import LearnedWeightsStore
+            store = LearnedWeightsStore()
+            if store.load() and store.is_valid():
+                return store
+        except ImportError:
+            pass  # Calibration module not available
+        except Exception:
+            pass  # Any other error, fall back to defaults
+        return None
+
+    @property
+    def HOME_BOOST(self) -> float:
+        """Home court advantage factor."""
+        from core.config import CONFIG
+        default = CONFIG.HOME_BOOST
+        if self._weights_store:
+            return self._weights_store.get_factor('HOME_BOOST', default)
+        return default
+
+    @property
+    def AWAY_PENALTY(self) -> float:
+        """Road game penalty factor."""
+        from core.config import CONFIG
+        default = CONFIG.AWAY_PENALTY
+        if self._weights_store:
+            return self._weights_store.get_factor('AWAY_PENALTY', default)
+        return default
+
+    @property
+    def B2B_PENALTY(self) -> float:
+        """Back-to-back game penalty factor."""
+        from core.config import CONFIG
+        default = CONFIG.B2B_PENALTY
+        if self._weights_store:
+            return self._weights_store.get_factor('B2B_PENALTY', default)
+        return default
+
+    @property
+    def BLOWOUT_HIGH_PENALTY(self) -> float:
+        """High blowout risk penalty factor (spread >= 12)."""
+        from core.config import CONFIG
+        default = CONFIG.BLOWOUT_HIGH_PENALTY
+        if self._weights_store:
+            return self._weights_store.get_factor('BLOWOUT_HIGH_PENALTY', default)
+        return default
+
+    @property
+    def BLOWOUT_MED_PENALTY(self) -> float:
+        """Medium blowout risk penalty factor (spread 8-11)."""
+        from core.config import CONFIG
+        default = CONFIG.BLOWOUT_MEDIUM_PENALTY
+        if self._weights_store:
+            return self._weights_store.get_factor('BLOWOUT_MEDIUM_PENALTY', default)
+        return default
+
+    @property
+    def LEAGUE_AVG_TOTAL(self) -> float:
+        """League average game total for scaling."""
+        from core.config import CONFIG
+        return CONFIG.LEAGUE_AVG_TOTAL
+
+    @property
+    def TOTAL_WEIGHT(self) -> float:
+        """Weight for game total adjustment on projections."""
+        from core.config import CONFIG
+        default = CONFIG.TOTAL_WEIGHT
+        if self._weights_store:
+            return self._weights_store.get_factor('TOTAL_WEIGHT', default)
+        return default
 
     @property
     def fetcher(self) -> 'NBADataFetcher':
@@ -1432,6 +1519,7 @@ class UnifiedPropModel:
         prop_type: str,
         opponent: str,
         player_team: str,
+        player_name: str,
         is_home: bool,
         is_b2b: bool,
         game_total: float,
@@ -1548,7 +1636,21 @@ class UnifiedPropModel:
         elif blowout_risk == 'MEDIUM':
             adjustments['blowout'] = self.BLOWOUT_MED_PENALTY
 
-        # 7. MINUTES TREND
+        # 7. PLAYER VS TEAM HISTORY
+        if player_name and opponent:
+            vs_stats = self.fetcher.get_player_vs_team_stats(
+                player_name, opponent, prop_type
+            )
+            if vs_stats and vs_stats.get('games_vs_team', 0) >= 3:
+                vs_factor = vs_stats.get('vs_factor', 1.0)
+                # Cap at +/-10%
+                adjustments['vs_team'] = max(0.9, min(1.1, vs_factor))
+                if vs_stats.get('dominates'):
+                    flags.append(f'DOMINATES vs {opponent}')
+                elif vs_stats.get('struggles'):
+                    flags.append(f'STRUGGLES vs {opponent}')
+
+        # 8. MINUTES TREND
         if minutes_factor and minutes_factor != 1.0:
             adjustments['minutes'] = max(0.9, min(1.1, minutes_factor))
             if minutes_factor >= 1.05:
@@ -1556,7 +1658,7 @@ class UnifiedPropModel:
             elif minutes_factor <= 0.95:
                 flags.append('MINS DOWN')
 
-        # 8. TEAMMATE INJURY BOOST
+        # 9. TEAMMATE INJURY BOOST
         if teammate_boost and teammate_boost > 1.0:
             adjustments['injury_boost'] = min(1.15, teammate_boost)
             boost_pct = round((teammate_boost - 1) * 100)
@@ -1740,6 +1842,7 @@ class UnifiedPropModel:
             prop_type=prop_type,
             opponent=opponent,
             player_team=player_team,
+            player_name=player_name,
             is_home=is_home,
             is_b2b=is_b2b,
             game_total=game_total,

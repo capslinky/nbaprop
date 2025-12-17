@@ -2317,6 +2317,11 @@ class LivePropAnalyzer:
             logger.warning("  Defense ratings unavailable")
             defense_ratings = pd.DataFrame()
 
+        # Load defense vs position data (has pts_rank, reb_rank, etc.)
+        defense_vs_position = self.nba.get_team_defense_vs_position()
+        if defense_vs_position is None:
+            defense_vs_position = pd.DataFrame()
+
         # Load pace data
         pace_data = self.nba.get_team_pace()
         if pace_data is not None:
@@ -2749,6 +2754,61 @@ class LivePropAnalyzer:
                 away_team = row.get('away_team', '')
                 game_matchup = f"{away_team} @ {home_team}" if home_team and away_team else 'Unknown'
 
+                # =============================================================
+                # STEP 6B: CONTEXTUAL DATA FOR OUTPUT
+                # =============================================================
+                # Determine player's team and opponent from matchup info
+                player_team = None
+                opponent = None
+                opp_defense_rank = None
+                matchup_label = 'NEUTRAL'
+                team_pace_rank = None
+                opp_pace_rank = None
+
+                # Extract player team from their most recent matchup
+                if not logs.empty and 'matchup' in logs.columns:
+                    last_matchup = logs.iloc[0]['matchup']
+                    # Format: "DAL @ TOR" or "DAL vs. TOR" - first part is player's team
+                    if ' @ ' in last_matchup:
+                        player_team = normalize_team_abbrev(last_matchup.split(' @ ')[0].strip())
+                    elif ' vs. ' in last_matchup:
+                        player_team = normalize_team_abbrev(last_matchup.split(' vs. ')[0].strip())
+
+                # Determine opponent for tonight's game
+                if player_team and home_team and away_team:
+                    home_norm = normalize_team_abbrev(home_team)
+                    away_norm = normalize_team_abbrev(away_team)
+                    if player_team == home_norm:
+                        opponent = away_norm
+                    elif player_team == away_norm:
+                        opponent = home_norm
+
+                # Look up opponent defense rank (use defense_vs_position which has ranks)
+                if opponent and defense_vs_position is not None and not defense_vs_position.empty:
+                    opp_row = defense_vs_position[defense_vs_position['team_abbrev'] == opponent]
+                    if not opp_row.empty and 'pts_rank' in opp_row.columns:
+                        opp_defense_rank = int(opp_row['pts_rank'].values[0])
+                        # Determine matchup label based on rank (1=worst defense, 30=best)
+                        if opp_defense_rank <= 5:
+                            matchup_label = 'SMASH'
+                        elif opp_defense_rank <= 10:
+                            matchup_label = 'GOOD'
+                        elif opp_defense_rank >= 26:
+                            matchup_label = 'TOUGH'
+                        elif opp_defense_rank >= 21:
+                            matchup_label = 'HARD'
+
+                # Look up pace ranks for both teams
+                if pace_data is not None and not pace_data.empty:
+                    if player_team:
+                        team_row = pace_data[pace_data['team_abbrev'] == player_team]
+                        if not team_row.empty and 'pace_rank' in team_row.columns:
+                            team_pace_rank = int(team_row['pace_rank'].values[0])
+                    if opponent:
+                        opp_pace_row = pace_data[pace_data['team_abbrev'] == opponent]
+                        if not opp_pace_row.empty and 'pace_rank' in opp_pace_row.columns:
+                            opp_pace_rank = int(opp_pace_row['pace_rank'].values[0])
+
                 value_props.append({
                     'player': player,
                     'prop_type': prop_type,
@@ -2773,10 +2833,18 @@ class LivePropAnalyzer:
                     'our_prob': round(our_prob * 100, 1),
                     'adjustments': ' | '.join(clean_adjustments) if clean_adjustments else 'None',
                     'is_b2b': context.get('is_b2b', False),
+                    'rest_days': context.get('rest_days'),
                     'minutes_factor': round(context.get('minutes_factor', 1.0), 2),
+                    'minutes_trend': context.get('minutes_trend', 'STABLE'),
                     'game': game_matchup,
                     'home_team': home_team,
                     'away_team': away_team,
+                    # MATCHUP CONTEXT COLUMNS
+                    'opponent': opponent,
+                    'opp_defense_rank': opp_defense_rank,
+                    'matchup_label': matchup_label,
+                    'team_pace_rank': team_pace_rank,
+                    'opp_pace_rank': opp_pace_rank,
                     # NEWS INTELLIGENCE COLUMNS
                     'news_status': news_context.status if news_context else 'NO_NEWS',
                     'news_adjustment': f"{(news_factor - 1) * 100:+.1f}%" if news_factor != 1.0 else '',
