@@ -57,7 +57,17 @@ def create_perplexity_search(perplexity_fn: Callable) -> Callable[[str], str]:
     return search
 
 
-def create_perplexity_api_search(api_key: str) -> Callable[[str], str]:
+@dataclass
+class SearchResult:
+    """Result from a search query with content and citations."""
+    content: str
+    citations: List[str] = field(default_factory=list)
+
+    def __str__(self) -> str:
+        return self.content
+
+
+def create_perplexity_api_search(api_key: str) -> Callable[[str], SearchResult]:
     """
     Create a search function using Perplexity API directly.
 
@@ -65,18 +75,18 @@ def create_perplexity_api_search(api_key: str) -> Callable[[str], str]:
         api_key: Perplexity API key
 
     Returns:
-        Callable that takes a query string and returns search results as text
+        Callable that takes a query string and returns SearchResult with content and citations
 
     Usage:
         search_fn = create_perplexity_api_search(os.environ.get('PERPLEXITY_API_KEY'))
         news_intel = NewsIntelligence(search_fn=search_fn)
     """
-    def search(query: str) -> str:
+    def search(query: str) -> SearchResult:
         """Execute search via Perplexity API."""
         import requests
 
         if not api_key:
-            return ""
+            return SearchResult(content="", citations=[])
 
         try:
             response = requests.post(
@@ -99,6 +109,7 @@ def create_perplexity_api_search(api_key: str) -> Callable[[str], str]:
                     ],
                     "temperature": 0.1,
                     "max_tokens": 500,
+                    "return_citations": True,
                 },
                 timeout=15
             )
@@ -106,14 +117,19 @@ def create_perplexity_api_search(api_key: str) -> Callable[[str], str]:
             if response.status_code == 200:
                 data = response.json()
                 content = data.get('choices', [{}])[0].get('message', {}).get('content', '')
-                return content
+                # Extract citations from response
+                citations = data.get('citations', [])
+                if not citations:
+                    # Some responses have citations in a different location
+                    citations = data.get('choices', [{}])[0].get('message', {}).get('citations', [])
+                return SearchResult(content=content, citations=citations)
             else:
                 logger.warning(f"Perplexity API error: {response.status_code}")
-                return ""
+                return SearchResult(content="", citations=[])
 
         except Exception as e:
             logger.warning(f"Perplexity API search failed for '{query}': {e}")
-            return ""
+            return SearchResult(content="", citations=[])
 
     return search
 
@@ -192,18 +208,24 @@ class NewsIntelligence:
         age = (datetime.now() - self._cache_timestamps[key]).total_seconds()
         return age < self._cache_ttl
 
-    def _search(self, query: str) -> str:
-        """Execute search query and return results as text."""
+    def _search(self, query: str) -> SearchResult:
+        """Execute search query and return SearchResult with content and citations."""
         if self._search_fn is None:
             logger.debug(f"No search function configured, skipping: {query}")
-            return ""
+            return SearchResult(content="", citations=[])
 
         try:
             result = self._search_fn(query)
-            return str(result) if result else ""
+            # Handle both old string returns and new SearchResult returns
+            if isinstance(result, SearchResult):
+                return result
+            elif result:
+                return SearchResult(content=str(result), citations=[])
+            else:
+                return SearchResult(content="", citations=[])
         except Exception as e:
             logger.warning(f"Search failed for '{query}': {e}")
-            return ""
+            return SearchResult(content="", citations=[])
 
     def fetch_game_news(self, home_team: str, away_team: str,
                         game_date: str = None) -> Dict[str, NewsContext]:
@@ -231,9 +253,11 @@ class NewsIntelligence:
 
             # Search for team-level news
             query = f"{team} NBA injury report lineup {game_date}"
-            search_results = self._search(query)
+            search_result = self._search(query)
 
-            context = self._parse_team_news(team, search_results)
+            context = self._parse_team_news(team, search_result.content)
+            # Add source citations
+            context.sources = search_result.citations
 
             # Cache result
             self._cache[cache_key] = context
@@ -268,14 +292,19 @@ class NewsIntelligence:
             f"{player_name} questionable GTD game time decision",
         ]
 
-        all_results = []
+        all_content = []
+        all_citations = []
         for query in queries:
-            result = self._search(query)
-            if result:
-                all_results.append(result)
+            search_result = self._search(query)
+            if search_result.content:
+                all_content.append(search_result.content)
+            if search_result.citations:
+                all_citations.extend(search_result.citations)
 
-        combined_text = '\n'.join(all_results)
+        combined_text = '\n'.join(all_content)
         context = self._parse_player_news(player_name, combined_text)
+        # Add source citations (deduplicated)
+        context.sources = list(dict.fromkeys(all_citations)) if all_citations else context.sources
 
         # Cache result
         self._cache[cache_key] = context

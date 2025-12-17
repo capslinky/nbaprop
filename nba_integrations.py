@@ -2782,6 +2782,7 @@ class LivePropAnalyzer:
                     'news_adjustment': f"{(news_factor - 1) * 100:+.1f}%" if news_factor != 1.0 else '',
                     'news_flags': ' | '.join(news_flags) if news_flags else '',
                     'news_notes': '; '.join(news_notes[:2]) if news_notes else '',  # Limit to 2 notes
+                    'news_sources': ' | '.join(news_context.sources[:3]) if news_context and news_context.sources else '',  # Source URLs
                 })
 
                 # Track for correlation filtering

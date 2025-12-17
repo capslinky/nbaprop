@@ -235,6 +235,14 @@ class PicksReportGenerator:
         if news_notes and news_notes.strip() and news_notes not in str(news_flags):
             parts.append(f"📰 {news_notes}")
 
+        # News sources (if present)
+        news_sources = row.get('news_sources', '')
+        if news_sources and news_sources.strip():
+            # Truncate long URLs for display
+            sources_list = news_sources.split(' | ')[:2]  # Max 2 sources
+            short_sources = [s[:50] + '...' if len(s) > 50 else s for s in sources_list]
+            parts.append(f"🔗 Sources: {', '.join(short_sources)}")
+
         return " | ".join(parts)
 
     def _create_top_picks_section(self, n: int = 25):
