@@ -272,7 +272,7 @@ class SituationalModel:
         
         base_pred = self.base_model.predict(history[prop_type], line)
         
-        if base_pred.projection is np.nan:
+        if np.isnan(base_pred.projection):
             return base_pred
         
         # Apply adjustments
