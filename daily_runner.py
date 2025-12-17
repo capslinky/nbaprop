@@ -61,6 +61,13 @@ import json
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / '.env')
+except ImportError:
+    pass  # python-dotenv not installed, use environment variables directly
+
 from core.logging_config import setup_logging, get_logger
 from core.constants import get_current_nba_season
 
