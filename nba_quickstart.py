@@ -122,6 +122,8 @@ def run_daily_analysis():
 
     from data import NBADataFetcher, OddsAPIClient, InjuryTracker, TEAM_ABBREVIATIONS
     from models import UnifiedPropModel
+    from core.rosters import get_player_team
+    from core.constants import normalize_team_abbrev
     from datetime import datetime
     import pandas as pd
 
@@ -243,14 +245,35 @@ def run_daily_analysis():
             under_odds = under_row['odds'].values[0] if len(under_row) > 0 else -110
 
             try:
+                # Determine player's team from roster data (reliable)
+                player_team = get_player_team(player)
+                player_team_abbrev = normalize_team_abbrev(player_team) if player_team else None
+
+                # Derive opponent and is_home from player's team + game matchup
+                if player_team_abbrev:
+                    if player_team_abbrev == home_abbrev:
+                        resolved_opponent = away_abbrev
+                        resolved_is_home = True
+                    elif player_team_abbrev == away_abbrev:
+                        resolved_opponent = home_abbrev
+                        resolved_is_home = False
+                    else:
+                        # Player team not matching either side - let model auto-detect
+                        resolved_opponent = None
+                        resolved_is_home = None
+                else:
+                    # No roster data - let model auto-detect
+                    resolved_opponent = None
+                    resolved_is_home = None
+
                 # Use UnifiedPropModel for full contextual analysis
                 analysis = model.analyze(
                     player_name=player,
                     prop_type=prop_type,
                     line=line,
                     odds=over_odds if over_odds else -110,
-                    opponent=home_abbrev if player in str(away_team) else away_abbrev,
-                    is_home=player not in str(away_team)
+                    opponent=resolved_opponent,
+                    is_home=resolved_is_home
                 )
 
                 if analysis and analysis.projection > 0:

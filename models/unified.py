@@ -268,13 +268,17 @@ class UnifiedPropModel:
         """
         Calculate base projection using weighted recent/older split.
         Returns (projection, trend, recent_avg, older_avg).
+
+        NOTE: history is sorted newest-first (index 0 = most recent game).
+        Use .head() for recent games and .iloc[5:15] for older games.
         """
         if len(history) < 5:
             return history.mean(), 'NEUTRAL', history.mean(), history.mean()
 
-        # Split into recent (last 5) and older (6-15)
-        recent = history.tail(5)
-        older = history.tail(15).head(10) if len(history) >= 10 else history.head(len(history) - 5)
+        # Split into recent (first 5 = most recent) and older (6-15)
+        # Logs are sorted newest-first, so .head(5) = last 5 games played
+        recent = history.head(5)
+        older = history.iloc[5:15] if len(history) >= 10 else history.iloc[5:]
 
         recent_avg = recent.mean()
         older_avg = older.mean() if len(older) > 0 else recent_avg
@@ -566,8 +570,9 @@ class UnifiedPropModel:
         hit_clarity = abs(over_rate - 0.5) * 2
 
         # 4. Trend strength (20%)
-        recent = history.tail(5).mean()
-        older = history.tail(15).head(10).mean() if len(history) >= 10 else mean_val
+        # NOTE: history is sorted newest-first, use .head() for recent
+        recent = history.head(5).mean()
+        older = history.iloc[5:15].mean() if len(history) >= 10 else mean_val
         trend_magnitude = abs(recent - older) / older if older > 0 else 0
         trend_score = min(1, trend_magnitude * 5)
 
@@ -646,10 +651,20 @@ class UnifiedPropModel:
             raise InvalidPropTypeError(prop_type)
         prop_type = prop_type_lower  # Normalize to lowercase
 
+        # Map prop type aliases to actual column names
+        # 'threes' is a common alias for 'fg3m' (3-pointers made)
+        PROP_TO_COLUMN = {
+            'threes': 'fg3m',
+            'three': 'fg3m',
+            '3pm': 'fg3m',
+            'steals_blocks': 'stl_blk',  # If this combo exists
+        }
+        column_name = PROP_TO_COLUMN.get(prop_type, prop_type)
+
         # Fetch player game logs
         logs = self.fetcher.get_player_game_logs(player_name, last_n_games=last_n_games)
 
-        if logs.empty or prop_type not in logs.columns:
+        if logs.empty or column_name not in logs.columns:
             # Return a "no data" analysis
             return PropAnalysis(
                 player=player_name,
@@ -670,7 +685,8 @@ class UnifiedPropModel:
                 flags=['NO DATA'],
             )
 
-        history = logs[prop_type]
+        # Use the mapped column name to get the stat history
+        history = logs[column_name]
 
         # Auto-detect context
         context = self._detect_context_from_logs(logs)
@@ -704,6 +720,31 @@ class UnifiedPropModel:
         # Get injury info
         player_status_info = self.injuries.get_player_status(player_name)
         player_status = player_status_info.get('status', 'HEALTHY')
+
+        # Early exit for OUT players - don't waste time analyzing
+        if player_status in ['OUT', 'INJURED', 'SUSPENDED']:
+            logger.info(f"Player {player_name} is {player_status} - returning PASS")
+            return PropAnalysis(
+                player=player_name,
+                prop_type=prop_type,
+                line=line,
+                projection=0,
+                base_projection=0,
+                edge=0,
+                confidence=0,
+                pick='PASS',
+                recent_avg=history.head(5).mean() if len(history) >= 5 else history.mean(),
+                season_avg=history.mean(),
+                over_rate=0,
+                under_rate=0,
+                std_dev=history.std(),
+                games_analyzed=len(history),
+                trend='NEUTRAL',
+                flags=[f'PLAYER {player_status}'],
+                player_status=player_status,
+                context_quality=0,
+                warnings=[f'Player is {player_status} - no pick possible'],
+            )
 
         teammate_boost_info = self.injuries.get_teammate_boost(
             player_name, player_team or '', prop_type

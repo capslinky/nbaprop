@@ -12,6 +12,7 @@ import time
 import logging
 
 from core.constants import normalize_team_abbrev
+from core.rosters import get_player_team
 from core.news_intelligence import NewsIntelligence
 from models import UnifiedPropModel
 from data import NBADataFetcher, OddsAPIClient, InjuryTracker
@@ -539,207 +540,71 @@ class LivePropAnalyzer:
 
         for i, row in unique_props.iterrows():
             player = row['player']
-            if player not in player_cache:
-                continue
-
-            logs = player_cache[player]
-            context = player_context.get(player, {})
             prop_type = row['prop_type']
-            stat_column = prop_to_column.get(prop_type, prop_type)
-
-            if stat_column not in logs.columns:
-                logger.warning(f"Column '{stat_column}' not found for {player} - skipping {prop_type} prop")
-                continue
-
-            history = logs[stat_column]
-
-            # MINIMUM SAMPLE SIZE CHECK
-            min_required = min_samples.get(prop_type, 15)
-            if len(history) < min_required:
-                skipped['sample_size'] += 1
-                continue
-
-            # =============================================================
-            # NEWS CONTEXT LOOKUP (10th adjustment factor)
-            # =============================================================
-            news_context = None
-            news_factor = 1.0
-            news_flags = []
-            news_notes = []
-
-            # Get game key for news lookup
+            line = row['line']
+            over_odds = row.get('over_odds', -110)
+            under_odds = row.get('under_odds', -110)
             home_team = row.get('home_team', '')
             away_team = row.get('away_team', '')
-            game_key = f"{away_team}@{home_team}" if home_team and away_team else None
 
-            # Check game-level news cache first
-            if game_key and game_key in game_news_cache:
-                # Check if this player has team-level news
-                player_team = context.get('team_abbrev', '')
-                if player_team in game_news_cache[game_key]:
-                    team_news = game_news_cache[game_key][player_team]
-                    if team_news.flags:
-                        news_flags.extend(team_news.flags)
+            # =============================================================
+            # STEP 1: DETERMINE CONTEXT FROM ROSTER + GAME DATA
+            # =============================================================
+            player_team = get_player_team(player)
+            player_team_abbrev = normalize_team_abbrev(player_team) if player_team else None
 
-            # Fetch player-specific news if preliminary edge looks promising
-            line = row['line']
-            prelim_avg = history.head(10).mean()
-            preliminary_edge = abs((prelim_avg - line) / line) if line > 0 else 0
+            # Derive opponent and is_home from player's team + game matchup
+            resolved_opponent = None
+            resolved_is_home = None
+            if player_team_abbrev and home_team and away_team:
+                home_norm = normalize_team_abbrev(home_team)
+                away_norm = normalize_team_abbrev(away_team)
+                if player_team_abbrev == home_norm:
+                    resolved_opponent = away_norm
+                    resolved_is_home = True
+                elif player_team_abbrev == away_norm:
+                    resolved_opponent = home_norm
+                    resolved_is_home = False
 
-            if preliminary_edge > 0.05:  # Only fetch detailed news for promising picks
-                try:
-                    player_news = self.news_intel.fetch_player_news(
-                        player_name=player,
-                        team=context.get('team_abbrev'),
-                        game_date=datetime.now().strftime('%Y-%m-%d')
-                    )
-                    if player_news:
-                        news_context = player_news
-                        news_factor = player_news.adjustment_factor
-                        news_flags = player_news.flags
-                        news_notes = player_news.notes
-
-                        # Skip if player confirmed out or on load management
-                        if player_news.should_skip():
-                            if 'news_out' not in skipped:
-                                skipped['news_out'] = 0
-                            skipped['news_out'] += 1
-                            continue
-                except Exception as e:
-                    logger.debug(f"Player news fetch failed for {player}: {e}")
-
+            # =============================================================
+            # STEP 2: USE UNIFIED MODEL FOR ANALYSIS
+            # This ensures consistent logic across all entry points
+            # =============================================================
             try:
-                # =============================================================
-                # STEP 1: BASE PROJECTION (weighted average with mean reversion)
-                # =============================================================
-                recent_5 = history.head(5)  # Most recent 5
-                recent_10 = history.head(10)
-                season = history
+                analysis = self.model.analyze(
+                    player_name=player,
+                    prop_type=prop_type,
+                    line=line,
+                    odds=over_odds if over_odds else -110,
+                    opponent=resolved_opponent,
+                    is_home=resolved_is_home,
+                    last_n_games=30  # Extended for statistical validity
+                )
 
-                recent_avg = recent_5.mean()
-                mid_avg = recent_10.mean()
-                season_avg = season.mean()
+                # Skip if analysis failed (no data)
+                if analysis.games_analyzed == 0 or analysis.pick == 'PASS':
+                    if 'PLAYER OUT' in str(analysis.flags) or 'PLAYER INJURED' in str(analysis.flags):
+                        skipped['injury_out'] += 1
+                    elif 'NO DATA' in str(analysis.flags):
+                        skipped['sample_size'] += 1
+                    else:
+                        skipped['no_edge'] += 1
+                    continue
 
-                # Apply MEAN REVERSION - hot streaks regress, cold streaks recover
-                # Weight: 40% recent, 35% mid-term, 25% season (regression to mean)
-                base_projection = (recent_avg * 0.40) + (mid_avg * 0.35) + (season_avg * 0.25)
-
-                # =============================================================
-                # STEP 2: CONTEXTUAL ADJUSTMENTS
-                # =============================================================
-                adjustment_factors = []
-                adjustment_notes = []
-
-                # --- HOME/AWAY ADJUSTMENT ---
-                if 'home' in logs.columns:
-                    home_games = logs[logs['home'] == True]
-                    away_games = logs[logs['home'] == False]
-
-                    if len(home_games) >= 3 and len(away_games) >= 3:
-                        home_avg = home_games[stat_column].mean()
-                        away_avg = away_games[stat_column].mean()
-                        overall = season_avg
-
-                        # Determine if tonight is home or away (from matchup string)
-                        # '@' in matchup means away game
-                        is_home_tonight = True  # Default assumption
-                        if 'event_info' in row and '@' in str(row.get('event_info', '')):
-                            is_home_tonight = False
-
-                        if is_home_tonight and home_avg > 0:
-                            ha_factor = home_avg / overall if overall > 0 else 1.0
-                            adjustment_factors.append(ha_factor)
-                            if abs(ha_factor - 1.0) > 0.05:
-                                adjustment_notes.append(f"Home: {ha_factor:.2f}x")
-                        elif not is_home_tonight and away_avg > 0:
-                            ha_factor = away_avg / overall if overall > 0 else 1.0
-                            adjustment_factors.append(ha_factor)
-                            if abs(ha_factor - 1.0) > 0.05:
-                                adjustment_notes.append(f"Away: {ha_factor:.2f}x")
-
-                # --- BACK-TO-BACK ADJUSTMENT ---
-                if context.get('is_b2b', False):
-                    b2b_factor = 0.93  # 7% reduction on back-to-backs
-                    adjustment_factors.append(b2b_factor)
-                    adjustment_notes.append("B2B: 0.93x")
-                elif context.get('rest_days', 2) >= 3:
-                    rest_factor = 1.03  # 3% boost with extra rest
-                    adjustment_factors.append(rest_factor)
-                    adjustment_notes.append("Rested: 1.03x")
-
-                # --- MINUTES TREND ADJUSTMENT ---
-                mins_factor = context.get('minutes_factor', 1.0)
-                if mins_factor < 0.9 or mins_factor > 1.1:
-                    # Only adjust if significant change
-                    capped_factor = max(0.85, min(1.15, mins_factor))
-                    adjustment_factors.append(capped_factor)
-                    adjustment_notes.append(f"Mins: {capped_factor:.2f}x")
-
-                # --- OPPONENT DEFENSE ADJUSTMENT ---
-                # (would need opponent info from game data - placeholder)
-                # For now, use neutral 1.0
-
-                # --- USAGE/SHOT VOLUME TREND ADJUSTMENT (NEW) ---
-                # Only apply to scoring-related props
-                # NOTE: Vol↑ neutralized (33% win rate = noise), only Vol↓ applied (69.8% win rate = signal)
-                scoring_props = ['points', 'pra', 'threes', 'pts_reb', 'pts_ast', 'field_goals_made', 'three_pointers_made']
-                if prop_type in scoring_props and len(logs) >= 10:
-                    usage_result = self.nba.calculate_usage_trend(logs)
-                    if usage_result:
-                        trend = usage_result.get('trend', 'STABLE')
-                        usage_factor = usage_result.get('usage_factor', 1.0)
-                        if trend == 'DOWN' and usage_factor < 1.0:
-                            # Vol↓ is predictive (69.8% win rate) - apply the factor
-                            adjustment_factors.append(usage_factor)
-                            adjustment_notes.append(f"Vol↓: {usage_factor:.2f}x")
-                        elif trend == 'UP':
-                            # Vol↑ is noise (33% win rate) - log but DON'T apply factor
-                            adjustment_notes.append(f"Vol↑: 1.00x (neutralized)")
-
-                # --- TRUE SHOOTING MOMENTUM (BACKTEST VALIDATED) ---
-                # Hot shooters stay hot (62.5% OVER), cold shooters stay cold (55.3% UNDER)
-                if prop_type in scoring_props and len(logs) >= 10:
-                    ts_result = self.nba.calculate_ts_efficiency(logs)
-                    if ts_result:
-                        ts_factor = ts_result.get('ts_factor', 1.0)
-                        momentum = ts_result.get('regression', 'NONE')
-                        if ts_factor != 1.0 and momentum in ('HOT', 'COLD'):
-                            adjustment_factors.append(ts_factor)
-                            recent_ts = ts_result.get('recent_ts_pct', 0)
-                            adjustment_notes.append(f"{momentum}: {ts_factor:.2f}x ({recent_ts:.0f}% TS)")
-
-                # --- NEWS INTELLIGENCE ADJUSTMENT (10th factor) ---
-                if news_factor != 1.0:
-                    adjustment_factors.append(news_factor)
-                    news_adj_pct = (news_factor - 1) * 100
-                    adjustment_notes.append(f"News: {news_factor:.2f}x ({news_adj_pct:+.0f}%)")
-
-                # Add news flags to adjustment notes
-                if news_flags:
-                    adjustment_notes.extend(news_flags)
-
-                # Apply all adjustments
-                final_projection = base_projection
-                for factor in adjustment_factors:
-                    final_projection *= factor
+                # MINIMUM SAMPLE SIZE CHECK
+                min_required = min_samples.get(prop_type, 15)
+                if analysis.games_analyzed < min_required:
+                    skipped['sample_size'] += 1
+                    continue
 
                 # =============================================================
                 # STEP 3: EDGE CALCULATION WITH VIG ADJUSTMENT
-                # FIX #1: Use correct odds based on side (over_odds vs under_odds)
-                # FIX #2: Conservative probability estimation
                 # =============================================================
-                line = row['line']
-                over_odds = row.get('over_odds', -110)
-                under_odds = row.get('under_odds', -110)
+                # Calculate vig-adjusted edge from model's edge
+                raw_edge = analysis.edge
+                pick = analysis.pick
 
-                # Raw edge (projection vs line)
-                raw_edge = (final_projection - line) / line if line > 0 else 0
-
-                # Historical hit rates
-                historical_over = (history > line).mean()
-                historical_under = (history < line).mean()
-
-                # FIX #1: Calculate no-vig true probabilities from BOTH sides
+                # Get implied probabilities from odds
                 def american_to_implied(odds):
                     if odds < 0:
                         return abs(odds) / (abs(odds) + 100)
@@ -747,218 +612,82 @@ class LivePropAnalyzer:
 
                 over_implied = american_to_implied(over_odds)
                 under_implied = american_to_implied(under_odds)
-
-                # Remove vig by normalizing
                 total_implied = over_implied + under_implied
-                true_over_prob = over_implied / total_implied
-                true_under_prob = under_implied / total_implied
 
-                # Determine pick direction based on raw edge
-                pick_over = raw_edge > 0
-
-                # FIX #2: Conservative probability estimation
-                # Use market probability as anchor, adjust based on:
-                # 1. Historical hit rate deviation from market
-                # 2. Projection deviation from line
-                # Cap total adjustment at ±15% from market
-                proj_vs_line = (final_projection - line) / line if line > 0 else 0
-
-                if pick_over:
-                    # Use OVER odds for implied probability
-                    implied_prob = over_implied
-                    breakeven = over_implied
-                    market_prob = true_over_prob
-
-                    # Historical edge over market
-                    hist_edge = historical_over - market_prob
-
-                    # Projection edge (capped)
-                    proj_adjustment = min(0.10, max(-0.10, proj_vs_line * 0.3))
-
-                    # Combined adjustment (capped at ±15%)
-                    total_adjustment = min(0.15, max(-0.15, hist_edge * 0.5 + proj_adjustment))
-                    our_prob = min(0.85, max(0.15, market_prob + total_adjustment))
+                if pick == 'OVER':
+                    breakeven = over_implied / total_implied
+                    our_prob = min(0.85, max(0.15, breakeven + raw_edge * 0.3))
+                    pick_odds = over_odds
                 else:
-                    # Use UNDER odds for implied probability
-                    implied_prob = under_implied
-                    breakeven = under_implied
-                    market_prob = true_under_prob
+                    breakeven = under_implied / total_implied
+                    our_prob = min(0.85, max(0.15, breakeven + abs(raw_edge) * 0.3))
+                    pick_odds = under_odds
 
-                    # Historical edge over market
-                    hist_edge = historical_under - market_prob
-
-                    # Projection edge (capped)
-                    proj_adjustment = min(0.10, max(-0.10, abs(proj_vs_line) * 0.3))
-
-                    # Combined adjustment (capped at ±15%)
-                    total_adjustment = min(0.15, max(-0.15, hist_edge * 0.5 + proj_adjustment))
-                    our_prob = min(0.85, max(0.15, market_prob + total_adjustment))
-
-                # VIG-ADJUSTED EDGE = our probability - breakeven probability
                 vig_adjusted_edge = (our_prob - breakeven) * 100
 
                 # =============================================================
-                # STEP 4: CONFIDENCE SCORE (multi-factor)
-                # =============================================================
-                std = history.std()
-                cv = std / season_avg if season_avg > 0 else 1
-
-                # Base confidence from consistency
-                consistency_score = max(0, min(1, 1 - cv))
-
-                # Sample size factor (more games = more confidence)
-                sample_factor = min(1.0, len(history) / 25)
-
-                # Agreement factor (do historical and projection agree?)
-                if raw_edge > 0:
-                    agreement = historical_over
-                else:
-                    agreement = historical_under
-
-                # Combined confidence
-                confidence = (consistency_score * 0.4) + (sample_factor * 0.3) + (agreement * 0.3)
-                confidence = max(0.2, min(0.85, confidence))  # Cap at 85%
-
-                # NEWS-BASED CONFIDENCE ADJUSTMENT
-                if news_context:
-                    if news_context.status in ('GTD_LEANING_OUT', 'LIKELY_OUT'):
-                        confidence *= 0.85  # -15% confidence for uncertain status
-                    elif news_context.status in ('GTD_UNCERTAIN',):
-                        confidence *= 0.90  # -10% confidence for unknown GTD
-                    elif news_context.status in ('GTD_LEANING_PLAY',):
-                        confidence *= 0.95  # -5% confidence even if likely playing
-                    elif news_context.status == 'RETURNING':
-                        confidence *= 0.90  # -10% confidence for returning players
-
-                # =============================================================
-                # STEP 5: PICK DETERMINATION
+                # STEP 4: FILTER BY EDGE AND CONFIDENCE
                 # =============================================================
                 if abs(vig_adjusted_edge) < 3:  # Need at least 3% edge after vig
                     skipped['no_edge'] += 1
                     continue
 
-                if confidence < min_confidence:
+                if analysis.confidence < min_confidence:
                     skipped['low_confidence'] += 1
                     continue
 
-                pick = 'OVER' if raw_edge > 0 else 'UNDER'
-
                 # =============================================================
-                # STEP 6: RECORD VALUE PROP
+                # STEP 5: RECORD VALUE PROP
                 # =============================================================
-                trend = 'HOT' if recent_avg > season_avg * 1.05 else 'COLD' if recent_avg < season_avg * 0.95 else 'NEUTRAL'
-
-                # FIX #4: Filter out nan values from adjustment_notes
-                clean_adjustments = [
-                    note for note in adjustment_notes
-                    if note and 'nan' not in str(note).lower()
-                ]
-
-                # Store the odds for the recommended side
-                pick_odds = over_odds if pick == 'OVER' else under_odds
-
-                # Build game matchup string
-                home_team = row.get('home_team', '')
-                away_team = row.get('away_team', '')
                 game_matchup = f"{away_team} @ {home_team}" if home_team and away_team else 'Unknown'
 
-                # =============================================================
-                # STEP 6B: CONTEXTUAL DATA FOR OUTPUT
-                # =============================================================
-                # Determine player's team and opponent from matchup info
-                player_team = None
-                opponent = None
-                opp_defense_rank = None
-                matchup_label = 'NEUTRAL'
-                team_pace_rank = None
-                opp_pace_rank = None
-
-                # Extract player team from their most recent matchup
-                if not logs.empty and 'matchup' in logs.columns:
-                    last_matchup = logs.iloc[0]['matchup']
-                    # Format: "DAL @ TOR" or "DAL vs. TOR" - first part is player's team
-                    if ' @ ' in last_matchup:
-                        player_team = normalize_team_abbrev(last_matchup.split(' @ ')[0].strip())
-                    elif ' vs. ' in last_matchup:
-                        player_team = normalize_team_abbrev(last_matchup.split(' vs. ')[0].strip())
-
-                # Determine opponent for tonight's game
-                if player_team and home_team and away_team:
-                    home_norm = normalize_team_abbrev(home_team)
-                    away_norm = normalize_team_abbrev(away_team)
-                    if player_team == home_norm:
-                        opponent = away_norm
-                    elif player_team == away_norm:
-                        opponent = home_norm
-
-                # Look up opponent defense rank (use defense_vs_position which has ranks)
-                if opponent and defense_vs_position is not None and not defense_vs_position.empty:
-                    opp_row = defense_vs_position[defense_vs_position['team_abbrev'] == opponent]
-                    if not opp_row.empty and 'pts_rank' in opp_row.columns:
-                        opp_defense_rank = int(opp_row['pts_rank'].values[0])
-                        # Determine matchup label based on rank (1=worst defense, 30=best)
-                        if opp_defense_rank <= 5:
-                            matchup_label = 'SMASH'
-                        elif opp_defense_rank <= 10:
-                            matchup_label = 'GOOD'
-                        elif opp_defense_rank >= 26:
-                            matchup_label = 'TOUGH'
-                        elif opp_defense_rank >= 21:
-                            matchup_label = 'HARD'
-
-                # Look up pace ranks for both teams
-                if pace_data is not None and not pace_data.empty:
-                    if player_team:
-                        team_row = pace_data[pace_data['team_abbrev'] == player_team]
-                        if not team_row.empty and 'pace_rank' in team_row.columns:
-                            team_pace_rank = int(team_row['pace_rank'].values[0])
-                    if opponent:
-                        opp_pace_row = pace_data[pace_data['team_abbrev'] == opponent]
-                        if not opp_pace_row.empty and 'pace_rank' in opp_pace_row.columns:
-                            opp_pace_rank = int(opp_pace_row['pace_rank'].values[0])
+                # Format adjustments as string
+                adj_parts = []
+                for key, val in (analysis.adjustments or {}).items():
+                    if val != 0:
+                        adj_parts.append(f"{key}: {val:+.1f}%")
+                adjustments_str = ' | '.join(adj_parts) if adj_parts else 'None'
 
                 value_props.append({
                     'player': player,
                     'prop_type': prop_type,
                     'line': line,
-                    'projection': round(final_projection, 1),
+                    'projection': analysis.projection,
                     'raw_edge': round(raw_edge * 100, 1),
-                    'avg_edge': round(vig_adjusted_edge, 1),  # VIG-ADJUSTED PROBABILITY EDGE
-                    'confidence': round(confidence * 100, 0),
+                    'avg_edge': round(vig_adjusted_edge, 1),
+                    'confidence': round(analysis.confidence * 100, 0),
                     'recommended_side': pick,
-                    'recent_avg': round(recent_avg, 1),
-                    'season_avg': round(season_avg, 1),
-                    'hit_rate_over': round(historical_over * 100, 0),
-                    'hit_rate_under': round(historical_under * 100, 0),
-                    'trend': trend,
-                    'games_analyzed': len(history),
+                    'recent_avg': analysis.recent_avg,
+                    'season_avg': analysis.season_avg,
+                    'hit_rate_over': round(analysis.over_rate * 100, 0),
+                    'hit_rate_under': round(analysis.under_rate * 100, 0),
+                    'trend': analysis.trend,
+                    'games_analyzed': analysis.games_analyzed,
                     'bookmaker': row.get('bookmaker', 'unknown'),
-                    'odds': pick_odds,  # Odds for the recommended side
+                    'odds': pick_odds,
                     'over_odds': over_odds,
                     'under_odds': under_odds,
-                    'implied_prob': round(implied_prob * 100, 1),  # Breakeven for recommended side
-                    'market_prob': round(market_prob * 100, 1),  # No-vig probability
+                    'implied_prob': round(breakeven * 100, 1),
+                    'market_prob': round(breakeven * 100, 1),
                     'our_prob': round(our_prob * 100, 1),
-                    'adjustments': ' | '.join(clean_adjustments) if clean_adjustments else 'None',
-                    'is_b2b': context.get('is_b2b', False),
-                    'rest_days': context.get('rest_days'),
-                    'minutes_factor': round(context.get('minutes_factor', 1.0), 2),
-                    'minutes_trend': context.get('minutes_trend', 'STABLE'),
+                    'adjustments': adjustments_str,
+                    'is_b2b': analysis.is_b2b,
+                    'rest_days': None,  # From context if available
+                    'minutes_factor': 1.0,
+                    'minutes_trend': 'STABLE',
                     'game': game_matchup,
                     'home_team': home_team,
                     'away_team': away_team,
-                    # MATCHUP CONTEXT COLUMNS
-                    'opponent': opponent,
-                    'opp_defense_rank': opp_defense_rank,
-                    'matchup_label': matchup_label,
-                    'team_pace_rank': team_pace_rank,
-                    'opp_pace_rank': opp_pace_rank,
-                    # NEWS INTELLIGENCE COLUMNS
-                    'news_status': news_context.status if news_context else 'NO_NEWS',
-                    'news_adjustment': f"{(news_factor - 1) * 100:+.1f}%" if news_factor != 1.0 else '',
-                    'news_flags': ' | '.join(news_flags) if news_flags else '',
-                    'news_notes': '; '.join(news_notes[:2]) if news_notes else '',  # Limit to 2 notes
-                    'news_sources': ' | '.join(news_context.sources[:3]) if news_context and news_context.sources else '',  # Source URLs
+                    # MATCHUP CONTEXT COLUMNS (from model)
+                    'opponent': analysis.opponent or resolved_opponent,
+                    'opp_defense_rank': analysis.opp_rank,
+                    'matchup_label': analysis.matchup_rating or 'NEUTRAL',
+                    'team_pace_rank': None,
+                    'opp_pace_rank': None,
+                    # FLAGS AND STATUS
+                    'flags': ' | '.join(analysis.flags) if analysis.flags else '',
+                    'player_status': analysis.player_status,
+                    'context_quality': analysis.context_quality,
                 })
 
                 # Track for correlation filtering
