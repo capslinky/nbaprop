@@ -54,6 +54,14 @@ from core.exceptions import (
     RateLimitError,
     OddsAPIError,
 )
+from core.rosters import (
+    get_player_team,
+    get_player_info,
+    get_team_stars,
+    get_team_star_players,
+    load_rosters_from_json,
+    TEAM_ROSTERS,
+)
 
 # =============================================================================
 # STRING PARSING HELPERS - Robust parsing for player names, matchups, etc.
@@ -941,6 +949,308 @@ class NBADataFetcher:
             'struggles': vs_avg < overall_avg * 0.9   # 10%+ worse vs this team
         }
 
+    # =========================================================================
+    # NEW FACTOR METHODS: Usage Rate, Shot Volume, TS% Efficiency
+    # =========================================================================
+
+    def get_player_usage(self, player_name: str, season: str = None) -> Optional[Dict[str, Any]]:
+        """
+        Get player's usage rate and advanced stats from NBA API.
+
+        Uses LeagueDashPlayerStats for official USG%, TS%, AST% values.
+        Falls back to calculating from game logs if API fails.
+
+        Args:
+            player_name: Player name to look up
+            season: NBA season (default: current season)
+
+        Returns:
+            Dict with usg_pct, ts_pct, ast_pct, or None if not available
+        """
+        if season is None:
+            season = get_current_nba_season()
+
+        # Check cache first
+        cache_key = f"usage_{player_name}_{season}"
+        if hasattr(self, '_usage_cache') and cache_key in self._usage_cache:
+            cache_entry = self._usage_cache[cache_key]
+            if (datetime.now() - cache_entry['timestamp']).total_seconds() < 3600:
+                return cache_entry['data']
+
+        if not hasattr(self, '_usage_cache'):
+            self._usage_cache = {}
+
+        try:
+            from nba_api.stats.endpoints import leaguedashplayerstats
+
+            self._rate_limit()  # Use proper rate limiting
+
+            # Fetch advanced stats
+            stats = leaguedashplayerstats.LeagueDashPlayerStats(
+                season=season,
+                measure_type_detailed_defense='Advanced',
+                per_mode_detailed='PerGame'
+            )
+            df = stats.get_data_frames()[0]
+
+            # Find player (case-insensitive, partial match)
+            player_lower = player_name.lower()
+            matches = df[df['PLAYER_NAME'].str.lower().str.contains(player_lower.split()[0])]
+
+            if matches.empty:
+                # Try exact match
+                matches = df[df['PLAYER_NAME'].str.lower() == player_lower]
+
+            if matches.empty:
+                logger.debug(f"Player '{player_name}' not found in advanced stats")
+                return None
+
+            # Get best match (prefer exact match)
+            for _, row in matches.iterrows():
+                if row['PLAYER_NAME'].lower() == player_lower:
+                    player_row = row
+                    break
+            else:
+                player_row = matches.iloc[0]
+
+            result = {
+                'player_name': player_row['PLAYER_NAME'],
+                'usg_pct': float(player_row.get('USG_PCT', 20.0)) * 100,  # Convert to percentage
+                'ts_pct': float(player_row.get('TS_PCT', 0.55)) * 100,
+                'ast_pct': float(player_row.get('AST_PCT', 0)) * 100,
+                'efg_pct': float(player_row.get('EFG_PCT', 0.50)) * 100,
+                'minutes': float(player_row.get('MIN', 0)),
+            }
+
+            # Cache the result
+            self._usage_cache[cache_key] = {
+                'data': result,
+                'timestamp': datetime.now()
+            }
+
+            return result
+
+        except Exception as e:
+            logger.debug(f"Could not fetch usage for {player_name}: {e}")
+
+            # Fallback: estimate from game logs
+            return self._estimate_usage_from_logs(player_name)
+
+    def _estimate_usage_from_logs(self, player_name: str) -> Optional[Dict[str, Any]]:
+        """
+        Estimate usage metrics from game logs when API fails.
+
+        Usage proxy = (FGA + 0.44 * FTA) / Minutes * 48
+        """
+        try:
+            logs = self.get_player_game_logs(player_name, last_n_games=15)
+            if logs.empty:
+                return None
+
+            # Check for required columns
+            if not all(col in logs.columns for col in ['fga', 'fta', 'minutes']):
+                return None
+
+            # Parse minutes
+            mins = logs['minutes'].apply(_parse_minutes)
+            valid_games = mins > 0
+
+            if valid_games.sum() < 5:
+                return None
+
+            fga = logs.loc[valid_games, 'fga'].astype(float)
+            fta = logs.loc[valid_games, 'fta'].astype(float)
+            mins = mins[valid_games]
+
+            # Usage proxy: possessions used per 48 minutes
+            # Formula: (FGA + 0.44*FTA) / MIN * 48
+            usage_proxy = (fga + 0.44 * fta) / mins * 48
+            avg_usage = usage_proxy.mean()
+
+            # Convert to approximate USG% (rough estimation)
+            # League average is ~100 possessions per 48, team has 5 players
+            # USG% = usage_proxy / 20 roughly
+            estimated_usg = min(40, max(10, avg_usage))  # Clamp to reasonable range
+
+            return {
+                'player_name': player_name,
+                'usg_pct': round(estimated_usg, 1),
+                'ts_pct': None,  # Can't estimate reliably
+                'ast_pct': None,
+                'efg_pct': None,
+                'minutes': round(mins.mean(), 1),
+                'source': 'estimated'
+            }
+
+        except Exception as e:
+            logger.debug(f"Could not estimate usage from logs: {e}")
+            return None
+
+    def calculate_usage_trend(self, game_logs: pd.DataFrame) -> Optional[Dict[str, Any]]:
+        """
+        Calculate shot volume trend (FGA per minute) from game logs.
+
+        This captures role changes independent of minutes played.
+        Example: Same 32 min but FGA drops 18→12 = negative signal for scoring props.
+
+        Args:
+            game_logs: DataFrame with game logs (must have fga, minutes columns)
+
+        Returns:
+            Dict with usage_factor, trend direction, and details
+        """
+        from core.config import CONFIG
+
+        if game_logs is None or game_logs.empty:
+            return None
+
+        if not all(col in game_logs.columns for col in ['fga', 'minutes']):
+            return None
+
+        try:
+            # Sort by date descending (most recent first)
+            logs = game_logs.sort_values('date', ascending=False).copy()
+
+            # Parse minutes
+            mins = logs['minutes'].apply(_parse_minutes)
+            valid = mins > 10  # Exclude garbage time appearances
+
+            if valid.sum() < 8:  # Need enough games
+                return None
+
+            logs = logs[valid]
+            mins = mins[valid]
+
+            fga = logs['fga'].astype(float)
+
+            # Calculate FGA per minute
+            fga_per_min = fga / mins
+
+            # Split into recent (L5) and older (L10-15)
+            recent_5 = fga_per_min.head(5).mean()
+            older = fga_per_min.iloc[5:15].mean() if len(fga_per_min) >= 10 else fga_per_min.iloc[5:].mean()
+
+            if older == 0 or pd.isna(older):
+                return None
+
+            # Calculate trend ratio
+            trend_ratio = recent_5 / older
+
+            # Get thresholds from config
+            up_threshold = CONFIG.SHOT_VOLUME_UP_THRESHOLD  # 1.03
+            down_threshold = CONFIG.SHOT_VOLUME_DOWN_THRESHOLD  # 0.97
+            max_adj = CONFIG.MAX_SHOT_VOLUME_ADJUSTMENT  # 0.08
+
+            # Determine trend direction
+            if trend_ratio >= up_threshold:
+                trend = 'UP'
+            elif trend_ratio <= down_threshold:
+                trend = 'DOWN'
+            else:
+                trend = 'STABLE'
+
+            # Calculate usage factor with caps
+            usage_factor = max(1 - max_adj, min(1 + max_adj, trend_ratio))
+
+            return {
+                'usage_factor': round(usage_factor, 4),
+                'trend': trend,
+                'recent_fga_per_min': round(recent_5, 3),
+                'older_fga_per_min': round(older, 3),
+                'trend_ratio': round(trend_ratio, 3),
+            }
+
+        except Exception as e:
+            logger.debug(f"Could not calculate usage trend: {e}")
+            return None
+
+    def calculate_ts_efficiency(self, game_logs: pd.DataFrame) -> Optional[Dict[str, Any]]:
+        """
+        Calculate True Shooting efficiency and regression factor.
+
+        TS% = PTS / (2 * (FGA + 0.44 * FTA))
+
+        If recent TS% significantly differs from season average, apply
+        regression to mean (expect bounce back or cooling off).
+
+        Args:
+            game_logs: DataFrame with points, fga, fta columns
+
+        Returns:
+            Dict with ts_factor, regression direction, and TS% values
+        """
+        from core.config import CONFIG
+
+        if game_logs is None or game_logs.empty:
+            return None
+
+        if not all(col in game_logs.columns for col in ['points', 'fga', 'fta']):
+            logger.debug(f"TS: Missing columns. Have: {list(game_logs.columns)}")
+            return None
+
+        try:
+            logs = game_logs.sort_values('date', ascending=False).copy()
+
+            def calc_ts(df):
+                """Calculate True Shooting % from a DataFrame slice."""
+                pts = df['points'].astype(float).sum()
+                fga = df['fga'].astype(float).sum()
+                fta = df['fta'].astype(float).sum()
+
+                denominator = 2 * (fga + 0.44 * fta)
+                if denominator == 0:
+                    return 0.55  # League average default
+                return pts / denominator
+
+            # Need at least 10 games for meaningful comparison
+            if len(logs) < 10:
+                return None
+
+            # Calculate recent (L5) and season TS%
+            recent_ts = calc_ts(logs.head(5))
+            season_ts = calc_ts(logs)
+
+            if season_ts == 0:
+                return None
+
+            # Calculate deviation from season average
+            deviation = (recent_ts - season_ts) / season_ts
+
+            # Get thresholds from config
+            threshold = CONFIG.TS_DEVIATION_THRESHOLD  # 0.05
+            weight = CONFIG.TS_REGRESSION_WEIGHT  # 0.3
+            max_adj = CONFIG.MAX_TS_ADJUSTMENT  # 0.05
+
+            # Determine momentum direction and factor
+            # BACKTEST VALIDATED: Hot shooters stay hot (62.5% OVER), cold stay cold (55.3% UNDER)
+            # Use MOMENTUM theory instead of regression-to-mean
+            if abs(deviation) < threshold:
+                # Within normal variance, no adjustment
+                ts_factor = 1.0
+                regression = 'NONE'
+            elif deviation > 0:
+                # Shooting hot - momentum continues (backtest: 62.5% OVER win rate)
+                regression = 'HOT'
+                # Apply positive adjustment (increase projection, favor OVER)
+                ts_factor = 1.0 + min(max_adj, deviation * weight)
+            else:
+                # Shooting cold - slump continues (backtest: 55.3% UNDER win rate)
+                regression = 'COLD'
+                # Apply negative adjustment (reduce projection, favor UNDER)
+                ts_factor = 1.0 - min(max_adj, abs(deviation) * weight)
+
+            return {
+                'ts_factor': round(ts_factor, 4),
+                'regression': regression,
+                'recent_ts_pct': round(recent_ts * 100, 1),
+                'season_ts_pct': round(season_ts * 100, 1),
+                'deviation_pct': round(deviation * 100, 1),
+            }
+
+        except Exception as e:
+            logger.debug(f"Could not calculate TS efficiency: {e}")
+            return None
+
 
 # =============================================================================
 # INJURY & LINEUP INTEGRATION
@@ -1333,9 +1643,18 @@ class InjuryTracker:
         return injuries[injuries['team'].str.upper() == team_upper]
 
     def get_stars_out(self, team_abbrev: str) -> List[str]:
-        """Get list of star players who are OUT for a team."""
+        """Get list of star players who are OUT for a team.
+
+        Uses roster data as primary source, falls back to STAR_PLAYERS constant.
+        """
         team_upper = team_abbrev.upper()
-        stars = self.STAR_PLAYERS.get(team_upper, [])
+
+        # Primary: Use roster data (dynamically loaded, reflects trades)
+        stars = get_team_stars(team_upper)
+
+        # Fallback: Use constants if roster data unavailable
+        if not stars:
+            stars = self.STAR_PLAYERS.get(team_upper, [])
 
         stars_out = []
         for star in stars:
@@ -1345,15 +1664,46 @@ class InjuryTracker:
 
         return stars_out
 
-    def get_teammate_boost(self, player_name: str, team_abbrev: str,
+    def get_teammate_boost(self, player_name: str, team_abbrev: str = None,
                            prop_type: str = 'points') -> dict:
         """
         Calculate usage/production boost when star teammates are out.
 
+        Args:
+            player_name: Player to check boosts for
+            team_abbrev: Team abbreviation (auto-detected from roster if None)
+            prop_type: Type of prop for boost calculation
+
         Returns:
-            dict with keys: boost_factor, stars_out, reason
+            dict with keys: boost_factor, stars_out, reason, team_validated
         """
-        team_upper = team_abbrev.upper()
+        # Auto-detect team from roster if not provided or validate if provided
+        roster_team = get_player_team(player_name)
+        team_validated = True
+
+        if team_abbrev is None:
+            # Auto-detect from roster
+            if roster_team:
+                team_upper = roster_team.upper()
+            else:
+                # Fallback: no team found, return no boost
+                return {
+                    'boost_factor': 1.0,
+                    'stars_out': [],
+                    'reason': f'Player {player_name} not found in rosters',
+                    'team_validated': False
+                }
+        else:
+            team_upper = team_abbrev.upper()
+            # Validate passed team matches roster
+            if roster_team and roster_team.upper() != team_upper:
+                logger.warning(
+                    f"Team mismatch for {player_name}: passed {team_upper}, "
+                    f"roster says {roster_team}. Using roster team."
+                )
+                team_upper = roster_team.upper()
+                team_validated = False
+
         stars_out = self.get_stars_out(team_upper)
 
         # Remove the player themselves from stars_out
@@ -1363,7 +1713,8 @@ class InjuryTracker:
             return {
                 'boost_factor': 1.0,
                 'stars_out': [],
-                'reason': 'No star teammates out'
+                'reason': 'No star teammates out',
+                'team_validated': team_validated
             }
 
         # Calculate boost based on number of stars out
@@ -1380,7 +1731,8 @@ class InjuryTracker:
         return {
             'boost_factor': round(total_boost, 3),
             'stars_out': stars_out,
-            'reason': f"{len(stars_out)} star(s) OUT: {', '.join(stars_out)}"
+            'reason': f"{len(stars_out)} star(s) OUT: {', '.join(stars_out)}",
+            'team_validated': team_validated
         }
 
     def should_exclude_player(self, player_name: str) -> Tuple[bool, Optional[str]]:
@@ -1397,10 +1749,15 @@ class InjuryTracker:
 
         return False, None
 
-    def get_injury_adjustment(self, player_name: str, team_abbrev: str,
+    def get_injury_adjustment(self, player_name: str, team_abbrev: str = None,
                                prop_type: str = 'points') -> dict:
         """
         Get complete injury-related adjustments for a player.
+
+        Args:
+            player_name: Player to analyze
+            team_abbrev: Team abbreviation (auto-detected from roster if None)
+            prop_type: Type of prop for boost calculation
 
         Returns:
             dict with keys:
@@ -1408,10 +1765,14 @@ class InjuryTracker:
                 - exclude: Whether to exclude from analysis
                 - teammate_boost: Boost from stars being out
                 - flags: List of warning/info flags
+                - roster_team: Team from roster lookup (for verification)
         """
         player_status = self.get_player_status(player_name)
         exclude, exclude_reason = self.should_exclude_player(player_name)
         teammate_boost = self.get_teammate_boost(player_name, team_abbrev, prop_type)
+
+        # Get roster team for verification
+        roster_team = get_player_team(player_name)
 
         flags = []
 
@@ -1423,13 +1784,18 @@ class InjuryTracker:
         if teammate_boost['stars_out']:
             flags.append(f"📈 USAGE BOOST (+{(teammate_boost['boost_factor']-1)*100:.0f}%)")
 
+        # Warn if team validation failed
+        if not teammate_boost.get('team_validated', True):
+            flags.append('⚠️ TEAM MISMATCH')
+
         return {
             'player_status': player_status,
             'exclude': exclude,
             'exclude_reason': exclude_reason,
             'teammate_boost': teammate_boost,
             'total_injury_factor': teammate_boost['boost_factor'],
-            'flags': flags
+            'flags': flags,
+            'roster_team': roster_team
         }
 
 
@@ -1934,13 +2300,15 @@ class OddsAPIClient:
         return [result] if result and isinstance(result, dict) else result
 
     def get_all_player_props(self, markets: List[str] = None,
-                             max_events: int = None) -> List[dict]:
+                             max_events: int = None,
+                             event_ids: List[str] = None) -> List[dict]:
         """
         Get player props for all upcoming games.
 
         Args:
             markets: List of prop markets to fetch
             max_events: Limit number of events to fetch (saves API calls)
+            event_ids: Optional list of specific event IDs to fetch (overrides max_events)
 
         Returns:
             List of event data with player props
@@ -1959,7 +2327,11 @@ class OddsAPIClient:
         if not events:
             return []
 
-        if max_events:
+        # Filter to specific event IDs if provided
+        if event_ids:
+            events = [e for e in events if e.get('id') in event_ids]
+            logger.info(f"Filtered to {len(events)} specific events")
+        elif max_events:
             events = events[:max_events]
 
         all_props = []
@@ -2107,6 +2479,104 @@ class LivePropAnalyzer:
         self.news_intel = NewsIntelligence(search_fn=news_search_fn)
         self._news_cache = {}  # {game_key: {player: NewsContext}}
 
+        # Track players confirmed OUT (refreshed before analysis)
+        self._players_out = set()
+        self._injury_report = None
+
+    def refresh_injuries(self, force: bool = True) -> dict:
+        """
+        Refresh injury data from all sources before running analysis.
+
+        Args:
+            force: Force refresh even if cache is valid (default True)
+
+        Returns:
+            dict with keys:
+                - players_out: set of player names confirmed OUT
+                - players_gtd: set of player names with GTD status
+                - players_questionable: set of player names who are QUESTIONABLE
+                - injury_df: Full injury DataFrame
+                - summary: Human-readable summary string
+        """
+        logger.info("=" * 60)
+        logger.info("INJURY REFRESH: Fetching fresh injury data...")
+
+        # Force refresh from all sources
+        injury_df = self.injuries.get_all_injuries(force_refresh=force)
+
+        players_out = set()
+        players_gtd = set()
+        players_questionable = set()
+        team_injuries = {}  # team -> list of injured players
+
+        if not injury_df.empty:
+            for _, row in injury_df.iterrows():
+                player = row['player'] if 'player' in row.index else ''
+                status = str(row['status']).upper() if 'status' in row.index else ''
+                team = row['team'] if 'team' in row.index else 'UNK'
+
+                if status in ['OUT', 'O', 'DNP']:
+                    players_out.add(player)
+                    if team not in team_injuries:
+                        team_injuries[team] = {'out': [], 'gtd': [], 'questionable': []}
+                    team_injuries[team]['out'].append(player)
+                elif status in ['GTD', 'GAME TIME DECISION', 'GAME-TIME DECISION']:
+                    players_gtd.add(player)
+                    if team not in team_injuries:
+                        team_injuries[team] = {'out': [], 'gtd': [], 'questionable': []}
+                    team_injuries[team]['gtd'].append(player)
+                elif status in ['QUESTIONABLE', 'Q', 'DOUBTFUL', 'D']:
+                    players_questionable.add(player)
+                    if team not in team_injuries:
+                        team_injuries[team] = {'out': [], 'gtd': [], 'questionable': []}
+                    team_injuries[team]['questionable'].append(player)
+
+        # Log summary
+        summary_lines = [
+            f"Total injuries: {len(injury_df)}",
+            f"OUT: {len(players_out)} players",
+            f"GTD: {len(players_gtd)} players",
+            f"Questionable: {len(players_questionable)} players",
+        ]
+
+        logger.info(f"  {summary_lines[0]}")
+        logger.info(f"  {summary_lines[1]}")
+        logger.info(f"  {summary_lines[2]}")
+        logger.info(f"  {summary_lines[3]}")
+
+        # Log key players OUT by team
+        if players_out:
+            logger.info("  Players OUT:")
+            for team, injuries in sorted(team_injuries.items()):
+                if injuries['out']:
+                    logger.info(f"    {team}: {', '.join(injuries['out'])}")
+
+        # Store for use in analysis
+        self._players_out = players_out
+        self._injury_report = {
+            'players_out': players_out,
+            'players_gtd': players_gtd,
+            'players_questionable': players_questionable,
+            'team_injuries': team_injuries,
+            'injury_df': injury_df,
+            'summary': '\n'.join(summary_lines),
+        }
+
+        logger.info("=" * 60)
+        return self._injury_report
+
+    def is_player_out(self, player_name: str) -> bool:
+        """Check if a player is confirmed OUT."""
+        # Check exact match first
+        if player_name in self._players_out:
+            return True
+        # Check partial match (for name variations)
+        player_lower = player_name.lower()
+        for out_player in self._players_out:
+            if player_lower in out_player.lower() or out_player.lower() in player_lower:
+                return True
+        return False
+
     def analyze_prop(self, player_name: str, prop_type: str,
                      line: float, odds: int = -110,
                      last_n_games: int = 15,
@@ -2229,7 +2699,8 @@ class LivePropAnalyzer:
         return pd.DataFrame(results)
 
     def find_value_props(self, min_edge: float = 0.05, max_events: int = 5,
-                         min_confidence: float = 0.4, bookmakers: list = None) -> pd.DataFrame:
+                         min_confidence: float = 0.4, bookmakers: list = None,
+                         event_ids: list = None) -> pd.DataFrame:
         """
         Scan current odds for value props with FULL CONTEXTUAL ANALYSIS.
 
@@ -2248,10 +2719,20 @@ class LivePropAnalyzer:
             max_events: Max number of games to scan (saves API calls)
             min_confidence: Minimum confidence threshold (default 40%)
             bookmakers: List of bookmaker keys to include (e.g., ['fanduel']). None = all books.
+            event_ids: Optional list of specific event IDs to analyze (overrides max_events)
         """
         if not self.odds:
             logger.warning("OddsAPIClient required for live odds scanning")
             return pd.DataFrame()
+
+        # =================================================================
+        # PHASE 0: INJURY REFRESH (CRITICAL - must run before analysis)
+        # =================================================================
+        injury_report = self.refresh_injuries(force=True)
+        players_out = injury_report.get('players_out', set())
+
+        if players_out:
+            logger.info(f"Will exclude {len(players_out)} players confirmed OUT from analysis")
 
         # =================================================================
         # PHASE 1: DATA COLLECTION
@@ -2259,7 +2740,7 @@ class LivePropAnalyzer:
         logger.info("=" * 60)
         logger.info("PHASE 1: Fetching market data...")
 
-        raw_props = self.odds.get_all_player_props(max_events=max_events)
+        raw_props = self.odds.get_all_player_props(max_events=max_events, event_ids=event_ids)
         props_df = self.odds.parse_player_props(raw_props)
 
         if props_df.empty:
@@ -2303,6 +2784,38 @@ class LivePropAnalyzer:
         unique_props['under_odds'] = unique_props['under_odds'].fillna(-110).astype(int)
 
         logger.info(f"Found {len(unique_props)} unique props across {max_events} games")
+
+        # =================================================================
+        # PHASE 1.5: FILTER OUT INJURED PLAYERS
+        # =================================================================
+        if players_out:
+            # Create a mask for players who are NOT out
+            def player_is_out(player_name):
+                player_lower = player_name.lower()
+                for out_player in players_out:
+                    if player_lower in out_player.lower() or out_player.lower() in player_lower:
+                        return True
+                return False
+
+            before_count = len(unique_props)
+            excluded_players = set()
+
+            # Build mask of players to keep
+            keep_mask = []
+            for player in unique_props['player']:
+                if player_is_out(player):
+                    excluded_players.add(player)
+                    keep_mask.append(False)
+                else:
+                    keep_mask.append(True)
+
+            unique_props = unique_props[keep_mask]
+
+            excluded_count = before_count - len(unique_props)
+            if excluded_count > 0:
+                logger.info(f"  EXCLUDED {excluded_count} props for {len(excluded_players)} players confirmed OUT:")
+                for player in sorted(excluded_players):
+                    logger.info(f"    - {player}")
 
         # =================================================================
         # PHASE 2: CONTEXTUAL DATA LOADING
@@ -2422,7 +2935,7 @@ class LivePropAnalyzer:
         logger.info("PHASE 4: Analyzing props with full context...")
 
         value_props = []
-        skipped = {'sample_size': 0, 'no_edge': 0, 'low_confidence': 0, 'correlation': 0}
+        skipped = {'sample_size': 0, 'no_edge': 0, 'low_confidence': 0, 'correlation': 0, 'injury_out': 0}
 
         # Map prop types to column names
         prop_to_column = {
@@ -2599,6 +3112,35 @@ class LivePropAnalyzer:
                 # --- OPPONENT DEFENSE ADJUSTMENT ---
                 # (would need opponent info from game data - placeholder)
                 # For now, use neutral 1.0
+
+                # --- USAGE/SHOT VOLUME TREND ADJUSTMENT (NEW) ---
+                # Only apply to scoring-related props
+                # NOTE: Vol↑ neutralized (33% win rate = noise), only Vol↓ applied (69.8% win rate = signal)
+                scoring_props = ['points', 'pra', 'threes', 'pts_reb', 'pts_ast', 'field_goals_made', 'three_pointers_made']
+                if prop_type in scoring_props and len(logs) >= 10:
+                    usage_result = self.nba.calculate_usage_trend(logs)
+                    if usage_result:
+                        trend = usage_result.get('trend', 'STABLE')
+                        usage_factor = usage_result.get('usage_factor', 1.0)
+                        if trend == 'DOWN' and usage_factor < 1.0:
+                            # Vol↓ is predictive (69.8% win rate) - apply the factor
+                            adjustment_factors.append(usage_factor)
+                            adjustment_notes.append(f"Vol↓: {usage_factor:.2f}x")
+                        elif trend == 'UP':
+                            # Vol↑ is noise (33% win rate) - log but DON'T apply factor
+                            adjustment_notes.append(f"Vol↑: 1.00x (neutralized)")
+
+                # --- TRUE SHOOTING MOMENTUM (BACKTEST VALIDATED) ---
+                # Hot shooters stay hot (62.5% OVER), cold shooters stay cold (55.3% UNDER)
+                if prop_type in scoring_props and len(logs) >= 10:
+                    ts_result = self.nba.calculate_ts_efficiency(logs)
+                    if ts_result:
+                        ts_factor = ts_result.get('ts_factor', 1.0)
+                        momentum = ts_result.get('regression', 'NONE')
+                        if ts_factor != 1.0 and momentum in ('HOT', 'COLD'):
+                            adjustment_factors.append(ts_factor)
+                            recent_ts = ts_result.get('recent_ts_pct', 0)
+                            adjustment_notes.append(f"{momentum}: {ts_factor:.2f}x ({recent_ts:.0f}% TS)")
 
                 # --- NEWS INTELLIGENCE ADJUSTMENT (10th factor) ---
                 if news_factor != 1.0:

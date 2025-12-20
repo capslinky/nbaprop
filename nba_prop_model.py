@@ -37,6 +37,7 @@ from core.odds_utils import (
     american_to_implied_prob,
     calculate_ev,
 )
+from core.rosters import get_player_team
 
 # Backward compatibility alias
 TEAM_ABBREV_MAP = TEAM_ABBREVIATIONS
@@ -707,6 +708,10 @@ class SmartModel:
             total_adjustment *= adj
 
         adjusted_projection = base_projection * total_adjustment
+
+        # Apply global projection bias (calibration correction)
+        # PROJECTION_BIAS > 1.0 boosts projections to correct systematic under-projection
+        adjusted_projection *= CONFIG.PROJECTION_BIAS
 
         # Recalculate edge
         adjusted_edge = (adjusted_projection - line) / line if line > 0 else 0
@@ -1400,6 +1405,40 @@ class UnifiedPropModel:
             return self._weights_store.get_factor('TOTAL_WEIGHT', default)
         return default
 
+    # =========================================================================
+    # NEW FACTOR PROPERTIES: Rest Days, Usage Rate, Shot Volume, TS%
+    # =========================================================================
+
+    @property
+    def REST_DAY_FACTORS(self) -> dict:
+        """Rest day adjustment factors (gradient instead of binary B2B)."""
+        from core.config import CONFIG
+        return CONFIG.REST_DAY_FACTORS
+
+    @property
+    def LEAGUE_AVG_USG(self) -> float:
+        """League average usage rate percentage."""
+        from core.config import CONFIG
+        return CONFIG.LEAGUE_AVG_USG
+
+    @property
+    def USAGE_FACTOR_WEIGHT(self) -> float:
+        """Weight for usage rate adjustment."""
+        from core.config import CONFIG
+        default = CONFIG.USAGE_FACTOR_WEIGHT
+        if self._weights_store:
+            return self._weights_store.get_factor('USAGE_FACTOR_WEIGHT', default)
+        return default
+
+    @property
+    def MAX_USAGE_ADJUSTMENT(self) -> float:
+        """Maximum usage rate adjustment cap (±%)."""
+        from core.config import CONFIG
+        default = CONFIG.MAX_USAGE_ADJUSTMENT
+        if self._weights_store:
+            return self._weights_store.get_factor('MAX_USAGE_ADJUSTMENT', default)
+        return default
+
     @property
     def fetcher(self) -> 'NBADataFetcher':
         """Lazy load data fetcher."""
@@ -1480,9 +1519,10 @@ class UnifiedPropModel:
             elif '@' in recent_matchup:
                 context['player_team'] = recent_matchup.split(' @')[0].strip()
 
-        # Detect B2B from game dates
+        # Detect B2B from game dates and get rest days
         b2b_info = self.fetcher.check_back_to_back(logs)
         context['is_b2b'] = b2b_info.get('is_b2b', False)
+        context['rest_days'] = b2b_info.get('rest_days')
 
         return context
 
@@ -1528,21 +1568,34 @@ class UnifiedPropModel:
         teammate_boost: float,
         defense_data: pd.DataFrame,
         pace_data: pd.DataFrame,
+        # New parameters for enhanced factors
+        rest_days: int = None,
+        game_logs: pd.DataFrame = None,
     ) -> tuple:
         """
-        Calculate all 9 adjustment factors.
+        Calculate all 12 adjustment factors.
         Returns (adjustments_dict, total_multiplier, flags, matchup_rating, opp_rank).
+
+        Factors:
+        1-9: Original factors (defense, location, B2B/rest, pace, total, blowout, vs_team, minutes, injury)
+        10: Usage rate (from NBA API advanced stats)
+        11: Shot volume trend (FGA/minute trend)
+        12: TS% efficiency regression
         """
         adjustments = {
             'opp_defense': 1.0,
             'location': 1.0,
-            'b2b': 1.0,
+            'rest': 1.0,  # Enhanced from b2b to full rest days gradient
             'pace': 1.0,
             'total': 1.0,
             'blowout': 1.0,
-            'vs_team': 1.0,  # Placeholder - would need additional data
+            'vs_team': 1.0,
             'minutes': 1.0,
             'injury_boost': 1.0,
+            # New factors
+            'usage_rate': 1.0,
+            'shot_volume': 1.0,
+            'ts_regression': 1.0,
         }
         flags = []
         matchup_rating = 'NEUTRAL'
@@ -1595,9 +1648,23 @@ class UnifiedPropModel:
         if is_home is not None:
             adjustments['location'] = self.HOME_BOOST if is_home else self.AWAY_PENALTY
 
-        # 3. BACK-TO-BACK
-        if is_b2b:
-            adjustments['b2b'] = self.B2B_PENALTY
+        # 3. REST DAYS (Enhanced gradient instead of binary B2B)
+        if rest_days is not None:
+            # Use gradient rest day factors from config
+            rest_factors = getattr(self, 'REST_DAY_FACTORS', {
+                0: 0.88, 1: 0.92, 2: 1.00, 3: 1.02, 4: 1.03, 5: 1.02, 6: 1.01
+            })
+            # Clamp to 0-6 range, use 6 for anything higher
+            clamped_days = min(6, max(0, rest_days))
+            adjustments['rest'] = rest_factors.get(clamped_days, 1.0)
+
+            if rest_days == 1:
+                flags.append('B2B')
+            elif rest_days >= 4:
+                flags.append('WELL RESTED')
+        elif is_b2b:
+            # Fallback to legacy B2B if rest_days not provided
+            adjustments['rest'] = self.B2B_PENALTY
             flags.append('B2B')
 
         # 4. PACE
@@ -1662,7 +1729,64 @@ class UnifiedPropModel:
         if teammate_boost and teammate_boost > 1.0:
             adjustments['injury_boost'] = min(1.15, teammate_boost)
             boost_pct = round((teammate_boost - 1) * 100)
-            flags.append(f'USAGE +{boost_pct}%')
+            flags.append(f'INJ BOOST +{boost_pct}%')
+
+        # =====================================================================
+        # NEW FACTORS (10-12): Usage, Shot Volume, TS% Regression
+        # =====================================================================
+
+        # 10. USAGE RATE (from NBA API advanced stats)
+        # Higher usage = more reliable projection for scoring props
+        if player_name and prop_type in ['points', 'pra', 'threes', 'fg3m', 'pts_reb', 'pts_ast']:
+            try:
+                usage_stats = self.fetcher.get_player_usage(player_name)
+                if usage_stats:
+                    player_usg = usage_stats.get('usg_pct', 20.0)
+                    league_avg = getattr(self, 'LEAGUE_AVG_USG', 20.0)
+                    weight = getattr(self, 'USAGE_FACTOR_WEIGHT', 0.3)
+                    max_adj = getattr(self, 'MAX_USAGE_ADJUSTMENT', 0.05)
+
+                    # Higher usage = more reliable, slight boost
+                    usg_deviation = (player_usg - league_avg) / 100
+                    usg_factor = 1.0 + (usg_deviation * weight)
+                    adjustments['usage_rate'] = max(1 - max_adj, min(1 + max_adj, usg_factor))
+
+                    if player_usg >= 28:
+                        flags.append('HIGH USG')
+                    elif player_usg <= 15:
+                        flags.append('LOW USG')
+            except Exception as e:
+                logger.debug(f"Could not fetch usage for {player_name}: {e}")
+
+        # 11. SHOT VOLUME TREND (FGA/minute trend)
+        # Catches role changes independent of minutes
+        if game_logs is not None and not game_logs.empty and prop_type in ['points', 'pra', 'threes', 'fg3m']:
+            try:
+                vol_trend = self.fetcher.calculate_usage_trend(game_logs)
+                if vol_trend:
+                    adjustments['shot_volume'] = vol_trend.get('usage_factor', 1.0)
+                    trend_dir = vol_trend.get('trend', 'STABLE')
+                    if trend_dir == 'UP':
+                        flags.append('VOL UP')
+                    elif trend_dir == 'DOWN':
+                        flags.append('VOL DOWN')
+            except Exception as e:
+                logger.debug(f"Could not calculate shot volume trend: {e}")
+
+        # 12. TRUE SHOOTING EFFICIENCY REGRESSION
+        # Regress extreme efficiency outliers toward mean
+        if game_logs is not None and not game_logs.empty and prop_type in ['points', 'pra']:
+            try:
+                ts_info = self.fetcher.calculate_ts_efficiency(game_logs)
+                if ts_info:
+                    adjustments['ts_regression'] = ts_info.get('ts_factor', 1.0)
+                    regression_type = ts_info.get('regression', 'NONE')
+                    if regression_type == 'DOWN':
+                        flags.append('TS REG DOWN')  # Shooting too hot, expect regression
+                    elif regression_type == 'UP':
+                        flags.append('TS REG UP')  # Shooting cold, expect bounce back
+            except Exception as e:
+                logger.debug(f"Could not calculate TS efficiency: {e}")
 
         # Calculate total multiplier
         total = 1.0
@@ -1680,6 +1804,7 @@ class UnifiedPropModel:
         is_b2b: bool,
         blowout_risk: str,
         teammate_boost: float,
+        vol_trend: str = None,  # 'UP', 'DOWN', or None
     ) -> float:
         """
         Calculate multi-factor confidence score (0-1).
@@ -1708,11 +1833,14 @@ class UnifiedPropModel:
         trend_magnitude = abs(recent - older) / older if older > 0 else 0
         trend_score = min(1, trend_magnitude * 5)
 
+        # Weights calibrated from 12/19 analysis:
+        # - Increased consistency weight (most predictive)
+        # - Reduced trend weight (NEUTRAL outperforms HOT/COLD by 20pts)
         base_confidence = (
-            consistency_score * 0.3 +
+            consistency_score * 0.4 +  # Increased from 0.3
             sample_score * 0.2 +
             hit_clarity * 0.3 +
-            trend_score * 0.2
+            trend_score * 0.1          # Reduced from 0.2
         )
 
         # Adjustments
@@ -1721,7 +1849,7 @@ class UnifiedPropModel:
         elif matchup_rating == 'GOOD':
             base_confidence += 0.05
         elif matchup_rating == 'TOUGH':
-            base_confidence -= 0.05
+            base_confidence -= 0.15  # Increased from 0.05 (TOUGH = 45.8% win rate)
 
         if is_b2b:
             base_confidence -= 0.05
@@ -1731,6 +1859,13 @@ class UnifiedPropModel:
 
         if teammate_boost and teammate_boost > 1.0:
             base_confidence += 0.05
+
+        # Vol trend adjustment (from 12/19 calibration)
+        # Vol↓ = 69.8% win rate, Vol↑ = 33% win rate
+        if vol_trend == 'DOWN':
+            base_confidence += 0.08  # Boost confidence for volume regression
+        elif vol_trend == 'UP':
+            base_confidence -= 0.10  # Penalize unsustainable high volume
 
         return max(0.2, min(0.95, base_confidence))
 
@@ -1805,6 +1940,17 @@ class UnifiedPropModel:
         # Auto-detect context
         context = self._detect_context_from_logs(logs)
         player_team = context['player_team']
+
+        # Validate/correct team using roster data (prevents misidentification)
+        roster_team = get_player_team(player_name)
+        if roster_team:
+            if player_team and player_team.upper() != roster_team.upper():
+                logger.warning(
+                    f"Team mismatch for {player_name}: matchup={player_team}, "
+                    f"roster={roster_team}. Using roster team."
+                )
+            player_team = roster_team
+
         if opponent is None:
             opponent = context.get('opponent')
         if is_home is None:
@@ -1851,10 +1997,15 @@ class UnifiedPropModel:
             teammate_boost=teammate_boost,
             defense_data=defense_data,
             pace_data=pace_data,
+            rest_days=context.get('rest_days'),
+            game_logs=logs,
         )
 
         # Apply adjustments
         projection = base_projection * total_adj
+
+        # Apply global projection bias (calibration correction)
+        projection *= CONFIG.PROJECTION_BIAS
 
         # Calculate stats
         season_avg = history.mean()
