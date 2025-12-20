@@ -24,8 +24,8 @@ Usage:
     results = analyzer.analyze_multiple_props(props)
 """
 
-# Re-export from nba_integrations.py
-from nba_integrations import LivePropAnalyzer
+# Import from submodule
+from analysis.live_analyzer import LivePropAnalyzer
 
 # Re-export Backtester from models
 from models import Backtester, BetResult

@@ -437,7 +437,8 @@ def analyze_custom_props(props_list: list):
         analyze_custom_props(props)
     """
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from nba_integrations import NBADataFetcher, LivePropAnalyzer
+    from data import NBADataFetcher
+    from analysis import LivePropAnalyzer
     
     fetcher = NBADataFetcher()
     analyzer = LivePropAnalyzer(nba_fetcher=fetcher)

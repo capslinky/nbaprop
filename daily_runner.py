@@ -196,19 +196,49 @@ class DailyRunner:
 
             odds_client = OddsAPIClient(api_key=api_key)
 
-            # Setup news intelligence with Perplexity if available
+            # Setup news intelligence and injury tracking with Perplexity if available
             news_search_fn = None
+            injury_tracker = None
             perplexity_key = CONFIG.PERPLEXITY_API_KEY or os.environ.get('PERPLEXITY_API_KEY')
             if perplexity_key:
                 from core.news_intelligence import create_perplexity_api_search
                 news_search_fn = create_perplexity_api_search(perplexity_key)
                 self.log("News intelligence: Perplexity API enabled")
+
+                # Create InjuryTracker with Perplexity for real-time injury data
+                from data import InjuryTracker
+
+                def perplexity_injury_fn(messages):
+                    """Wrapper to call Perplexity API for injury queries."""
+                    try:
+                        import requests
+                        url = "https://api.perplexity.ai/chat/completions"
+                        headers = {
+                            "Authorization": f"Bearer {perplexity_key}",
+                            "Content-Type": "application/json"
+                        }
+                        payload = {
+                            "model": "sonar",
+                            "messages": messages
+                        }
+                        response = requests.post(url, headers=headers, json=payload, timeout=30)
+                        if response.status_code == 200:
+                            result = response.json()
+                            return result.get('choices', [{}])[0].get('message', {}).get('content', '')
+                    except Exception as e:
+                        self.log(f"Perplexity injury query error: {e}", "DEBUG")
+                    return None
+
+                injury_tracker = InjuryTracker(perplexity_fn=perplexity_injury_fn)
+                self.log("Injury tracking: Perplexity real-time enabled")
             else:
                 self.log("News intelligence: Disabled (no PERPLEXITY_API_KEY)")
+                self.log("Injury tracking: Using web scraping only")
 
             analyzer = LivePropAnalyzer(
                 nba_fetcher=fetcher,
                 odds_client=odds_client,
+                injury_tracker=injury_tracker,
                 news_search_fn=news_search_fn
             )
 
@@ -415,7 +445,7 @@ class DailyRunner:
             return None, None
 
         try:
-            from nba_integrations import InjuryTracker
+            from data import InjuryTracker
             from core.rosters import TEAM_ROSTERS, get_team_stars
             import pandas as pd
             from datetime import date
@@ -577,6 +607,91 @@ class DailyRunner:
     # POST-GAME WORKFLOW
     # =========================================================================
 
+    def backfill_missing_results(self) -> Tuple[int, int]:
+        """
+        Automatically backfill results for all past dates with missing results.
+
+        Returns:
+            Tuple of (total_fetched, total_errors)
+        """
+        self.log_section("BACKFILL MISSING RESULTS")
+
+        if self.dry_run:
+            self.log("Would backfill missing results", "DRY-RUN")
+            return 0, 0
+
+        try:
+            from pick_tracker import PickTracker
+
+            tracker = PickTracker()
+            missing_dates = tracker.get_dates_missing_results()
+
+            if not missing_dates:
+                self.log("No dates with missing results found")
+                return 0, 0
+
+            self.log(f"Found {len(missing_dates)} dates with missing results:")
+            for date in missing_dates:
+                self.log(f"  - {date}")
+
+            total_fetched = 0
+            total_errors = 0
+
+            for date in missing_dates:
+                self.log(f"\nBackfilling {date}...")
+                fetched, errors = self.fetch_results_from_api(date)
+                total_fetched += fetched
+                total_errors += errors
+
+            self.log(f"\nBackfill complete: {total_fetched} results fetched, {total_errors} errors")
+            return total_fetched, total_errors
+
+        except Exception as e:
+            self.log(f"Backfill error: {e}", "ERROR")
+            return 0, 0
+
+    def generate_oversight_report(self, days: int = 7, output_path: str = None) -> Optional[str]:
+        """
+        Generate daily oversight report (PDF and console).
+
+        Args:
+            days: Number of days to include in report
+            output_path: Optional custom output path for PDF
+
+        Returns:
+            Path to PDF file, or None if failed
+        """
+        self.log_section("OVERSIGHT REPORT")
+
+        if self.dry_run:
+            self.log("Would generate oversight report", "DRY-RUN")
+            return None
+
+        try:
+            from pick_tracker import PickTracker
+            from reports.oversight_report import OversightReportGenerator
+
+            tracker = PickTracker()
+            generator = OversightReportGenerator(tracker)
+
+            # Print console report
+            generator.print_console_report(days)
+
+            # Generate PDF
+            pdf_path = generator.generate_pdf(days, output_path)
+            self.log(f"PDF oversight report saved to: {pdf_path}")
+
+            return pdf_path
+
+        except ImportError as e:
+            self.log(f"Oversight report requires reportlab: {e}", "WARN")
+            return None
+        except Exception as e:
+            self.log(f"Error generating oversight report: {e}", "ERROR")
+            import traceback
+            self.log(traceback.format_exc(), "DEBUG")
+            return None
+
     def fetch_results_from_api(self, date_str: str = None) -> Tuple[int, int]:
         """
         Fetch actual results from NBA API for pending picks.
@@ -618,29 +733,31 @@ class DailyRunner:
             errors = 0
             player_cache = {}
 
+            # Parse target date for comparison
+            import pandas as pd
+            target_date = pd.to_datetime(date_str).date()
+
             for player in players:
                 try:
-                    # Fetch recent game logs (last 3 games to find the right date)
-                    logs = fetcher.get_player_game_logs(player, last_n_games=3)
+                    # Fetch recent game logs (last 10 games to find the right date)
+                    logs = fetcher.get_player_game_logs(player, last_n_games=10)
 
                     if logs.empty:
                         self.log(f"  No data for {player}", "WARN")
                         errors += 1
                         continue
 
-                    # Find the game from our target date
-                    # Game logs have 'date' column in format like '2024-12-10'
+                    # Find the game from our target date using proper datetime comparison
+                    game_log = pd.DataFrame()
                     if 'date' in logs.columns:
-                        game_log = logs[logs['date'].astype(str).str.contains(date_str.replace('-', ''))]
-                        if game_log.empty:
-                            # Try matching on formatted date
-                            logs['date_str'] = logs['date'].astype(str)
-                            game_log = logs[logs['date_str'].str[:10] == date_str]
+                        # Convert date column to date objects for comparison
+                        logs['game_date'] = pd.to_datetime(logs['date']).dt.date
+                        game_log = logs[logs['game_date'] == target_date]
 
                     if game_log.empty:
-                        # Use most recent game as fallback
-                        game_log = logs.head(1)
-                        self.log(f"  {player}: Using most recent game (date mismatch)", "WARN")
+                        # Player didn't play on this date - skip them (don't use wrong game data)
+                        self.log(f"  {player}: No game on {date_str} (skipping)", "DEBUG")
+                        continue
 
                     player_cache[player] = game_log.iloc[0].to_dict()
 
@@ -741,12 +858,19 @@ class DailyRunner:
             self.log(f"Error generating report: {e}", "ERROR")
             return {}
 
-    def run_post_game(self, date_str: str = None) -> dict:
+    def run_post_game(self, date_str: str = None, backfill: bool = True, oversight_days: int = 7) -> dict:
         """
         Full post-game workflow:
-        1. Fetch results from NBA API
-        2. Record results to database
+        1. Backfill any missing results from previous days (optional)
+        2. Fetch results from NBA API for today/specified date
         3. Generate accuracy report
+        4. Generate oversight report
+        5. Run weekly calibration (Sundays)
+
+        Args:
+            date_str: Date to process (default: today)
+            backfill: Whether to auto-backfill missing results (default: True)
+            oversight_days: Number of days for oversight report (default: 7)
         """
         self.log_section("POST-GAME WORKFLOW")
 
@@ -759,23 +883,115 @@ class DailyRunner:
             'date': date_str,
             'fetched': 0,
             'errors': 0,
+            'backfill_fetched': 0,
+            'backfill_errors': 0,
         }
 
-        # Step 1: Fetch and record results
+        # Step 1: Backfill missing results (if enabled)
+        if backfill:
+            backfill_fetched, backfill_errors = self.backfill_missing_results()
+            results['backfill_fetched'] = backfill_fetched
+            results['backfill_errors'] = backfill_errors
+
+        # Step 2: Fetch and record results for target date
         fetched, errors = self.fetch_results_from_api(date_str)
         results['fetched'] = fetched
         results['errors'] = errors
 
-        # Step 2: Generate report
+        # Step 3: Generate accuracy report
         report = self.generate_accuracy_report()
         results['report'] = report
 
+        # Step 4: Generate oversight report
+        oversight_pdf = self.generate_oversight_report(days=oversight_days)
+        results['oversight_pdf'] = oversight_pdf
+
+        # Step 5: Weekly calibration check (Sundays only)
+        calibration_result = self.run_weekly_calibration_check()
+        if calibration_result:
+            results['calibration'] = calibration_result
+
         # Summary
         self.log_section("POST-GAME SUMMARY")
-        self.log(f"Results fetched: {results['fetched']}")
-        self.log(f"Errors: {results['errors']}")
+        if backfill:
+            self.log(f"Backfill results: {results['backfill_fetched']} fetched, {results['backfill_errors']} errors")
+        self.log(f"Today's results: {results['fetched']} fetched, {results['errors']} errors")
+        if oversight_pdf:
+            self.log(f"Oversight report: {oversight_pdf}")
+        if calibration_result:
+            self.log(f"Calibration: {calibration_result.get('status', 'skipped')}")
 
         return results
+
+    def run_weekly_calibration_check(self) -> Optional[dict]:
+        """
+        Run model calibration on Sundays after sufficient data accumulates.
+
+        Returns:
+            Calibration result dict, or None if skipped
+        """
+        # Only run on Sundays
+        if datetime.now().weekday() != 6:  # 0=Monday, 6=Sunday
+            return None
+
+        self.log_section("WEEKLY CALIBRATION CHECK")
+        self.log("Running weekly model calibration (Sunday)...")
+
+        try:
+            from calibration import CalibrationAnalyzer, WeightOptimizer, LearnedWeightsStore
+            from core.config import CONFIG
+
+            analyzer = CalibrationAnalyzer()
+
+            # Check if sufficient data
+            if not analyzer.has_sufficient_data():
+                self.log(f"Insufficient data for calibration (need {CONFIG.CALIBRATION_MIN_TOTAL_PICKS} picks)")
+                return {'status': 'skipped', 'reason': 'insufficient_data'}
+
+            # Run analysis
+            result = analyzer.calculate_all_factor_stats()
+            self.log(f"Analyzed {result.picks_with_results} picks, win rate: {result.overall_win_rate:.1%}")
+
+            # Optimize
+            optimizer = WeightOptimizer()
+            optimized = optimizer.optimize_all_factors(result)
+
+            # Count adjustments
+            adjusted_count = sum(1 for opt in optimized.values() if opt.was_adjusted)
+
+            if adjusted_count == 0:
+                self.log("No factors need adjustment")
+                return {'status': 'no_changes', 'picks_analyzed': result.picks_with_results}
+
+            # Save if not dry run
+            if self.dry_run:
+                self.log(f"[DRY RUN] Would adjust {adjusted_count} factor(s)")
+                return {'status': 'dry_run', 'would_adjust': adjusted_count}
+
+            # Save weights
+            weights = optimizer.create_learned_weights(optimized, result)
+            store = LearnedWeightsStore()
+
+            if store.save(weights):
+                self.log(f"Calibration complete: {adjusted_count} factor(s) adjusted")
+                for name, opt in optimized.items():
+                    if opt.was_adjusted:
+                        self.log(f"  {name}: {opt.current_value:.3f} -> {opt.new_value:.3f} ({opt.change_pct*100:+.1f}%)")
+                return {
+                    'status': 'success',
+                    'factors_adjusted': adjusted_count,
+                    'picks_analyzed': result.picks_with_results,
+                }
+            else:
+                self.log("Error saving calibration weights", level="ERROR")
+                return {'status': 'error', 'reason': 'save_failed'}
+
+        except ImportError:
+            self.log("Calibration module not available", level="WARNING")
+            return {'status': 'skipped', 'reason': 'module_not_available'}
+        except Exception as e:
+            self.log(f"Calibration error: {e}", level="ERROR")
+            return {'status': 'error', 'reason': str(e)}
 
     # =========================================================================
     # LINE MONITORING WORKFLOW
@@ -1014,6 +1230,8 @@ class DailyRunner:
 
 
 def main():
+    from core.config import CONFIG
+
     parser = argparse.ArgumentParser(
         description='NBA Prop Daily Runner - Automated Workflow',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1039,12 +1257,18 @@ Examples:
                        help='Just show accuracy report')
     parser.add_argument('--injury-report', action='store_true',
                        help='Generate daily NBA injury report (PDF + CSV)')
+    parser.add_argument('--schedule', action='store_true',
+                       help='Show NBA game schedule')
+    parser.add_argument('--oversight-report', action='store_true',
+                       help='Generate oversight report only (PDF + console)')
+    parser.add_argument('--no-backfill', action='store_true',
+                       help='Disable auto-backfill of missing results in post-game')
     parser.add_argument('--monitor', action='store_true',
                        help='Run continuous line monitoring with alerts')
     parser.add_argument('--date', type=str,
                        help='Date for results (YYYY-MM-DD), default: today for pre-game, yesterday for post-game')
-    parser.add_argument('--days', type=int, default=30,
-                       help='Days for accuracy report (default: 30)')
+    parser.add_argument('--days', type=int, default=7,
+                       help='Days for accuracy/oversight report (default: 7)')
     parser.add_argument('--interval', type=int, default=300,
                        help='Monitor polling interval in seconds (default: 300 = 5 min)')
     parser.add_argument('--duration', type=int, default=0,
@@ -1062,8 +1286,8 @@ Examples:
 
     args = parser.parse_args()
 
-    # Parse bookmaker filter
-    bookmakers = [args.book] if args.book else None
+    # Parse bookmaker filter - use CONFIG.PREFERRED_BOOKS as default
+    bookmakers = [args.book] if args.book else CONFIG.PREFERRED_BOOKS
 
     runner = DailyRunner(verbose=not args.quiet, dry_run=args.dry_run)
 
@@ -1076,19 +1300,30 @@ Examples:
     if args.full:
         runner.run_pre_game(bookmakers=bookmakers)
         print()
-        runner.run_post_game(args.date)
+        runner.run_post_game(
+            date_str=args.date,
+            backfill=not args.no_backfill,
+            oversight_days=args.days
+        )
 
     elif args.pre_game:
         runner.run_pre_game(bookmakers=bookmakers)
 
     elif args.post_game:
-        runner.run_post_game(args.date)
+        runner.run_post_game(
+            date_str=args.date,
+            backfill=not args.no_backfill,
+            oversight_days=args.days
+        )
 
     elif args.fetch_results:
         runner.fetch_results_from_api(args.date)
 
     elif args.accuracy:
         runner.generate_accuracy_report(args.days)
+
+    elif args.oversight_report:
+        runner.generate_oversight_report(days=args.days)
 
     elif args.injury_report:
         pdf_path, csv_path = runner.generate_injury_report()
@@ -1107,13 +1342,19 @@ Examples:
             webhook_url=args.webhook
         )
 
+    elif args.schedule:
+        from data.schedule_utils import print_schedule
+        print_schedule(days=args.days, date_str=args.date)
+
     else:
         parser.print_help()
         print("\n" + "=" * 60)
         print("Quick Start:")
         print("  1. Before games:  python daily_runner.py --pre-game")
         print("  2. After games:   python daily_runner.py --post-game")
-        print("  3. Line monitor:  python daily_runner.py --monitor")
+        print("  3. Schedule:      python daily_runner.py --schedule")
+        print("  4. Oversight:     python daily_runner.py --oversight-report --days 7")
+        print("  5. Line monitor:  python daily_runner.py --monitor")
         print("=" * 60)
 
 

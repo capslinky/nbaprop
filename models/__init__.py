@@ -7,7 +7,7 @@ This module provides:
 - Various model implementations for generating predictions
 
 Available Models:
-- UnifiedPropModel: Production model with 9 contextual adjustments
+- UnifiedPropModel: Production model with 12 contextual adjustments
 - WeightedAverageModel: Recency-weighted baseline
 - SituationalModel: Adjusts for home/away, B2B, opponent
 - MedianModel: Outlier-resistant median-based
@@ -22,24 +22,17 @@ Usage:
     print(f"Projection: {analysis.projection}, Edge: {analysis.edge:.1%}")
 """
 
-# Re-export from nba_prop_model.py
-# This maintains backward compatibility while establishing the new module structure
-from nba_prop_model import (
-    # Data classes (output formats)
-    Prediction,
-    PropAnalysis,
-
-    # Models
-    WeightedAverageModel,
-    SituationalModel,
-    MedianModel,
-    EnsembleModel,
-    SmartModel,
-    UnifiedPropModel,
-
-    # Backtesting
-    BetResult,
-    Backtester,
+# Import from submodules
+from models.prediction import Prediction
+from models.prop_analysis import PropAnalysis
+from models.simple_models import WeightedAverageModel, SituationalModel, MedianModel
+from models.ensemble import EnsembleModel, SmartModel
+from models.unified import UnifiedPropModel
+from models.backtesting import BetResult, Backtester
+from models.generators import (
+    generate_player_season_data,
+    generate_sample_dataset,
+    generate_prop_lines,
 )
 
 # Import from core for utilities
@@ -66,6 +59,11 @@ __all__ = [
     # Backtesting
     'BetResult',
     'Backtester',
+
+    # Generators
+    'generate_player_season_data',
+    'generate_sample_dataset',
+    'generate_prop_lines',
 
     # Utilities (convenience re-exports)
     'calculate_ev',

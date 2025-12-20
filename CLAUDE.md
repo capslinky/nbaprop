@@ -31,7 +31,7 @@ python daily_runner.py --post-game
 
 ## Architecture
 
-### Module Structure (Refactored)
+### Module Structure
 
 ```
 nbaprop/
@@ -39,29 +39,52 @@ nbaprop/
 │   ├── config.py             # Centralized Config dataclass
 │   ├── constants.py          # Team maps, star players
 │   ├── odds_utils.py         # Odds math, Kelly, EV calculations
-│   └── exceptions.py         # Custom error types
+│   ├── exceptions.py         # Custom error types
+│   ├── rosters.py            # Team rosters and player lookups
+│   └── news_intelligence.py  # Real-time news context
 │
 ├── data/                      # Data layer
-│   └── __init__.py           # Re-exports: NBADataFetcher, OddsAPIClient, InjuryTracker
+│   ├── __init__.py           # Re-exports all data fetchers
+│   └── fetchers/             # Data fetcher implementations
+│       ├── nba_fetcher.py    # NBADataFetcher (nba_api)
+│       ├── odds_fetcher.py   # OddsAPIClient (The Odds API)
+│       ├── injury_tracker.py # InjuryTracker
+│       └── async_fetcher.py  # AsyncDataFetcher
 │
 ├── models/                    # Prediction models
 │   ├── __init__.py           # Re-exports all models
-│   └── base.py               # BaseModel interface, StandardPrediction
+│   ├── prediction.py         # Prediction dataclass
+│   ├── prop_analysis.py      # PropAnalysis dataclass
+│   ├── simple_models.py      # WeightedAverage, Situational, Median
+│   ├── ensemble.py           # EnsembleModel, SmartModel
+│   ├── unified.py            # UnifiedPropModel (production)
+│   ├── backtesting.py        # BetResult, Backtester
+│   └── generators.py         # Sample data generators
 │
 ├── analysis/                  # Analysis orchestration
-│   └── __init__.py           # Re-exports: LivePropAnalyzer, Backtester
+│   ├── __init__.py           # Re-exports LivePropAnalyzer, Backtester
+│   └── live_analyzer.py      # LivePropAnalyzer
 │
+├── calibration/               # Model calibration tools
+├── reports/                   # Report generation
+├── tests/                     # Test suite
+│
+├── # Entry points:
 ├── app.py                    # Streamlit dashboard
 ├── nba_quickstart.py         # CLI entry point
 ├── daily_runner.py           # Daily automation
-├── nba_prop_model.py         # Model implementations (legacy location)
-└── nba_integrations.py       # Data fetchers (legacy location)
+├── calibrate_model.py        # Calibration runner
+├── validate_system.py        # System validation
+│
+├── # Backward compatibility shims (DEPRECATED):
+├── nba_prop_model.py         # Re-exports from models/
+└── nba_integrations.py       # Re-exports from data/ and analysis/
 ```
 
 ### Recommended Imports
 
 ```python
-# New modular imports (preferred)
+# Modular imports (preferred)
 from core.config import CONFIG
 from core.constants import TEAM_ABBREVIATIONS, normalize_team_abbrev
 from core.odds_utils import kelly_criterion, calculate_ev
@@ -70,10 +93,10 @@ from data import NBADataFetcher, OddsAPIClient, InjuryTracker
 from models import UnifiedPropModel, PropAnalysis
 from analysis import LivePropAnalyzer, Backtester
 
-# Legacy imports still work (for backward compatibility)
-from nba_prop_model import UnifiedPropModel
-from nba_integrations import NBADataFetcher
-from nba_quickstart import CONFIG  # Returns dict for backward compat
+# Legacy imports (DEPRECATED - trigger warnings)
+# These still work for backward compatibility but will issue DeprecationWarning:
+# from nba_prop_model import UnifiedPropModel  # Use: from models import ...
+# from nba_integrations import NBADataFetcher  # Use: from data import ...
 ```
 
 ### Entry Points

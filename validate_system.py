@@ -69,14 +69,14 @@ def validate_imports() -> Tuple[bool, List[str]]:
 
     # Check project modules
     try:
-        from nba_integrations import NBADataFetcher, OddsAPIClient, InjuryTracker
+        from data import NBADataFetcher, OddsAPIClient, InjuryTracker
     except ImportError as e:
-        errors.append(f"nba_integrations import error: {e}")
+        errors.append(f"data module import error: {e}")
 
     try:
-        from nba_prop_model import UnifiedPropModel, PropAnalysis
+        from models import UnifiedPropModel, PropAnalysis
     except ImportError as e:
-        errors.append(f"nba_prop_model import error: {e}")
+        errors.append(f"models module import error: {e}")
 
     try:
         from nba_quickstart import CONFIG
@@ -89,7 +89,7 @@ def validate_imports() -> Tuple[bool, List[str]]:
 def validate_nba_api(verbose: bool = False) -> Tuple[bool, str, float]:
     """Test NBA API connection."""
     try:
-        from nba_integrations import NBADataFetcher
+        from data import NBADataFetcher
 
         start = time.time()
         fetcher = NBADataFetcher()
@@ -115,7 +115,7 @@ def validate_odds_api(verbose: bool = False) -> Tuple[bool, str, int]:
     """Test Odds API connection."""
     try:
         from nba_quickstart import CONFIG
-        from nba_integrations import OddsAPIClient
+        from data import OddsAPIClient
 
         api_key = CONFIG.get('ODDS_API_KEY') or os.environ.get('ODDS_API_KEY')
 
@@ -144,7 +144,7 @@ def validate_odds_api(verbose: bool = False) -> Tuple[bool, str, int]:
 def validate_defense_data(verbose: bool = False) -> Tuple[bool, str, int]:
     """Test defense data loading."""
     try:
-        from nba_integrations import NBADataFetcher
+        from data import NBADataFetcher
 
         fetcher = NBADataFetcher()
         defense_data = fetcher.get_team_defense_vs_position()
@@ -171,7 +171,7 @@ def validate_defense_data(verbose: bool = False) -> Tuple[bool, str, int]:
 def validate_pace_data(verbose: bool = False) -> Tuple[bool, str, int]:
     """Test pace data loading."""
     try:
-        from nba_integrations import NBADataFetcher
+        from data import NBADataFetcher
 
         fetcher = NBADataFetcher()
         pace_data = fetcher.get_team_pace()
@@ -196,7 +196,7 @@ def validate_pace_data(verbose: bool = False) -> Tuple[bool, str, int]:
 def validate_injury_tracker(verbose: bool = False) -> Tuple[bool, str]:
     """Test injury tracker."""
     try:
-        from nba_integrations import InjuryTracker
+        from data import InjuryTracker
 
         tracker = InjuryTracker()
 
@@ -216,7 +216,7 @@ def validate_unified_model(test_player: str = "Luka Doncic",
                           verbose: bool = False) -> Tuple[bool, str, dict]:
     """Test UnifiedPropModel with full context analysis."""
     try:
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel()
 
@@ -403,7 +403,7 @@ def run_context_coverage_test(player: str = "Luka Doncic", prop_type: str = "poi
     """
     Detailed context coverage test showing exactly what data was used.
     """
-    from nba_prop_model import UnifiedPropModel
+    from models import UnifiedPropModel
 
     print("\n" + "=" * 60)
     print("          CONTEXT COVERAGE TEST")
