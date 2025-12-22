@@ -86,7 +86,7 @@ class FileCache(CacheStore):
         }
         path = self._path_for_key(key)
         with self._lock:
-            path.write_text(json.dumps(payload), encoding="utf-8")
+            path.write_text(json.dumps(payload, default=str), encoding="utf-8")
 
     def invalidate(self, key: str) -> None:
         path = self._path_for_key(key)

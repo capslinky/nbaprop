@@ -12,7 +12,7 @@ class JsonStorage:
 
     def write_table(self, name: str, rows: List[Dict]) -> str:
         path = self._base_dir / f"{name}.json"
-        path.write_text(json.dumps(rows, indent=2, sort_keys=True), encoding="utf-8")
+        path.write_text(json.dumps(rows, indent=2, sort_keys=True, default=str), encoding="utf-8")
         return str(path)
 
     def read_table(self, name: str) -> List[Dict]:
