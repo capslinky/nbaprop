@@ -26,6 +26,7 @@ def test_run_daily_writes_outputs(tmp_path, monkeypatch):
     assert "raw_odds_path" in outputs
     assert "raw_player_logs_path" in outputs
     assert "raw_injury_report_path" in outputs
+    assert "normalized_picks_path" in outputs
 
     picks_path = Path(outputs["picks_csv"])
     assert picks_path.exists()
