@@ -13,6 +13,8 @@ import subprocess
 from nbaprop.config import Config
 from nbaprop.ops.logging import configure_logging
 from nbaprop.runtime.manifest import RunManifest
+from nbaprop.storage import FileCache
+from nbaprop.ingestion.odds import fetch_odds_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -75,8 +77,12 @@ def run_daily(config_path: Optional[str] = None) -> int:
     elif dotenv_path:
         logger.info("Loaded config from %s", dotenv_path)
 
-    runs_dir = Path(config.cache_dir) / "runs"
+    cache_dir = Path(config.cache_dir)
+    runs_dir = cache_dir / "runs"
+    cache = FileCache(cache_dir / "snapshots")
     manifest_path = _write_manifest(manifest, runs_dir)
+    snapshot = fetch_odds_snapshot(cache, ttl_seconds=60)
+    manifest.outputs["odds_snapshot"] = f"{snapshot.get('source')}:{snapshot.get('fetched_at')}"
 
     logger.info("No-op daily run completed.")
     logger.info("Run manifest written to %s", manifest_path)
