@@ -117,7 +117,10 @@ def run_daily(config_path: Optional[str] = None) -> int:
     manifest.outputs["raw_injury_report_path"] = storage.write_table("raw_injury_report", [injury_report])
 
     normalized = normalize_raw_data(snapshot, player_logs, injury_report)
-    normalized["prop_features"] = build_features(normalized.get("props", []))
+    normalized["prop_features"] = build_features(
+        normalized.get("props", []),
+        raw_player_logs=player_logs,
+    )
     model = BaselineModel()
     normalized["picks"] = model.predict(normalized["prop_features"])
     for name, rows in normalized.items():
