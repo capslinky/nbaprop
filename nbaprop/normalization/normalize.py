@@ -44,15 +44,16 @@ def normalize_raw_data(
 
             prop_type = (prop.get("prop_type") or "").lower()
             line = prop.get("line")
+            side = (prop.get("side") or "").lower()
             if prop_type and line is not None:
-                prop_id = make_prop_key(player_id, prop_type, line)
+                prop_id = make_prop_key(player_id, prop_type, line, side)
                 props[prop_id] = {
                     "prop_id": prop_id,
                     "player_id": player_id,
                     "prop_type": prop_type,
                     "line": line,
                     "odds": prop.get("odds"),
-                    "side": prop.get("side"),
+                    "side": side or None,
                     "event_id": prop.get("event_id"),
                 }
 

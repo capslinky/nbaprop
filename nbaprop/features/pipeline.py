@@ -16,6 +16,7 @@ def build_features(props: List[Dict]) -> List[Dict]:
                 "line": prop.get("line"),
                 "odds": prop.get("odds"),
                 "prop_type": prop.get("prop_type"),
+                "side": prop.get("side"),
             },
         })
     return rows

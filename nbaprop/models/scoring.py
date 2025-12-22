@@ -1,6 +1,17 @@
 """Odds-aware scoring helpers."""
 
 from typing import Dict
+import math
+
+
+def _american_to_implied(odds: int) -> float:
+    if odds > 0:
+        return 100 / (odds + 100)
+    return abs(odds) / (abs(odds) + 100)
+
+
+def _normal_cdf(x: float) -> float:
+    return 0.5 * (1 + math.erf(x / math.sqrt(2)))
 
 
 def score_prop(row: Dict) -> Dict:
@@ -21,15 +32,46 @@ def score_prop(row: Dict) -> Dict:
     except (TypeError, ValueError):
         odds = -110
 
-    edge = 0.0
-    confidence = 0.2
-    pick = "PASS"
-    if abs(edge) >= 0.03:
-        pick = "OVER" if edge > 0 else "UNDER"
+    recent_avg = features.get("recent_avg")
+    season_avg = features.get("season_avg")
+
+    if recent_avg in (None, 0, 0.0) and season_avg in (None, 0, 0.0):
+        projection = float(line)
+    elif season_avg in (None, 0, 0.0):
+        projection = float(recent_avg)
+    elif recent_avg in (None, 0, 0.0):
+        projection = float(season_avg)
+    else:
+        projection = (float(recent_avg) * 0.6) + (float(season_avg) * 0.4)
+
+    std = max(1.0, abs(projection) * 0.25)
+    z = (float(line) - projection) / std
+    prob_over = 1 - _normal_cdf(z)
+
+    side = (features.get("side") or "").lower()
+    if side == "under":
+        prob_win = 1 - prob_over
+        pick = "UNDER"
+    elif side == "over":
+        prob_win = prob_over
+        pick = "OVER"
+    else:
+        prob_win = prob_over if prob_over >= 0.5 else 1 - prob_over
+        pick = "OVER" if prob_over >= 0.5 else "UNDER"
+
+    implied = _american_to_implied(odds)
+    edge = prob_win - implied
+    confidence = max(0.2, min(0.95, abs(prob_win - 0.5) * 2))
+
+    if edge < 0.03:
+        pick = "PASS"
+
     return {
         "prop_id": row.get("prop_id"),
-        "edge": edge,
-        "confidence": confidence,
+        "projection": round(projection, 2),
+        "probability": round(prob_win, 4),
+        "edge": round(edge, 4),
+        "confidence": round(confidence, 4),
         "pick": pick,
         "odds": odds,
     }

@@ -11,8 +11,9 @@ def canonicalize_team_abbrev(team: str) -> str:
     return team.strip().upper()
 
 
-def make_prop_key(player_id: str, prop_type: str, line: float) -> str:
-    return f"{player_id}:{prop_type}:{line}"
+def make_prop_key(player_id: str, prop_type: str, line: float, side: str = "") -> str:
+    base = f"{player_id}:{prop_type}:{line}"
+    return f"{base}:{side}" if side else base
 
 
 def make_player_id(player_name: str) -> str:
