@@ -1,0 +1,5 @@
+{
+  "ODDS_API_KEY": "",
+  "NBA_API_DELAY": "1.5",
+  "NBAPROP_CACHE_DIR": ".cache"
+}
