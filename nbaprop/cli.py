@@ -61,6 +61,10 @@ def _try_load_dotenv(repo_root: Path) -> Optional[str]:
         try:
             config = Config.load(str(env_path))
             os.environ.setdefault("ODDS_API_KEY", config.odds_api_key)
+            os.environ.setdefault("ODDS_MAX_EVENTS", str(config.odds_max_events))
+            os.environ.setdefault("ODDS_MAX_PLAYERS", str(config.odds_max_players))
+            os.environ.setdefault("MIN_EDGE_THRESHOLD", str(config.min_edge_threshold))
+            os.environ.setdefault("MIN_CONFIDENCE", str(config.min_confidence))
             os.environ.setdefault("NBA_API_DELAY", str(config.nba_api_delay))
             os.environ.setdefault("NBAPROP_CACHE_DIR", config.cache_dir)
             return str(env_path)
@@ -121,7 +125,10 @@ def run_daily(config_path: Optional[str] = None) -> int:
         normalized.get("props", []),
         raw_player_logs=player_logs,
     )
-    model = BaselineModel()
+    model = BaselineModel(
+        min_edge=config.min_edge_threshold,
+        min_confidence=config.min_confidence,
+    )
     normalized["picks"] = model.predict(normalized["prop_features"])
     for name, rows in normalized.items():
         manifest.outputs[f"normalized_{name}_path"] = storage.write_table(f"normalized_{name}", rows)

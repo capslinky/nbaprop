@@ -58,6 +58,8 @@ class Config:
     odds_api_key: str
     odds_max_events: int
     odds_max_players: int
+    min_edge_threshold: float
+    min_confidence: float
     nba_api_delay: float
     cache_dir: str
 
@@ -67,6 +69,8 @@ class Config:
             odds_api_key=os.environ.get("ODDS_API_KEY", ""),
             odds_max_events=_coerce_int(os.environ.get("ODDS_MAX_EVENTS"), 5),
             odds_max_players=_coerce_int(os.environ.get("ODDS_MAX_PLAYERS"), 25),
+            min_edge_threshold=_coerce_float(os.environ.get("MIN_EDGE_THRESHOLD"), 0.03),
+            min_confidence=_coerce_float(os.environ.get("MIN_CONFIDENCE"), 0.4),
             nba_api_delay=_coerce_float(os.environ.get("NBA_API_DELAY"), 1.5),
             cache_dir=os.environ.get("NBAPROP_CACHE_DIR", ".cache"),
         )
@@ -87,6 +91,14 @@ class Config:
             odds_max_players=_coerce_int(
                 file_data.get("ODDS_MAX_PLAYERS"),
                 env_config.odds_max_players,
+            ),
+            min_edge_threshold=_coerce_float(
+                file_data.get("MIN_EDGE_THRESHOLD"),
+                env_config.min_edge_threshold,
+            ),
+            min_confidence=_coerce_float(
+                file_data.get("MIN_CONFIDENCE"),
+                env_config.min_confidence,
             ),
             nba_api_delay=_coerce_float(
                 file_data.get("NBA_API_DELAY"),

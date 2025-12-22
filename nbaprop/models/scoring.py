@@ -14,7 +14,7 @@ def _normal_cdf(x: float) -> float:
     return 0.5 * (1 + math.erf(x / math.sqrt(2)))
 
 
-def score_prop(row: Dict) -> Dict:
+def score_prop(row: Dict, min_edge: float = 0.03, min_confidence: float = 0.4) -> Dict:
     """Score a single prop row with probability, edge, and confidence."""
     features = row.get("features", {})
     line = features.get("line")
@@ -49,21 +49,32 @@ def score_prop(row: Dict) -> Dict:
     prob_over = 1 - _normal_cdf(z)
 
     side = (features.get("side") or "").lower()
+    implied = _american_to_implied(odds)
+    prob_under = 1 - prob_over
+
     if side == "under":
-        prob_win = 1 - prob_over
+        prob_win = prob_under
         pick = "UNDER"
+        edge = prob_win - implied
     elif side == "over":
         prob_win = prob_over
         pick = "OVER"
+        edge = prob_win - implied
     else:
-        prob_win = prob_over if prob_over >= 0.5 else 1 - prob_over
-        pick = "OVER" if prob_over >= 0.5 else "UNDER"
+        edge_over = prob_over - implied
+        edge_under = prob_under - implied
+        if edge_over >= edge_under:
+            prob_win = prob_over
+            pick = "OVER"
+            edge = edge_over
+        else:
+            prob_win = prob_under
+            pick = "UNDER"
+            edge = edge_under
 
-    implied = _american_to_implied(odds)
-    edge = prob_win - implied
     confidence = max(0.2, min(0.95, abs(prob_win - 0.5) * 2))
 
-    if edge < 0.03:
+    if edge < min_edge or confidence < min_confidence:
         pick = "PASS"
 
     return {
