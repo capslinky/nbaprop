@@ -51,6 +51,9 @@ def normalize_raw_data(
                     "player_id": player_id,
                     "prop_type": prop_type,
                     "line": line,
+                    "odds": prop.get("odds"),
+                    "side": prop.get("side"),
+                    "event_id": prop.get("event_id"),
                 }
 
     # Seed game data from the first odds event when available

@@ -13,6 +13,9 @@ def build_features(props: List[Dict]) -> List[Dict]:
                 "recent_avg": 0.0,
                 "season_avg": 0.0,
                 "minutes_trend": 1.0,
+                "line": prop.get("line"),
+                "odds": prop.get("odds"),
+                "prop_type": prop.get("prop_type"),
             },
         })
     return rows
