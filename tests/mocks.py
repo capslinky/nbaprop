@@ -130,6 +130,18 @@ class MockNBADataFetcher:
             'adjustment': 1.0
         }
 
+    def get_player_vs_team_stats(self, player_name: str, opponent: str,
+                                 prop_type: str = 'points') -> dict:
+        """Return mock vs-team stats payload matching NBADataFetcher signature."""
+        return {
+            'vs_team_avg': 28.5,
+            'overall_avg': 27.0,
+            'games_vs_team': 3,
+            'vs_factor': 1.0,
+            'dominates': False,
+            'struggles': False
+        }
+
 
 class MockInjuryTracker:
     """Mock injury tracker for testing."""

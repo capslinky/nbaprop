@@ -60,7 +60,7 @@ class TestUnifiedModelIntegration:
         assert result.base_projection is not None
         assert result.edge is not None
         assert result.confidence is not None
-        assert result.pick in ('OVER', 'UNDER', 'NO PICK')
+        assert result.pick in ('OVER', 'UNDER', 'PASS')
 
         # Verify adjustments were applied
         assert result.adjustments is not None
