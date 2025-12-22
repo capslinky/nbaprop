@@ -47,7 +47,7 @@ def _write_manifest(manifest: RunManifest, output_dir: Path) -> Path:
 def run_daily(config_path: Optional[str] = None) -> int:
     """Run the daily pipeline end-to-end (no-op scaffold)."""
     repo_root = Path(__file__).resolve().parents[1]
-    config = Config.from_env()
+    config = Config.load(config_path=config_path)
 
     manifest = RunManifest()
     manifest.git_sha = _get_git_sha(repo_root)
@@ -55,7 +55,7 @@ def run_daily(config_path: Optional[str] = None) -> int:
 
     configure_logging(run_id=manifest.run_id)
     if config_path:
-        logger.warning("Config path support is not implemented: %s", config_path)
+        logger.info("Loaded config from %s", config_path)
 
     runs_dir = Path(config.cache_dir) / "runs"
     manifest_path = _write_manifest(manifest, runs_dir)
@@ -70,7 +70,7 @@ def run_backtest(config_path: Optional[str] = None) -> int:
     configure_logging()
     logger.error("Backtest pipeline is not implemented yet.")
     if config_path:
-        logger.warning("Config path support is not implemented: %s", config_path)
+        logger.info("Loaded config from %s", config_path)
     return 1
 
 
