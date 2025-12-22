@@ -7,6 +7,7 @@ from nbaprop.normalization.ids import (
     make_player_id,
     make_team_id,
     make_game_id,
+    make_prop_key,
     canonicalize_player_name,
     canonicalize_team_abbrev,
 )
@@ -30,6 +31,27 @@ def normalize_raw_data(
             "player_id": player_id,
             "player_name": player_name,
         }
+
+    # Seed props and players from odds snapshot props
+    if raw_odds and isinstance(raw_odds, dict):
+        for prop in raw_odds.get("props", []):
+            player_name = canonicalize_player_name(prop.get("player", "Unknown Player"))
+            player_id = make_player_id(player_name)
+            players[player_id] = {
+                "player_id": player_id,
+                "player_name": player_name,
+            }
+
+            prop_type = (prop.get("prop_type") or "").lower()
+            line = prop.get("line")
+            if prop_type and line is not None:
+                prop_id = make_prop_key(player_id, prop_type, line)
+                props[prop_id] = {
+                    "prop_id": prop_id,
+                    "player_id": player_id,
+                    "prop_type": prop_type,
+                    "line": line,
+                }
 
     # Seed game data from the first odds event when available
     if raw_odds:

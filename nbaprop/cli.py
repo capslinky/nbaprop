@@ -99,7 +99,11 @@ def run_daily(config_path: Optional[str] = None) -> int:
     manifest.outputs["odds_snapshot"] = f"{snapshot.get('source')}:{snapshot.get('fetched_at')}"
     manifest.outputs["raw_odds_path"] = storage.write_table("raw_odds_snapshot", [snapshot])
 
-    players = ["Example Player"]
+    players = snapshot.get("players") or []
+    if config.odds_max_players and players:
+        players = players[:config.odds_max_players]
+    if not players:
+        players = ["Example Player"]
     player_logs = fetch_player_logs(
         players,
         cache,

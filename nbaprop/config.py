@@ -57,6 +57,7 @@ def _load_config_data(path: Path) -> Dict[str, str]:
 class Config:
     odds_api_key: str
     odds_max_events: int
+    odds_max_players: int
     nba_api_delay: float
     cache_dir: str
 
@@ -65,6 +66,7 @@ class Config:
         return cls(
             odds_api_key=os.environ.get("ODDS_API_KEY", ""),
             odds_max_events=_coerce_int(os.environ.get("ODDS_MAX_EVENTS"), 5),
+            odds_max_players=_coerce_int(os.environ.get("ODDS_MAX_PLAYERS"), 25),
             nba_api_delay=_coerce_float(os.environ.get("NBA_API_DELAY"), 1.5),
             cache_dir=os.environ.get("NBAPROP_CACHE_DIR", ".cache"),
         )
@@ -81,6 +83,10 @@ class Config:
             odds_max_events=_coerce_int(
                 file_data.get("ODDS_MAX_EVENTS"),
                 env_config.odds_max_events,
+            ),
+            odds_max_players=_coerce_int(
+                file_data.get("ODDS_MAX_PLAYERS"),
+                env_config.odds_max_players,
             ),
             nba_api_delay=_coerce_float(
                 file_data.get("NBA_API_DELAY"),
