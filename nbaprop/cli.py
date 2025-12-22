@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import logging
+import os
 import subprocess
 
 from nbaprop.config import Config
@@ -44,9 +45,24 @@ def _write_manifest(manifest: RunManifest, output_dir: Path) -> Path:
     return manifest_path
 
 
+def _try_load_dotenv(repo_root: Path) -> Optional[str]:
+    env_path = repo_root / ".env"
+    if not env_path.exists():
+        return None
+    try:
+        config = Config.load(str(env_path))
+        os.environ.setdefault("ODDS_API_KEY", config.odds_api_key)
+        os.environ.setdefault("NBA_API_DELAY", str(config.nba_api_delay))
+        os.environ.setdefault("NBAPROP_CACHE_DIR", config.cache_dir)
+        return str(env_path)
+    except Exception:
+        return None
+
+
 def run_daily(config_path: Optional[str] = None) -> int:
     """Run the daily pipeline end-to-end (no-op scaffold)."""
     repo_root = Path(__file__).resolve().parents[1]
+    dotenv_path = _try_load_dotenv(repo_root)
     config = Config.load(config_path=config_path)
 
     manifest = RunManifest()
@@ -56,6 +72,8 @@ def run_daily(config_path: Optional[str] = None) -> int:
     configure_logging(run_id=manifest.run_id)
     if config_path:
         logger.info("Loaded config from %s", config_path)
+    elif dotenv_path:
+        logger.info("Loaded config from %s", dotenv_path)
 
     runs_dir = Path(config.cache_dir) / "runs"
     manifest_path = _write_manifest(manifest, runs_dir)
@@ -67,10 +85,14 @@ def run_daily(config_path: Optional[str] = None) -> int:
 
 def run_backtest(config_path: Optional[str] = None) -> int:
     """Run the backtest pipeline end-to-end (no-op scaffold)."""
+    repo_root = Path(__file__).resolve().parents[1]
+    dotenv_path = _try_load_dotenv(repo_root)
     configure_logging()
     logger.error("Backtest pipeline is not implemented yet.")
     if config_path:
         logger.info("Loaded config from %s", config_path)
+    elif dotenv_path:
+        logger.info("Loaded config from %s", dotenv_path)
     return 1
 
 
