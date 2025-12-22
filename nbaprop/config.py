@@ -22,6 +22,15 @@ def _coerce_float(value: Optional[str], default: float) -> float:
         return default
 
 
+def _coerce_int(value: Optional[str], default: int) -> int:
+    if value is None or value == "":
+        return default
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def _parse_env_file(path: Path) -> Dict[str, str]:
     data: Dict[str, str] = {}
     for raw_line in path.read_text(encoding="utf-8").splitlines():
@@ -47,6 +56,7 @@ def _load_config_data(path: Path) -> Dict[str, str]:
 @dataclass
 class Config:
     odds_api_key: str
+    odds_max_events: int
     nba_api_delay: float
     cache_dir: str
 
@@ -54,6 +64,7 @@ class Config:
     def from_env(cls) -> "Config":
         return cls(
             odds_api_key=os.environ.get("ODDS_API_KEY", ""),
+            odds_max_events=_coerce_int(os.environ.get("ODDS_MAX_EVENTS"), 5),
             nba_api_delay=_coerce_float(os.environ.get("NBA_API_DELAY"), 1.5),
             cache_dir=os.environ.get("NBAPROP_CACHE_DIR", ".cache"),
         )
@@ -67,6 +78,10 @@ class Config:
         file_data = _load_config_data(Path(config_path))
         return cls(
             odds_api_key=file_data.get("ODDS_API_KEY", env_config.odds_api_key),
+            odds_max_events=_coerce_int(
+                file_data.get("ODDS_MAX_EVENTS"),
+                env_config.odds_max_events,
+            ),
             nba_api_delay=_coerce_float(
                 file_data.get("NBA_API_DELAY"),
                 env_config.nba_api_delay,

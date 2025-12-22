@@ -88,12 +88,23 @@ def run_daily(config_path: Optional[str] = None) -> int:
     cache = FileCache(cache_dir / "snapshots")
     storage = JsonStorage(str(cache_dir / "storage"))
     manifest_path = _write_manifest(manifest, runs_dir)
-    snapshot = fetch_odds_snapshot(cache, ttl_seconds=60)
+    snapshot = fetch_odds_snapshot(
+        cache,
+        ttl_seconds=60,
+        api_key=config.odds_api_key,
+        max_events=config.odds_max_events,
+    )
     manifest.outputs["odds_snapshot"] = f"{snapshot.get('source')}:{snapshot.get('fetched_at')}"
     manifest.outputs["raw_odds_path"] = storage.write_table("raw_odds_snapshot", [snapshot])
 
     players = ["Example Player"]
-    player_logs = fetch_player_logs(players, cache, ttl_seconds=300)
+    player_logs = fetch_player_logs(
+        players,
+        cache,
+        ttl_seconds=300,
+        base_delay=config.nba_api_delay,
+        cache_dir=config.cache_dir,
+    )
     manifest.outputs["raw_player_logs_path"] = storage.write_table("raw_player_logs", player_logs)
 
     injury_report = fetch_injury_report(cache, ttl_seconds=300)

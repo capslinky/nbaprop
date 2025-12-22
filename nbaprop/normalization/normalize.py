@@ -31,11 +31,25 @@ def normalize_raw_data(
             "player_name": player_name,
         }
 
-    # Stub game based on odds snapshot to seed tables
+    # Seed game data from the first odds event when available
     if raw_odds:
-        home_team = canonicalize_team_abbrev(raw_odds.get("home_team", "HOME"))
-        away_team = canonicalize_team_abbrev(raw_odds.get("away_team", "AWAY"))
-        game_time = raw_odds.get("game_time", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+        event = None
+        events = raw_odds.get("events") if isinstance(raw_odds, dict) else None
+        if isinstance(events, list) and events:
+            event = events[0]
+
+        if event:
+            home_team = canonicalize_team_abbrev(event.get("home_team", "HOME"))
+            away_team = canonicalize_team_abbrev(event.get("away_team", "AWAY"))
+            game_time = event.get("commence_time")
+        else:
+            home_team = canonicalize_team_abbrev(raw_odds.get("home_team", "HOME"))
+            away_team = canonicalize_team_abbrev(raw_odds.get("away_team", "AWAY"))
+            game_time = raw_odds.get("game_time")
+
+        if not game_time:
+            game_time = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
         game_id = make_game_id(home_team, away_team, game_time)
 
         games[game_id] = {
