@@ -13,7 +13,7 @@ import subprocess
 from nbaprop.config import Config
 from nbaprop.ops.logging import configure_logging
 from nbaprop.runtime.manifest import RunManifest
-from nbaprop.storage import FileCache
+from nbaprop.storage import FileCache, JsonStorage
 from nbaprop.ingestion.odds import fetch_odds_snapshot
 from nbaprop.reporting.csv_output import write_picks_csv
 
@@ -81,9 +81,11 @@ def run_daily(config_path: Optional[str] = None) -> int:
     cache_dir = Path(config.cache_dir)
     runs_dir = cache_dir / "runs"
     cache = FileCache(cache_dir / "snapshots")
+    storage = JsonStorage(str(cache_dir / "storage"))
     manifest_path = _write_manifest(manifest, runs_dir)
     snapshot = fetch_odds_snapshot(cache, ttl_seconds=60)
     manifest.outputs["odds_snapshot"] = f"{snapshot.get('source')}:{snapshot.get('fetched_at')}"
+    manifest.outputs["raw_odds_path"] = storage.write_table("raw_odds_snapshot", [snapshot])
 
     picks_path = runs_dir / f"picks_{manifest.run_id}.csv"
     write_picks_csv([], str(picks_path))
