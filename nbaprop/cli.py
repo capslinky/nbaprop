@@ -16,6 +16,7 @@ from nbaprop.runtime.manifest import RunManifest
 from nbaprop.storage import FileCache, JsonStorage
 from nbaprop.ingestion.odds import fetch_odds_snapshot
 from nbaprop.ingestion.nba_stats import fetch_player_logs
+from nbaprop.ingestion.injuries import fetch_injury_report
 from nbaprop.reporting.csv_output import write_picks_csv
 
 logger = logging.getLogger(__name__)
@@ -91,6 +92,9 @@ def run_daily(config_path: Optional[str] = None) -> int:
     players = ["Example Player"]
     player_logs = fetch_player_logs(players, cache, ttl_seconds=300)
     manifest.outputs["raw_player_logs_path"] = storage.write_table("raw_player_logs", player_logs)
+
+    injury_report = fetch_injury_report(cache, ttl_seconds=300)
+    manifest.outputs["raw_injury_report_path"] = storage.write_table("raw_injury_report", [injury_report])
 
     picks_path = runs_dir / f"picks_{manifest.run_id}.csv"
     write_picks_csv([], str(picks_path))
