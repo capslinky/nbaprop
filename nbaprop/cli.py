@@ -54,17 +54,19 @@ def _write_manifest(manifest: RunManifest, output_dir: Path) -> Path:
 
 
 def _try_load_dotenv(repo_root: Path) -> Optional[str]:
-    env_path = repo_root / ".env"
-    if not env_path.exists():
-        return None
-    try:
-        config = Config.load(str(env_path))
-        os.environ.setdefault("ODDS_API_KEY", config.odds_api_key)
-        os.environ.setdefault("NBA_API_DELAY", str(config.nba_api_delay))
-        os.environ.setdefault("NBAPROP_CACHE_DIR", config.cache_dir)
-        return str(env_path)
-    except Exception:
-        return None
+    candidate_paths = [repo_root / ".env", repo_root.parent / ".env"]
+    for env_path in candidate_paths:
+        if not env_path.exists():
+            continue
+        try:
+            config = Config.load(str(env_path))
+            os.environ.setdefault("ODDS_API_KEY", config.odds_api_key)
+            os.environ.setdefault("NBA_API_DELAY", str(config.nba_api_delay))
+            os.environ.setdefault("NBAPROP_CACHE_DIR", config.cache_dir)
+            return str(env_path)
+        except Exception:
+            continue
+    return None
 
 
 def run_daily(config_path: Optional[str] = None) -> int:
