@@ -15,10 +15,12 @@ Perplexity Integration:
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple, Callable
-from datetime import datetime, timedelta
+from typing import Dict, List, Optional, Callable
+from datetime import datetime
 import re
 import logging
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +63,9 @@ def create_perplexity_search(perplexity_fn: Callable) -> Callable[[str], str]:
                 return response.get('content', str(response))
             return str(response) if response else ""
 
+        except (TypeError, ValueError, AttributeError) as e:
+            logger.warning(f"Perplexity search response parsing error for '{query}': {e}")
+            return ""
         except Exception as e:
             logger.warning(f"Perplexity search failed for '{query}': {e}")
             return ""
@@ -148,6 +153,12 @@ def create_perplexity_api_search(api_key: str) -> Callable[[str], SearchResult]:
                 logger.warning(f"Perplexity API error: {response.status_code}")
                 return SearchResult(content="", citations=[])
 
+        except requests.RequestException as e:
+            logger.warning(f"Perplexity API network error for '{query}': {e}")
+            return SearchResult(content="", citations=[])
+        except (KeyError, TypeError, ValueError) as e:
+            logger.warning(f"Perplexity API response parsing error for '{query}': {e}")
+            return SearchResult(content="", citations=[])
         except Exception as e:
             logger.warning(f"Perplexity API search failed for '{query}': {e}")
             return SearchResult(content="", citations=[])
@@ -244,6 +255,9 @@ class NewsIntelligence:
                 return SearchResult(content=str(result), citations=[])
             else:
                 return SearchResult(content="", citations=[])
+        except (TypeError, ValueError, AttributeError) as e:
+            logger.warning(f"Search result parsing error for '{query}': {e}")
+            return SearchResult(content="", citations=[])
         except Exception as e:
             logger.warning(f"Search failed for '{query}': {e}")
             return SearchResult(content="", citations=[])

@@ -18,7 +18,7 @@ Usage:
 import logging
 import json
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Protocol
+from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
@@ -116,6 +116,12 @@ class ConsoleAlert(AlertHandler):
                 print(f"   Data: {json.dumps(alert.data, indent=2)}")
 
             return True
+        except (IOError, OSError) as e:
+            logger.error(f"Console alert I/O error: {e}")
+            return False
+        except (TypeError, ValueError) as e:
+            logger.error(f"Console alert formatting error: {e}")
+            return False
         except Exception as e:
             logger.error(f"Console alert failed: {e}")
             return False
@@ -147,6 +153,9 @@ class LoggingAlert(AlertHandler):
                 extra={'alert_data': alert.data}
             )
             return True
+        except (KeyError, TypeError, ValueError) as e:
+            logger.error(f"Logging alert formatting error: {e}")
+            return False
         except Exception as e:
             logger.error(f"Logging alert failed: {e}")
             return False
@@ -192,6 +201,12 @@ class WebhookAlert(AlertHandler):
             return True
         except ImportError:
             logger.error("requests library required for webhook alerts")
+            return False
+        except requests.RequestException as e:
+            logger.error(f"Webhook alert network error: {e}")
+            return False
+        except (TypeError, ValueError) as e:
+            logger.error(f"Webhook alert payload formatting error: {e}")
             return False
         except Exception as e:
             logger.error(f"Webhook alert failed: {e}")
@@ -257,6 +272,12 @@ class FileAlert(AlertHandler):
             with open(self.filepath, 'a') as f:
                 f.write(json.dumps(alert.to_dict()) + '\n')
             return True
+        except (IOError, OSError, PermissionError) as e:
+            logger.error(f"File alert I/O error: {e}")
+            return False
+        except (TypeError, ValueError) as e:
+            logger.error(f"File alert serialization error: {e}")
+            return False
         except Exception as e:
             logger.error(f"File alert failed: {e}")
             return False
@@ -283,6 +304,9 @@ class CallbackAlert(AlertHandler):
     def send(self, alert: Alert) -> bool:
         try:
             return bool(self.callback(alert))
+        except (TypeError, AttributeError) as e:
+            logger.error(f"Callback alert invocation error: {e}")
+            return False
         except Exception as e:
             logger.error(f"Callback alert failed: {e}")
             return False

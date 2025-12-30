@@ -158,8 +158,12 @@ class AsyncDataFetcher:
 
             context.opponent = opponent
 
+        except (ConnectionError, TimeoutError, aiohttp.ClientError) as e:
+            logger.warning(f"Network error fetching context for {player_name}: {e}")
+        except (KeyError, TypeError, ValueError) as e:
+            logger.warning(f"Data parsing error fetching context for {player_name}: {e}")
         except Exception as e:
-            logger.warning(f"Error fetching context for {player_name}: {e}")
+            logger.warning(f"Unexpected error fetching context for {player_name}: {e}")
 
         context.fetch_time_ms = (datetime.now() - start_time).total_seconds() * 1000
         return context
@@ -204,6 +208,12 @@ class AsyncDataFetcher:
                         return await self.fetch_player_context(
                             session, player, opponent, last_n_games
                         )
+                    except (ConnectionError, TimeoutError, aiohttp.ClientError) as e:
+                        errors.append(f"{player}: Network error - {str(e)}")
+                        return PlayerContext(
+                            player_name=player,
+                            game_logs=pd.DataFrame()
+                        )
                     except Exception as e:
                         errors.append(f"{player}: {str(e)}")
                         return PlayerContext(
@@ -245,8 +255,14 @@ class AsyncDataFetcher:
                     else:
                         logger.warning(f"Odds API error: {response.status}")
                         return []
+            except aiohttp.ClientError as e:
+                logger.error(f"Network error fetching odds events: {e}")
+                return []
+            except asyncio.TimeoutError as e:
+                logger.error(f"Timeout fetching odds events: {e}")
+                return []
             except Exception as e:
-                logger.error(f"Error fetching odds events: {e}")
+                logger.error(f"Unexpected error fetching odds events: {e}")
                 return []
 
     async def fetch_player_props(
@@ -277,8 +293,14 @@ class AsyncDataFetcher:
                     else:
                         logger.warning(f"Props API error: {response.status}")
                         return {}
+            except aiohttp.ClientError as e:
+                logger.error(f"Network error fetching props: {e}")
+                return {}
+            except asyncio.TimeoutError as e:
+                logger.error(f"Timeout fetching props: {e}")
+                return {}
             except Exception as e:
-                logger.error(f"Error fetching props: {e}")
+                logger.error(f"Unexpected error fetching props: {e}")
                 return {}
 
     async def fetch_all_props_parallel(
@@ -329,8 +351,12 @@ class AsyncDataFetcher:
                 self._defense_cache = self._nba_fetcher.get_team_defense_vs_position()
                 self._pace_cache = self._nba_fetcher.get_team_pace()
                 self._cache_time = datetime.now()
+            except (ConnectionError, TimeoutError) as e:
+                logger.warning(f"Network error refreshing team caches: {e}")
+            except (KeyError, TypeError, ValueError) as e:
+                logger.warning(f"Data parsing error refreshing team caches: {e}")
             except Exception as e:
-                logger.warning(f"Error refreshing team caches: {e}")
+                logger.warning(f"Unexpected error refreshing team caches: {e}")
 
     def _defense_cache_valid(self) -> bool:
         """Check if defense cache is still valid."""

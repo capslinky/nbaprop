@@ -5,9 +5,10 @@ player injuries from multiple sources, and calculating usage boosts
 when star teammates are out.
 """
 
+import io
 import pandas as pd
 from datetime import datetime
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 import time
 import logging
 import re
@@ -17,6 +18,7 @@ from core.constants import (
     STAR_PLAYERS,
     STAR_OUT_BOOST,
     get_current_nba_season,
+    TEAM_ABBREVIATIONS,
 )
 
 logger = logging.getLogger(__name__)
@@ -54,6 +56,63 @@ class InjuryTracker:
         self._cache_ttl = 1800  # 30 minutes cache
         self._manual_injuries = {}  # Manual overrides
         self._perplexity_fn = perplexity_fn
+        self._debug_info = {}
+
+        # Team name to abbreviation mapping
+        self._team_name_map = {
+            'atlanta hawks': 'ATL', 'hawks': 'ATL',
+            'boston celtics': 'BOS', 'celtics': 'BOS',
+            'brooklyn nets': 'BKN', 'nets': 'BKN',
+            'charlotte hornets': 'CHA', 'hornets': 'CHA',
+            'chicago bulls': 'CHI', 'bulls': 'CHI',
+            'cleveland cavaliers': 'CLE', 'cavaliers': 'CLE', 'cavs': 'CLE',
+            'dallas mavericks': 'DAL', 'mavericks': 'DAL', 'mavs': 'DAL',
+            'denver nuggets': 'DEN', 'nuggets': 'DEN',
+            'detroit pistons': 'DET', 'pistons': 'DET',
+            'golden state warriors': 'GSW', 'warriors': 'GSW',
+            'houston rockets': 'HOU', 'rockets': 'HOU',
+            'indiana pacers': 'IND', 'pacers': 'IND',
+            'la clippers': 'LAC', 'los angeles clippers': 'LAC', 'clippers': 'LAC',
+            'los angeles lakers': 'LAL', 'la lakers': 'LAL', 'lakers': 'LAL',
+            'memphis grizzlies': 'MEM', 'grizzlies': 'MEM',
+            'miami heat': 'MIA', 'heat': 'MIA',
+            'milwaukee bucks': 'MIL', 'bucks': 'MIL',
+            'minnesota timberwolves': 'MIN', 'timberwolves': 'MIN', 'wolves': 'MIN',
+            'new orleans pelicans': 'NOP', 'pelicans': 'NOP',
+            'new york knicks': 'NYK', 'knicks': 'NYK',
+            'oklahoma city thunder': 'OKC', 'thunder': 'OKC',
+            'orlando magic': 'ORL', 'magic': 'ORL',
+            'philadelphia 76ers': 'PHI', '76ers': 'PHI', 'sixers': 'PHI',
+            'phoenix suns': 'PHX', 'suns': 'PHX',
+            'portland trail blazers': 'POR', 'trail blazers': 'POR', 'blazers': 'POR',
+            'sacramento kings': 'SAC', 'kings': 'SAC',
+            'san antonio spurs': 'SAS', 'spurs': 'SAS',
+            'toronto raptors': 'TOR', 'raptors': 'TOR',
+            'utah jazz': 'UTA', 'jazz': 'UTA',
+            'washington wizards': 'WAS', 'wizards': 'WAS',
+        }
+
+    def _normalize_team_name(self, team_str: str) -> str:
+        """Convert full team name to 3-letter abbreviation."""
+        if not team_str:
+            return 'UNK'
+
+        team_lower = team_str.lower().strip()
+
+        # Already an abbreviation
+        if len(team_lower) == 3 and team_lower.isalpha():
+            return team_lower.upper()
+
+        # Look up in mapping
+        if team_lower in self._team_name_map:
+            return self._team_name_map[team_lower]
+
+        # Try partial match
+        for name, abbrev in self._team_name_map.items():
+            if name in team_lower or team_lower in name:
+                return abbrev
+
+        return team_str.upper()[:3] if team_str else 'UNK'
 
     def get_injuries_from_nba_api(self) -> pd.DataFrame:
         """Fetch injury data from NBA API."""
@@ -72,8 +131,14 @@ class InjuryTracker:
 
             return pd.DataFrame()
 
+        except (ConnectionError, TimeoutError) as e:
+            logger.warning(f"Network error fetching injuries from NBA API: {e}")
+            return pd.DataFrame()
+        except (KeyError, TypeError, ValueError) as e:
+            logger.warning(f"Data parsing error in NBA API injuries: {e}")
+            return pd.DataFrame()
         except Exception as e:
-            logger.warning(f"NBA API injury fetch error: {e}")
+            logger.warning(f"Unexpected error fetching injuries from NBA API: {e}")
             return pd.DataFrame()
 
     def get_injuries_from_rotowire(self) -> pd.DataFrame:
@@ -115,8 +180,10 @@ class InjuryTracker:
                         'source': 'CBS Sports'
                     })
 
-        except Exception as e:
-            logger.warning(f"CBS Sports scrape error: {e}")
+        except requests.RequestException as e:
+            logger.warning(f"CBS Sports request error: {e}")
+        except (KeyError, TypeError, ValueError, AttributeError) as e:
+            logger.warning(f"CBS Sports parsing error: {e}")
 
         # Try Rotowire as backup
         if not injuries:
@@ -147,10 +214,102 @@ class InjuryTracker:
                             'source': 'Rotowire'
                         })
 
-            except Exception as e:
-                logger.warning(f"Rotowire scrape error: {e}")
+            except requests.RequestException as e:
+                logger.warning(f"Rotowire request error: {e}")
+            except (KeyError, TypeError, ValueError, AttributeError) as e:
+                logger.warning(f"Rotowire parsing error: {e}")
 
         return pd.DataFrame(injuries) if injuries else pd.DataFrame()
+
+    def _fetch_official_report_urls_from_official_site(self) -> List[str]:
+        """Fetch official report URLs from NBA's official injury report page."""
+        season = get_current_nba_season()
+        candidates = [
+            "https://official.nba.com/nba-injury-report/",
+            f"https://official.nba.com/nba-injury-report-{season}/",
+        ]
+        all_urls: List[str] = []
+
+        for page_url in candidates:
+            try:
+                response = requests.get(page_url, timeout=12)
+            except requests.RequestException as e:
+                errors = self._debug_info.setdefault("official_page_errors", [])
+                errors.append(f"{page_url}: {e}")
+                continue
+
+            status = response.status_code
+            statuses = self._debug_info.setdefault("official_page_status", [])
+            statuses.append(f"{page_url}:{status}")
+
+            if status != 200:
+                continue
+
+            found = self._extract_official_report_urls(response.text)
+            matches = self._debug_info.setdefault("official_page_matches", [])
+            matches.append({"url": page_url, "count": len(found)})
+
+            all_urls.extend(found)
+
+        # Deduplicate while preserving order
+        seen = set()
+        ordered: List[str] = []
+        for url in all_urls:
+            if url in seen:
+                continue
+            seen.add(url)
+            ordered.append(url)
+        return ordered
+
+    def get_injuries_from_official_report(self) -> pd.DataFrame:
+        """Fetch the official NBA injury report PDF and parse it."""
+        report_url = None
+        candidate_urls: List[str] = []
+
+        if self._perplexity_fn is not None:
+            try:
+                from datetime import date
+
+                url_query = (
+                    f"Return ONLY the latest official NBA injury report PDF URL for "
+                    f"{date.today().strftime('%B %d, %Y')}. "
+                    "The URL must be from ak-static.cms.nba.com/referee/injury/ "
+                    "and look like Injury-Report_YYYY-MM-DD_HHPM.pdf. "
+                    "If no URL is found, respond with 'NONE'."
+                )
+                self._debug_info["perplexity_url_query"] = url_query
+                url_response = self._perplexity_fn([{"role": "user", "content": url_query}])
+                if isinstance(url_response, dict):
+                    url_text = url_response.get('content', str(url_response))
+                else:
+                    url_text = str(url_response)
+                self._debug_info["perplexity_url_response"] = url_text
+
+                report_urls = self._extract_official_report_urls(url_text)
+                if report_urls:
+                    report_url = self._select_latest_report_url(report_urls)
+            except (TypeError, KeyError, ValueError) as e:
+                logger.warning(f"Perplexity official report parsing failed: {e}")
+            except Exception as e:
+                logger.warning(f"Unexpected error in Perplexity official report lookup: {e}")
+
+        if report_url:
+            candidate_urls.append(report_url)
+
+        official_urls = self._fetch_official_report_urls_from_official_site()
+        if official_urls:
+            candidate_urls.extend(official_urls)
+
+        if candidate_urls:
+            report_url = self._select_latest_report_url(candidate_urls)
+
+        if report_url:
+            self._debug_info["official_report_url"] = report_url
+            official_df = self._parse_official_report_pdf(report_url)
+            if not official_df.empty:
+                return official_df
+
+        return pd.DataFrame()
 
     def get_injuries_from_perplexity(self) -> pd.DataFrame:
         """
@@ -167,24 +326,44 @@ class InjuryTracker:
         try:
             from datetime import date
 
+            # Perplexity's summarized injury list
             query = (
-                f"NBA injury report for games on {date.today().strftime('%B %d, %Y')}. "
-                "List all players who are OUT, DOUBTFUL, QUESTIONABLE, or GTD (game-time decision). "
-                "Format each player as: PLAYER_NAME | TEAM_ABBREV | STATUS | INJURY_TYPE"
+                f"From nba.com only, list ALL NBA players on the official NBA injury report for "
+                f"{date.today().strftime('%B %d, %Y')}. "
+                "Use the official NBA injury report page on NBA.com as the source. "
+                "Include every player who is OUT, DOUBTFUL, QUESTIONABLE, or GTD. "
+                "Format EXACTLY as: PLAYER_NAME | TEAM_NAME | STATUS | INJURY (one player per line). "
+                "If the official report is not published yet, respond with "
+                "'No official NBA.com injury report found.' "
+                "Do not ask clarifying questions - provide the complete list immediately."
             )
 
+            self._debug_info["perplexity_summary_query"] = query
             messages = [{"role": "user", "content": query}]
             response = self._perplexity_fn(messages)
 
             if not response:
                 return pd.DataFrame()
 
-            # Parse the response text
-            return self._parse_perplexity_injuries(response)
+            # Normalize response text and parse directly
+            if isinstance(response, dict):
+                response_text = response.get('content', str(response))
+            else:
+                response_text = str(response)
 
-        except Exception as e:
-            logger.warning(f"Perplexity injury fetch error: {e}")
+            self._debug_info["perplexity_summary_response"] = response_text
+            return self._parse_perplexity_injuries(response_text)
+
+        except (TypeError, KeyError, ValueError) as e:
+            logger.warning(f"Perplexity injury parsing error: {e}")
             return pd.DataFrame()
+        except Exception as e:
+            logger.warning(f"Unexpected error fetching injuries from Perplexity: {e}")
+            return pd.DataFrame()
+
+    def get_debug_info(self) -> dict:
+        """Return debug info from the latest Perplexity calls."""
+        return dict(self._debug_info)
 
     def _parse_perplexity_injuries(self, response: str) -> pd.DataFrame:
         """
@@ -215,20 +394,28 @@ class InjuryTracker:
 
             # Try pipe-delimited format first
             if '|' in line:
+                # Remove citation markers like [1][2][3] from the end
+                line = re.sub(r'\[\d+\]', '', line).strip()
+
                 parts = [p.strip() for p in line.split('|')]
                 if len(parts) >= 3:
-                    player = parts[0].strip('* ')
-                    team = parts[1].strip().upper()
+                    # Remove bold markers (**) and clean player name
+                    player = parts[0].strip('* ').replace('**', '').strip()
+                    team_raw = parts[1].strip()
                     status = parts[2].strip().upper()
                     injury = parts[3] if len(parts) > 3 else ''
 
-                    # Validate team abbreviation (3 letters)
-                    if len(team) == 3 and team.isalpha():
+                    # Convert full team name to abbreviation if needed
+                    team = self._normalize_team_name(team_raw)
+
+                    # Accept if we have a valid player and status
+                    if player and status in ['OUT', 'O', 'DNP', 'GTD', 'GAME TIME DECISION',
+                                              'QUESTIONABLE', 'Q', 'DOUBTFUL', 'D', 'PROBABLE', 'P']:
                         injuries.append({
                             'player': player,
                             'team': team,
                             'status': status,
-                            'injury': injury,
+                            'injury': injury.replace(';', ' -'),
                             'source': 'Perplexity'
                         })
                 continue
@@ -269,6 +456,248 @@ class InjuryTracker:
 
         return pd.DataFrame(injuries) if injuries else pd.DataFrame()
 
+    def _extract_official_report_urls(self, text: str) -> List[str]:
+        """Extract official NBA injury report PDF URLs from text."""
+        if not text:
+            return []
+        cleaned = re.sub(r"\[\d+\]", "", text)
+        urls = re.findall(
+            r"https?://ak-static\.cms\.nba\.com/referee/injury/"
+            r"Injury-Report_\d{4}-\d{2}-\d{2}_\d{2}(?:_\d{2})?(?:AM|PM)\.pdf",
+            cleaned
+        )
+        # Deduplicate while preserving order
+        seen = set()
+        ordered = []
+        for url in urls:
+            if url not in seen:
+                seen.add(url)
+                ordered.append(url)
+        return ordered
+
+    def _select_latest_report_url(self, urls: List[str]) -> Optional[str]:
+        """Pick the latest report URL based on its timestamp."""
+        if not urls:
+            return None
+
+        def parse_timestamp(url: str) -> Optional[datetime]:
+            match = re.search(
+                r"Injury-Report_(\d{4}-\d{2}-\d{2})_(\d{2})_(\d{2})(AM|PM)\.pdf",
+                url
+            )
+            if match:
+                date_str, hour_str, minute_str, meridiem = match.groups()
+                try:
+                    return datetime.strptime(
+                        f"{date_str} {hour_str}:{minute_str}{meridiem}",
+                        "%Y-%m-%d %I:%M%p",
+                    )
+                except ValueError:
+                    return None
+            match = re.search(
+                r"Injury-Report_(\d{4}-\d{2}-\d{2})_(\d{2})(AM|PM)\.pdf",
+                url
+            )
+            if not match:
+                return None
+            date_str, hour_str, meridiem = match.groups()
+            try:
+                return datetime.strptime(f"{date_str} {hour_str}{meridiem}", "%Y-%m-%d %I%p")
+            except ValueError:
+                return None
+
+        latest_url = None
+        latest_ts = None
+        for url in urls:
+            ts = parse_timestamp(url)
+            if ts and (latest_ts is None or ts > latest_ts):
+                latest_ts = ts
+                latest_url = url
+        return latest_url or urls[0]
+
+    def _parse_official_report_pdf(self, url: str) -> pd.DataFrame:
+        """Parse the official NBA injury report PDF into a DataFrame."""
+        try:
+            from PyPDF2 import PdfReader
+        except ImportError as e:
+            logger.warning(f"PyPDF2 not available for injury PDF parsing: {e}")
+            return pd.DataFrame()
+
+        try:
+            response = requests.get(url, timeout=20)
+            response.raise_for_status()
+        except requests.RequestException as e:
+            logger.warning(f"Official injury report download failed: {e}")
+            return pd.DataFrame()
+
+        try:
+            reader = PdfReader(io.BytesIO(response.content))
+        except (ValueError, IOError, OSError) as e:
+            logger.warning(f"Failed to read injury report PDF: {e}")
+            return pd.DataFrame()
+        except Exception as e:
+            logger.warning(f"Unexpected error parsing injury report PDF: {e}")
+            return pd.DataFrame()
+
+        status_tokens = {"Out", "Questionable", "Doubtful", "Probable", "GTD", "Available"}
+        suffix_tokens = {"Jr.,", "Sr.,", "II,", "III,", "IV,", "V,", "VI,", "Jr.", "Sr.", "II", "III", "IV"}
+        team_tokens = sorted(
+            [(name, name.lower().split()) for name in TEAM_ABBREVIATIONS.keys() if " " in name],
+            key=lambda x: len(x[1]),
+            reverse=True
+        )
+
+        def combine_hyphens(tokens: List[str]) -> List[str]:
+            combined = []
+            i = 0
+            while i < len(tokens):
+                token = tokens[i]
+                if token.endswith("-") and len(token) > 1 and i + 1 < len(tokens):
+                    combined.append(token[:-1] + "-" + tokens[i + 1])
+                    i += 2
+                    continue
+                combined.append(token)
+                i += 1
+            return combined
+
+        def merge_suffixes(tokens: List[str]) -> List[str]:
+            merged = []
+            for token in tokens:
+                if token in suffix_tokens and merged:
+                    merged[-1] = f"{merged[-1]} {token}"
+                else:
+                    merged.append(token)
+            return merged
+
+        def match_team(tokens: List[str], idx: int) -> Tuple[Optional[str], int]:
+            for name, parts in team_tokens:
+                if idx + len(parts) <= len(tokens):
+                    window = [t.lower() for t in tokens[idx:idx + len(parts)]]
+                    if window == parts:
+                        return name, len(parts)
+            return None, 0
+
+        def is_date_token(token: str) -> bool:
+            return bool(re.match(r"\d{1,2}/\d{1,2}/\d{4}", token))
+
+        def is_time_token(token: str) -> bool:
+            return bool(re.match(r"\d{1,2}:\d{2}", token))
+
+        def is_matchup_token(token: str) -> bool:
+            return bool(re.match(r"^[A-Z]{2,3}@[A-Z]{2,3}$", token))
+
+        def normalize_reason(tokens: List[str]) -> str:
+            if not tokens:
+                return ""
+            text = " ".join(tokens).strip()
+            text = re.sub(r"\s+([;:,])", r"\1", text)
+            text = re.sub(r"\s+-\s+", " - ", text)
+            text = re.sub(r"\s{2,}", " ", text)
+            return text
+
+        def is_player_start(tokens: List[str], idx: int) -> bool:
+            token = tokens[idx]
+            if "," not in token:
+                return False
+            for offset in range(1, 5):
+                if idx + offset >= len(tokens):
+                    break
+                if tokens[idx + offset] in status_tokens:
+                    return True
+            return False
+
+        def extract_page_tokens(text: str) -> List[str]:
+            lines = [line.strip() for line in text.splitlines() if line.strip()]
+            for i, line in enumerate(lines):
+                if line.lower() == "reason":
+                    return lines[i + 1:]
+            if len(lines) > 6 and lines[0].lower() == "injury" and lines[1].lower().startswith("report"):
+                if "Page" in lines:
+                    page_idx = lines.index("Page")
+                    return lines[min(page_idx + 4, len(lines)):]
+            return lines
+
+        tokens = []
+        for page in reader.pages:
+            page_text = page.extract_text() or ""
+            tokens.extend(extract_page_tokens(page_text))
+
+        tokens = combine_hyphens(tokens)
+        tokens = merge_suffixes(tokens)
+
+        rows = []
+        current_team = None
+        player_tokens = []
+        status = None
+        reason_tokens = []
+
+        def flush_row() -> None:
+            nonlocal player_tokens, status, reason_tokens
+            if not player_tokens or not status:
+                player_tokens = []
+                status = None
+                reason_tokens = []
+                return
+            player_raw = " ".join(player_tokens)
+            if "," in player_raw:
+                last, rest = player_raw.split(",", 1)
+                player_name = f"{rest.strip()} {last.strip()}".strip()
+            else:
+                player_name = player_raw.strip()
+            rows.append({
+                "player": player_name,
+                "team": self._normalize_team_name(current_team or ""),
+                "status": status.upper(),
+                "injury": normalize_reason(reason_tokens),
+                "source": "NBA Official Report",
+            })
+            player_tokens = []
+            status = None
+            reason_tokens = []
+
+        i = 0
+        while i < len(tokens):
+            token = tokens[i]
+
+            if token in {"Page", "of"}:
+                i += 1
+                continue
+            if token in {"AM", "PM", "(ET)"}:
+                i += 1
+                continue
+            if is_date_token(token) or is_time_token(token) or is_matchup_token(token):
+                i += 1
+                continue
+
+            team_name, team_len = match_team(tokens, i)
+            if team_name:
+                if status:
+                    flush_row()
+                current_team = team_name
+                i += team_len
+                continue
+
+            if status is None:
+                if token in status_tokens:
+                    status = token
+                else:
+                    player_tokens.append(token)
+                i += 1
+                continue
+
+            if is_player_start(tokens, i):
+                flush_row()
+                player_tokens.append(token)
+                i += 1
+                continue
+
+            reason_tokens.append(token)
+            i += 1
+
+        flush_row()
+
+        return pd.DataFrame(rows) if rows else pd.DataFrame()
+
     def get_all_injuries(self, force_refresh: bool = False) -> pd.DataFrame:
         """
         Get combined injury data from all sources.
@@ -276,10 +705,11 @@ class InjuryTracker:
 
         Priority order (lower = higher priority):
             0. Manual overrides
-            1. Perplexity AI (real-time breaking news)
-            2. NBA API (official injury reports)
-            3. CBS Sports (web scraping)
-            4. Rotowire (web scraping fallback)
+            1. NBA Official Report (nba.com PDF)
+            2. Perplexity AI (real-time breaking news)
+            3. NBA API (official injury reports)
+            4. CBS Sports (web scraping)
+            5. Rotowire (web scraping fallback)
         """
         now = datetime.now()
 
@@ -291,23 +721,28 @@ class InjuryTracker:
         # Fetch from all sources
         all_injuries = []
 
-        # 1. Perplexity AI (real-time, highest priority after manual)
+        # 1. NBA Official Report (official PDF)
+        official_injuries = self.get_injuries_from_official_report()
+        if not official_injuries.empty:
+            all_injuries.append(official_injuries)
+
+        # 2. Perplexity AI (real-time)
         perplexity_injuries = self.get_injuries_from_perplexity()
         if not perplexity_injuries.empty:
             all_injuries.append(perplexity_injuries)
 
-        # 2. NBA API
+        # 3. NBA API
         nba_injuries = self.get_injuries_from_nba_api()
         if not nba_injuries.empty:
             nba_injuries['source'] = 'NBA API'
             all_injuries.append(nba_injuries)
 
-        # 3. Web scraping (CBS Sports + Rotowire)
+        # 4. Web scraping (CBS Sports + Rotowire)
         web_injuries = self.get_injuries_from_rotowire()
         if not web_injuries.empty:
             all_injuries.append(web_injuries)
 
-        # 4. Manual overrides (always included, highest priority)
+        # 5. Manual overrides (always included, highest priority)
         if self._manual_injuries:
             manual_df = pd.DataFrame(list(self._manual_injuries.values()))
             manual_df['source'] = 'Manual'
@@ -319,10 +754,11 @@ class InjuryTracker:
             # Priority: Manual > Perplexity > NBA API > CBS Sports > Rotowire
             combined['priority'] = combined['source'].map({
                 'Manual': 0,
-                'Perplexity': 1,
-                'NBA API': 2,
-                'CBS Sports': 3,
-                'Rotowire': 4
+                'NBA Official Report': 1,
+                'Perplexity': 2,
+                'NBA API': 3,
+                'CBS Sports': 4,
+                'Rotowire': 5
             })
             combined = combined.sort_values('priority').drop_duplicates(subset=['player'], keep='first')
             combined = combined.drop(columns=['priority'])
