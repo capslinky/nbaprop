@@ -31,11 +31,26 @@ class MemoryCache(CacheStore):
         with self._lock:
             entry = self._data.get(key)
             if not entry:
+                try:
+                    from nbaprop.ops import get_metrics_recorder
+                    get_metrics_recorder().increment("cache.memory.miss")
+                except Exception:
+                    pass
                 return None
             value, expires_at = entry
             if expires_at is not None and time.time() >= expires_at:
                 self._data.pop(key, None)
+                try:
+                    from nbaprop.ops import get_metrics_recorder
+                    get_metrics_recorder().increment("cache.memory.expired")
+                except Exception:
+                    pass
                 return None
+            try:
+                from nbaprop.ops import get_metrics_recorder
+                get_metrics_recorder().increment("cache.memory.hit")
+            except Exception:
+                pass
             return value
 
     def set(self, key: str, value: Any, ttl_seconds: int) -> None:
@@ -63,10 +78,21 @@ class FileCache(CacheStore):
     def get(self, key: str) -> Optional[Any]:
         path = self._path_for_key(key)
         if not path.exists():
+            try:
+                from nbaprop.ops import get_metrics_recorder
+                get_metrics_recorder().increment("cache.file.miss")
+            except Exception:
+                pass
             return None
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
+        except (json.JSONDecodeError, UnicodeDecodeError, OSError) as e:
+            # JSON parsing, encoding, or file read error
+            try:
+                from nbaprop.ops import get_metrics_recorder
+                get_metrics_recorder().increment("cache.file.error")
+            except Exception:
+                pass
             return None
         expires_at = payload.get("expires_at")
         if expires_at is not None and time.time() >= float(expires_at):
@@ -74,7 +100,17 @@ class FileCache(CacheStore):
                 path.unlink()
             except OSError:
                 pass
+            try:
+                from nbaprop.ops import get_metrics_recorder
+                get_metrics_recorder().increment("cache.file.expired")
+            except Exception:
+                pass
             return None
+        try:
+            from nbaprop.ops import get_metrics_recorder
+            get_metrics_recorder().increment("cache.file.hit")
+        except Exception:
+            pass
         return payload.get("value")
 
     def set(self, key: str, value: Any, ttl_seconds: int) -> None:

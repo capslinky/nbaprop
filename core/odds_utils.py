@@ -12,8 +12,11 @@ Provides:
 - Statistical confidence calculations
 """
 
+import logging
 from typing import Tuple, Dict
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 # Defer scipy import for faster module load
 _stats = None
@@ -346,8 +349,13 @@ def calculate_prob_over(
             mask = x_range > line
             prob_over = np.trapz(pdf[mask], x_range[mask])
             return max(0.01, min(0.99, prob_over))
-        except Exception:
-            # Fall back to empirical
+        except (ValueError, np.linalg.LinAlgError) as e:
+            # KDE can fail with insufficient data or singular matrix
+            logger.debug(f"KDE calculation failed, falling back to empirical: {e}")
+            return calculate_prob_over(history, line, 'empirical')
+        except Exception as e:
+            # Unexpected error, fall back to empirical
+            logger.debug(f"Unexpected error in KDE, falling back to empirical: {e}")
             return calculate_prob_over(history, line, 'empirical')
 
     return 0.5

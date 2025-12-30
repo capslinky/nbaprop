@@ -5,7 +5,7 @@ Combines all contextual factors into a single, consistent analysis with 12 adjus
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional, Dict, Any, List
 
 import pandas as pd
@@ -95,8 +95,10 @@ class UnifiedPropModel:
                 return store
         except ImportError:
             pass  # Calibration module not available
-        except Exception:
-            pass  # Any other error, fall back to defaults
+        except (OSError, IOError, ValueError) as e:
+            logger.debug(f"Could not load learned weights: {e}")
+        except Exception as e:
+            logger.debug(f"Unexpected error loading learned weights: {e}")
         return None
 
     @property
@@ -497,8 +499,10 @@ class UnifiedPropModel:
                         flags.append('HIGH USG')
                     elif player_usg <= 15:
                         flags.append('LOW USG')
+            except (KeyError, TypeError, ValueError) as e:
+                logger.debug(f"Data error fetching usage for {player_name}: {e}")
             except Exception as e:
-                logger.debug(f"Could not fetch usage for {player_name}: {e}")
+                logger.debug(f"Unexpected error fetching usage for {player_name}: {e}")
 
         # 11. SHOT VOLUME TREND (FGA/minute trend)
         # Catches role changes independent of minutes
@@ -512,8 +516,10 @@ class UnifiedPropModel:
                         flags.append('VOL UP')
                     elif trend_dir == 'DOWN':
                         flags.append('VOL DOWN')
+            except (KeyError, TypeError, ValueError) as e:
+                logger.debug(f"Data error calculating shot volume trend: {e}")
             except Exception as e:
-                logger.debug(f"Could not calculate shot volume trend: {e}")
+                logger.debug(f"Unexpected error calculating shot volume trend: {e}")
 
         # 12. TRUE SHOOTING EFFICIENCY REGRESSION
         # Regress extreme efficiency outliers toward mean
@@ -527,8 +533,10 @@ class UnifiedPropModel:
                         flags.append('TS REG DOWN')  # Shooting too hot, expect regression
                     elif regression_type == 'UP':
                         flags.append('TS REG UP')  # Shooting cold, expect bounce back
+            except (KeyError, TypeError, ValueError) as e:
+                logger.debug(f"Data error calculating TS efficiency: {e}")
             except Exception as e:
-                logger.debug(f"Could not calculate TS efficiency: {e}")
+                logger.debug(f"Unexpected error calculating TS efficiency: {e}")
 
         # Calculate total multiplier
         total = 1.0
@@ -624,6 +632,8 @@ class UnifiedPropModel:
         game_total: float = None,
         blowout_risk: str = None,
         last_n_games: int = 15,
+        game_logs: Optional[pd.DataFrame] = None,
+        game_date: Optional[date] = None,
     ) -> PropAnalysis:
         """
         Analyze a player prop with full contextual adjustments.
@@ -638,6 +648,8 @@ class UnifiedPropModel:
             game_total: Optional Vegas over/under total
             blowout_risk: Optional 'HIGH', 'MEDIUM', 'LOW'
             last_n_games: Games to analyze (default 15)
+            game_logs: Optional DataFrame of game logs (for backtesting)
+            game_date: Optional game date to filter logs (for backtesting)
 
         Returns:
             PropAnalysis with projection, edge, confidence, and full context
@@ -651,6 +663,26 @@ class UnifiedPropModel:
             raise InvalidPropTypeError(prop_type)
         prop_type = prop_type_lower  # Normalize to lowercase
 
+        if prop_type in CONFIG.EXCLUDED_PROP_TYPES:
+            return PropAnalysis(
+                player=player_name,
+                prop_type=prop_type,
+                line=line,
+                projection=0,
+                base_projection=0,
+                edge=0,
+                confidence=0,
+                pick='PASS',
+                recent_avg=0,
+                season_avg=0,
+                over_rate=0,
+                under_rate=0,
+                std_dev=0,
+                games_analyzed=0,
+                trend='NEUTRAL',
+                flags=['EXCLUDED_PROP_TYPE'],
+            )
+
         # Map prop type aliases to actual column names
         # 'threes' is a common alias for 'fg3m' (3-pointers made)
         PROP_TO_COLUMN = {
@@ -662,7 +694,15 @@ class UnifiedPropModel:
         column_name = PROP_TO_COLUMN.get(prop_type, prop_type)
 
         # Fetch player game logs
-        logs = self.fetcher.get_player_game_logs(player_name, last_n_games=last_n_games)
+        logs = game_logs if game_logs is not None else self.fetcher.get_player_game_logs(
+            player_name,
+            last_n_games=last_n_games,
+        )
+
+        if game_date and not logs.empty and 'date' in logs.columns:
+            logs = logs.copy()
+            logs['date'] = pd.to_datetime(logs['date'])
+            logs = logs[logs['date'].dt.date < game_date]
 
         if logs.empty or column_name not in logs.columns:
             # Return a "no data" analysis
@@ -802,6 +842,12 @@ class UnifiedPropModel:
             blowout_risk=blowout_risk,
             teammate_boost=teammate_boost,
         )
+
+        # Apply injury risk penalty for GTD/QUESTIONABLE statuses
+        if player_status_info.get('is_gtd') or player_status_info.get('is_questionable'):
+            edge *= CONFIG.INJURY_RISK_EDGE_MULTIPLIER
+            confidence *= CONFIG.INJURY_RISK_CONFIDENCE_MULTIPLIER
+            flags.insert(0, 'INJURY_RISK_PENALTY')
 
         # Determine pick
         min_edge = 0.03 + (1 - confidence) * 0.02  # 3-5% based on confidence

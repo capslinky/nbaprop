@@ -12,6 +12,7 @@ import time
 import logging
 
 from core.constants import normalize_team_abbrev
+from core.config import CONFIG
 from core.rosters import get_player_team
 from core.news_intelligence import NewsIntelligence
 from models import UnifiedPropModel
@@ -45,6 +46,7 @@ class LivePropAnalyzer:
         # Initialize news intelligence for real-time context
         self.news_intel = NewsIntelligence(search_fn=news_search_fn)
         self._news_cache = {}  # {game_key: {player: NewsContext}}
+        self._news_enabled = bool(news_search_fn)
 
         # Track players confirmed OUT (refreshed before analysis)
         self._players_out = set()
@@ -307,19 +309,27 @@ class LivePropAnalyzer:
         logger.info("=" * 60)
         logger.info("PHASE 1: Fetching market data...")
 
-        raw_props = self.odds.get_all_player_props(max_events=max_events, event_ids=event_ids)
+        if bookmakers:
+            logger.info(f"Filtered to bookmakers: {', '.join(bookmakers)}")
+
+        raw_props = self.odds.get_all_player_props(
+            markets=CONFIG.PROP_MARKETS,
+            max_events=max_events,
+            event_ids=event_ids,
+            bookmakers=bookmakers,
+        )
         props_df = self.odds.parse_player_props(raw_props)
 
         if props_df.empty:
             logger.info("No props available")
             return pd.DataFrame()
 
-        # Filter to specific bookmakers if requested
-        if bookmakers:
-            props_df = props_df[props_df['bookmaker'].isin(bookmakers)]
-            logger.info(f"Filtered to bookmakers: {', '.join(bookmakers)}")
+        # Filter excluded prop types
+        excluded = {p.lower() for p in CONFIG.EXCLUDED_PROP_TYPES}
+        if excluded:
+            props_df = props_df[~props_df['prop_type'].str.lower().isin(excluded)]
             if props_df.empty:
-                logger.info("No props from specified bookmakers")
+                logger.info("No props after excluding high-variance types")
                 return pd.DataFrame()
 
         # Get game context
@@ -413,11 +423,12 @@ class LivePropAnalyzer:
         # =================================================================
         # PHASE 2.5: NEWS INTELLIGENCE (real-time injury/lineup context)
         # =================================================================
-        logger.info("PHASE 2.5: Fetching news intelligence...")
+        if self._news_enabled:
+            logger.info("PHASE 2.5: Fetching news intelligence...")
 
         # Get unique games from props
         game_news_cache = {}
-        if 'home_team' in unique_props.columns and 'away_team' in unique_props.columns:
+        if self._news_enabled and 'home_team' in unique_props.columns and 'away_team' in unique_props.columns:
             games = unique_props[['home_team', 'away_team']].drop_duplicates()
 
             for _, game in games.iterrows():
@@ -438,12 +449,17 @@ class LivePropAnalyzer:
                         for team, context in game_news.items():
                             if context.flags:
                                 logger.info(f"  News {team}: {', '.join(context.flags)}")
+                    except (ConnectionError, TimeoutError) as e:
+                        logger.debug(f"Network error fetching news for {game_key}: {e}")
+                    except (KeyError, TypeError, ValueError) as e:
+                        logger.debug(f"Data error fetching news for {game_key}: {e}")
                     except Exception as e:
-                        logger.debug(f"News fetch failed for {game_key}: {e}")
+                        logger.debug(f"Unexpected error fetching news for {game_key}: {e}")
 
             logger.info(f"  News scanned for {len(games)} games")
         else:
-            logger.warning("  Game info not available for news scanning")
+            if self._news_enabled:
+                logger.warning("  Game info not available for news scanning")
 
         # =================================================================
         # PHASE 3: PLAYER DATA FETCHING (with extended history)
@@ -491,8 +507,12 @@ class LivePropAnalyzer:
 
                     player_context[player] = context
 
+            except (ConnectionError, TimeoutError) as e:
+                logger.debug(f"Network error processing player context: {e}")
+            except (KeyError, TypeError, ValueError, AttributeError) as e:
+                logger.debug(f"Data error processing player context: {e}")
             except Exception as e:
-                logger.debug(f"Failed to process player context: {e}")
+                logger.debug(f"Unexpected error processing player context: {e}")
 
         logger.info(f"  Cached {len(player_cache)} players with context")
 
@@ -517,13 +537,14 @@ class LivePropAnalyzer:
 
         # MINIMUM SAMPLE SIZES by prop type (for statistical validity)
         min_samples = {
-            'points': 10,      # Lower variance
-            'rebounds': 12,    # Medium variance
-            'assists': 15,     # Higher variance
-            'pra': 10,         # Aggregated, lower variance
-            'threes': 20,      # VERY high variance - need more data
-            'blocks': 20,      # High variance
-            'steals': 20,      # High variance
+            'points': CONFIG.MIN_SAMPLE_POINTS,
+            'rebounds': CONFIG.MIN_SAMPLE_REBOUNDS,
+            'assists': CONFIG.MIN_SAMPLE_ASSISTS,
+            'pra': CONFIG.MIN_SAMPLE_PRA,
+            'threes': CONFIG.MIN_SAMPLE_THREES,
+            'blocks': CONFIG.MIN_SAMPLE_BLOCKS,
+            'steals': CONFIG.MIN_SAMPLE_STEALS,
+            'turnovers': CONFIG.MIN_SAMPLE_DEFAULT,
         }
 
         # Defense factor mapping
@@ -628,11 +649,15 @@ class LivePropAnalyzer:
                 # =============================================================
                 # STEP 4: FILTER BY EDGE AND CONFIDENCE
                 # =============================================================
-                if abs(vig_adjusted_edge) < 3:  # Need at least 3% edge after vig
+                thresholds = CONFIG.prop_thresholds_for(prop_type)
+                min_edge_threshold = thresholds["min_edge"]
+                min_conf_threshold = thresholds["min_confidence"]
+
+                if abs(vig_adjusted_edge) < (min_edge_threshold * 100):
                     skipped['no_edge'] += 1
                     continue
 
-                if analysis.confidence < min_confidence:
+                if analysis.confidence < min_conf_threshold:
                     skipped['low_confidence'] += 1
                     continue
 
@@ -695,8 +720,16 @@ class LivePropAnalyzer:
                     player_picks[player] = []
                 player_picks[player].append(prop_type)
 
+            except (ConnectionError, TimeoutError) as e:
+                logger.warning(f"Network error analyzing prop for {player} {prop_type}: {e}")
+                skipped['analysis_error'] = skipped.get('analysis_error', 0) + 1
+                continue
+            except (KeyError, TypeError, ValueError, AttributeError) as e:
+                logger.warning(f"Data error analyzing prop for {player} {prop_type}: {e}")
+                skipped['analysis_error'] = skipped.get('analysis_error', 0) + 1
+                continue
             except Exception as e:
-                logger.warning(f"Failed to analyze prop for {player} {prop_type}: {e}")
+                logger.warning(f"Unexpected error analyzing prop for {player} {prop_type}: {e}")
                 skipped['analysis_error'] = skipped.get('analysis_error', 0) + 1
                 continue
 
@@ -709,39 +742,50 @@ class LivePropAnalyzer:
             df = pd.DataFrame(value_props)
             original_count = len(df)
 
-            # Step 1: Remove highly correlated props (points vs pra, etc.)
-            # If player has both 'points' and 'pra', keep only the higher edge one
-            correlated_pairs = [('points', 'pra'), ('rebounds', 'pra'), ('assists', 'pra')]
+            correlation_removed = 0
+            alt_lines_removed = 0
+            if CONFIG.CORRELATION_FILTER_ENABLED:
+                # Step 1: Remove highly correlated props (points vs pra, etc.)
+                correlated_pairs = [('points', 'pra'), ('rebounds', 'pra'), ('assists', 'pra')]
 
-            rows_to_drop = []
-            for player in df['player'].unique():
-                player_df = df[df['player'] == player]
-                for prop1, prop2 in correlated_pairs:
-                    p1 = player_df[player_df['prop_type'] == prop1]
-                    p2 = player_df[player_df['prop_type'] == prop2]
-                    if len(p1) > 0 and len(p2) > 0:
-                        # Keep the one with higher vig-adjusted edge
-                        if p1.iloc[0]['avg_edge'] > p2.iloc[0]['avg_edge']:
-                            rows_to_drop.extend(p2.index.tolist())
-                        else:
-                            rows_to_drop.extend(p1.index.tolist())
+                rows_to_drop = []
+                for player in df['player'].unique():
+                    player_df = df[df['player'] == player]
+                    for prop1, prop2 in correlated_pairs:
+                        p1 = player_df[player_df['prop_type'] == prop1]
+                        p2 = player_df[player_df['prop_type'] == prop2]
+                        if len(p1) > 0 and len(p2) > 0:
+                            # Keep the one with higher vig-adjusted edge
+                            if p1.iloc[0]['avg_edge'] > p2.iloc[0]['avg_edge']:
+                                rows_to_drop.extend(p2.index.tolist())
+                            else:
+                                rows_to_drop.extend(p1.index.tolist())
 
-            df = df.drop(index=list(set(rows_to_drop)))
-            correlation_removed = original_count - len(df)
+                df = df.drop(index=list(set(rows_to_drop)))
+                correlation_removed = original_count - len(df)
 
-            # FIX #3: Alt Line Deduplication
-            # Keep only ONE line per player per prop type (the one with highest edge)
-            # This prevents picks like: Garland UNDER 23.5, 22.5, 21.5 all appearing
-            before_alt_dedup = len(df)
-            df = df.sort_values(['avg_edge', 'confidence'], ascending=[False, False])
-            df = df.drop_duplicates(subset=['player', 'prop_type'], keep='first')
-            alt_lines_removed = before_alt_dedup - len(df)
+                # Alt Line Deduplication
+                before_alt_dedup = len(df)
+                df = df.sort_values(['avg_edge', 'confidence'], ascending=[False, False])
+                df = df.drop_duplicates(subset=['player', 'prop_type'], keep='first')
+                alt_lines_removed = before_alt_dedup - len(df)
 
-            skipped['correlation'] = correlation_removed
-            skipped['alt_lines'] = alt_lines_removed
+                skipped['correlation'] = correlation_removed
+                skipped['alt_lines'] = alt_lines_removed
 
-            # Sort by vig-adjusted edge
-            df = df.sort_values('avg_edge', ascending=False)
+            # Sort by ranking mode
+            if CONFIG.PICK_RANKING_MODE == "edge":
+                df = df.sort_values('avg_edge', ascending=False)
+            else:
+                df = df.assign(rank_score=df['avg_edge'].abs() * df['confidence'])
+                df = df.sort_values('rank_score', ascending=False)
+
+            # Top-N per game after thresholding
+            if CONFIG.TOP_PICKS_PER_GAME and 'game' in df.columns:
+                df = df.groupby('game', as_index=False, sort=False).head(CONFIG.TOP_PICKS_PER_GAME)
+
+            if 'rank_score' in df.columns:
+                df = df.drop(columns=['rank_score'])
 
             logger.info(f"PHASE 5: Filtering removed {correlation_removed} correlated + {alt_lines_removed} alt lines")
             logger.info("=" * 60)

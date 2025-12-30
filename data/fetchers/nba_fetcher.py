@@ -25,6 +25,11 @@ from core.constants import (
     get_current_nba_season,
 )
 from core.config import CONFIG
+from core.exceptions import (
+    DataFetchError,
+    PlayerNotFoundError,
+    NetworkError,
+)
 from .resilient import get_resilient_fetcher
 
 logger = logging.getLogger(__name__)
@@ -429,8 +434,14 @@ class NBADataFetcher:
 
             return None
 
+        except (ConnectionError, TimeoutError) as e:
+            logger.warning(f"Network error finding player {player_name}: {e}")
+            return None
+        except (KeyError, TypeError, ValueError) as e:
+            logger.warning(f"Data parsing error finding player {player_name}: {e}")
+            return None
         except Exception as e:
-            logger.warning(f"Error finding player {player_name}: {e}")
+            logger.warning(f"Unexpected error finding player {player_name}: {e}")
             return None
 
     def get_player_game_logs(self, player_name: str, season: str = None,
@@ -603,8 +614,14 @@ class NBADataFetcher:
             self._set_cached_table(self._defense_ratings_cache, result)
             return result
 
+        except (ConnectionError, TimeoutError) as e:
+            logger.warning(f"Network error fetching team defense ratings: {e}")
+            return pd.DataFrame()
+        except (KeyError, TypeError, ValueError) as e:
+            logger.warning(f"Data parsing error in team defense ratings: {e}")
+            return pd.DataFrame()
         except Exception as e:
-            logger.warning(f"Error fetching team defense ratings: {e}")
+            logger.warning(f"Unexpected error fetching team defense ratings: {e}")
             return pd.DataFrame()
 
     def get_team_defense_vs_position(self, season: str = None) -> pd.DataFrame:
@@ -685,8 +702,14 @@ class NBADataFetcher:
             self._set_cached_table(self._defense_vs_position_cache, result)
             return result
 
+        except (ConnectionError, TimeoutError) as e:
+            logger.warning(f"Network error fetching team defense vs position: {e}")
+            return pd.DataFrame()
+        except (KeyError, TypeError, ValueError) as e:
+            logger.warning(f"Data parsing error in team defense vs position: {e}")
+            return pd.DataFrame()
         except Exception as e:
-            logger.warning(f"Error fetching team defense vs position: {e}")
+            logger.warning(f"Unexpected error fetching team defense vs position: {e}")
             return pd.DataFrame()
 
     def get_player_splits(self, player_name: str, season: str = None) -> dict:
@@ -764,8 +787,14 @@ class NBADataFetcher:
             return games_df[['GAME_ID', 'HOME_TEAM_ID', 'VISITOR_TEAM_ID',
                             'GAME_STATUS_TEXT']].copy()
 
+        except (ConnectionError, TimeoutError) as e:
+            logger.warning(f"Network error fetching today's schedule: {e}")
+            return pd.DataFrame()
+        except (KeyError, TypeError, ValueError) as e:
+            logger.warning(f"Data parsing error in today's schedule: {e}")
+            return pd.DataFrame()
         except Exception as e:
-            logger.warning(f"Error fetching today's schedule: {e}")
+            logger.warning(f"Unexpected error fetching today's schedule: {e}")
             return pd.DataFrame()
 
     def get_multiple_players_logs(self, player_names: List[str],
@@ -856,8 +885,14 @@ class NBADataFetcher:
             self._set_cached_table(self._pace_cache, result)
             return result
 
+        except (ConnectionError, TimeoutError) as e:
+            logger.warning(f"Network error fetching team pace: {e}")
+            return pd.DataFrame()
+        except (KeyError, TypeError, ValueError) as e:
+            logger.warning(f"Data parsing error in team pace: {e}")
+            return pd.DataFrame()
         except Exception as e:
-            logger.warning(f"Error fetching team pace: {e}")
+            logger.warning(f"Unexpected error fetching team pace: {e}")
             return pd.DataFrame()
 
     def get_team_schedule(self, team_abbrev: str, season: str = None) -> pd.DataFrame:
@@ -893,8 +928,14 @@ class NBADataFetcher:
 
             return df[['GAME_DATE', 'MATCHUP', 'WL']].head(10)
 
+        except (ConnectionError, TimeoutError) as e:
+            logger.warning(f"Network error fetching team schedule: {e}")
+            return pd.DataFrame()
+        except (KeyError, TypeError, ValueError) as e:
+            logger.warning(f"Data parsing error in team schedule: {e}")
+            return pd.DataFrame()
         except Exception as e:
-            logger.warning(f"Error fetching team schedule: {e}")
+            logger.warning(f"Unexpected error fetching team schedule: {e}")
             return pd.DataFrame()
 
     def check_back_to_back(self, player_logs: pd.DataFrame, game_date: datetime = None) -> dict:
@@ -1100,9 +1141,17 @@ class NBADataFetcher:
             logger.info(f"Loaded advanced stats for {len(result)} players")
             return result
 
+        except (ConnectionError, TimeoutError) as e:
+            self._on_failure()
+            logger.warning(f"Network error fetching player advanced stats: {e}")
+            return pd.DataFrame()
+        except (KeyError, TypeError, ValueError) as e:
+            self._on_failure()
+            logger.warning(f"Data parsing error in player advanced stats: {e}")
+            return pd.DataFrame()
         except Exception as e:
             self._on_failure()
-            logger.warning(f"Error fetching player advanced stats: {e}")
+            logger.warning(f"Unexpected error fetching player advanced stats: {e}")
             return pd.DataFrame()
 
     def get_player_usage(self, player_name: str, season: str = None) -> dict:
@@ -1339,7 +1388,7 @@ class NBADataFetcher:
         try:
             player_logs[date_col] = pd.to_datetime(player_logs[date_col])
             teammate_logs[teammate_date_col] = pd.to_datetime(teammate_logs[teammate_date_col])
-        except Exception as e:
+        except (ValueError, TypeError) as e:
             logger.warning(f"Date conversion error: {e}")
             return self._default_usage_boost("Date conversion error")
 
