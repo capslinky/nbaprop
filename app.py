@@ -18,6 +18,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data import NBADataFetcher, OddsAPIClient, InjuryTracker, TEAM_ABBREVIATIONS
 from models import UnifiedPropModel
 from core.config import CONFIG
+from core.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 st.set_page_config(page_title="NBA Props", page_icon="🏀", layout="wide")
 
@@ -211,6 +214,7 @@ with tab1:
                             'Adjustments': analysis.adjustments
                         })
                 except Exception as e:
+                    logger.debug(f"Skipped prop in dashboard: {e}")
                     continue
 
             progress.progress((i + 1) / len(events), text=f"Done: {game_name}")

@@ -1,0 +1,952 @@
+[
+  {
+    "player_id": "e3ae9d94a2714cb0",
+    "player_name": "Anfernee Simons",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "4deb45f2e29535fa",
+    "player_name": "Ausar Thompson",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "787e3981d8e44c11",
+    "player_name": "Brice Sensabaugh",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "5f2b3ff4f9948e93",
+    "player_name": "Brook Lopez",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "719212055825801f",
+    "player_name": "Cade Cunningham",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "4e45d282ab40fb92",
+    "player_name": "Cam Spencer",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "d63216a88b094398",
+    "player_name": "Cedric Coward",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "527114f33971ad75",
+    "player_name": "DeMar DeRozan",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "5a9d4c9a099faddc",
+    "player_name": "Deandre Ayton",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "278d13442499f167",
+    "player_name": "Dennis Schroder",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "4b549c971bbb6c26",
+    "player_name": "Derrick Jones",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "56366070652c315d",
+    "player_name": "Derrick White",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "97db3d8243263977",
+    "player_name": "Duncan Robinson",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "322a3d3bbe4b6b0b",
+    "player_name": "G.G. Jackson",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "1bd6dfe5605cb7aa",
+    "player_name": "Hugo Gonzalez",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "230a681311fee4a4",
+    "player_name": "Isaiah Collier",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "4caf9e680e33cf8c",
+    "player_name": "Isaiah Stewart II",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "cf5ff662fff85eb6",
+    "player_name": "Ja Morant",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "fb752041a1ec85bd",
+    "player_name": "Jaden Ivey",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "c477d934c6e0a9f9",
+    "player_name": "Jake LaRavia",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "7bb8e25366b34345",
+    "player_name": "Jalen Duren",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "938d41c8da02c0a6",
+    "player_name": "James Harden",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "6bcf4433e1256fa7",
+    "player_name": "Jared McCain",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "29e79437a2214ca3",
+    "player_name": "Jaren Jackson Jr",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "36b79ae03f263fbb",
+    "player_name": "Jarred Vanderbilt",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "1cd4677a3b0b50fb",
+    "player_name": "Javonte Green",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "a3a687d1a2eff17e",
+    "player_name": "Jaxson Hayes",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "195708c325c4c735",
+    "player_name": "Jaylen Brown",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "00417796df3a3a94",
+    "player_name": "Jaylen Wells",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "f90abdac8476856e",
+    "player_name": "Jock Landale",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "232d2c6cb0f702e0",
+    "player_name": "Joel Embiid",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "f164bb3cebeeaa43",
+    "player_name": "John Collins",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "2c32eb67b1d23b03",
+    "player_name": "Jordan Walsh",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "b0cd7d8d9d34eeb6",
+    "player_name": "Jusuf Nurkic",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "bf23820d29c03413",
+    "player_name": "Kawhi Leonard",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "982d03be20a88073",
+    "player_name": "Keegan Murray",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "eebbd3f8dcedbe8e",
+    "player_name": "Keyonte George",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "5f14e644f6af651b",
+    "player_name": "Kris Dunn",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "1245618580f0afa4",
+    "player_name": "Kyle Filipowski",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "6528127ba219e939",
+    "player_name": "Lauri Markkanen",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "c4d4f0b6da65c90d",
+    "player_name": "LeBron James",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "b53a87d939b510c9",
+    "player_name": "Luka Doncic",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "add3ebb83e07580b",
+    "player_name": "Marcus Smart",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "a3d663b91b6b6f21",
+    "player_name": "Maxime Raynaud",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "c29cbd55ca2a2752",
+    "player_name": "Neemias Queta",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "478269f2f009f52c",
+    "player_name": "Nicolas Batum",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "f062e27e93420987",
+    "player_name": "Nique Clifford",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "17c40c7eb7c61bc4",
+    "player_name": "Paul George",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "8266cd61c58c9517",
+    "player_name": "Payton Pritchard",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "6f560079bed2caf9",
+    "player_name": "Precious Achiuwa",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "b5293a12d6b1625b",
+    "player_name": "Quentin Grimes",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "6aebcc86b626593a",
+    "player_name": "Russell Westbrook",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "776947d150358207",
+    "player_name": "Sam Hauser",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "f0f6cdc30bf237c9",
+    "player_name": "Santi Aldama",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "920b4c0f03d8363f",
+    "player_name": "Svi Mykhailiuk",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "b90d46e90cecc8d4",
+    "player_name": "Tobias Harris",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "3cfc8bdeebb00461",
+    "player_name": "Tyrese Maxey",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "e8e371aa543245b3",
+    "player_name": "VJ Edgecombe",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "235af6bf567d425c",
+    "player_name": "MarJon Beauchamp",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "2c17420af0128d08",
+    "player_name": "Landry Shamet",
+    "team_abbrev": "NYK"
+  },
+  {
+    "player_id": "3549b0fb8f63022b",
+    "player_name": "Mitchell Robinson",
+    "team_abbrev": "NYK"
+  },
+  {
+    "player_id": "41dce95d5a25acde",
+    "player_name": "Tyler Kolek",
+    "team_abbrev": "NYK"
+  },
+  {
+    "player_id": "2cc25a6ccfc13e09",
+    "player_name": "Ariel Hukporti",
+    "team_abbrev": "NYK"
+  },
+  {
+    "player_id": "93649c8911b65ca1",
+    "player_name": "Josh Hart",
+    "team_abbrev": "NYK"
+  },
+  {
+    "player_id": "c872a3622f3bc6d2",
+    "player_name": "Coby White",
+    "team_abbrev": "CHI"
+  },
+  {
+    "player_id": "4a6bb8a8cfec10d5",
+    "player_name": "Lachlan Olbrich",
+    "team_abbrev": "CHI"
+  },
+  {
+    "player_id": "9d8c21cd42c321c9",
+    "player_name": "Emanuel Miller",
+    "team_abbrev": "CHI"
+  },
+  {
+    "player_id": "fa374d1abb3b6035",
+    "player_name": "Josh Giddey",
+    "team_abbrev": "CHI"
+  },
+  {
+    "player_id": "20b5ef08211c0099",
+    "player_name": "Trentyn Flowers",
+    "team_abbrev": "CHI"
+  },
+  {
+    "player_id": "452f2dfc0df14f7a",
+    "player_name": "Noa Essengue",
+    "team_abbrev": "CHI"
+  },
+  {
+    "player_id": "05fbd33123e77e11",
+    "player_name": "Zach Collins",
+    "team_abbrev": "CHI"
+  },
+  {
+    "player_id": "9d117f6330178a01",
+    "player_name": "Dejounte Murray",
+    "team_abbrev": "NOP"
+  },
+  {
+    "player_id": "6fed5a53e22ca645",
+    "player_name": "Herbert Jones",
+    "team_abbrev": "NOP"
+  },
+  {
+    "player_id": "6cb4ccf82bf5cce1",
+    "player_name": "Stephon Castle",
+    "team_abbrev": "SAS"
+  },
+  {
+    "player_id": "bfe461b93e45c104",
+    "player_name": "Hunter Dickinson",
+    "team_abbrev": "NOP"
+  },
+  {
+    "player_id": "645eebc1752475e8",
+    "player_name": "Luke Travers",
+    "team_abbrev": "CLE"
+  },
+  {
+    "player_id": "de67b896fed70864",
+    "player_name": "Max Strus",
+    "team_abbrev": "CLE"
+  },
+  {
+    "player_id": "a1c72713449b1271",
+    "player_name": "Larry Nance Jr.",
+    "team_abbrev": "CLE"
+  },
+  {
+    "player_id": "9ea8ae204f976e4e",
+    "player_name": "Sam Merrill",
+    "team_abbrev": "CLE"
+  },
+  {
+    "player_id": "58d99219db4e31a5",
+    "player_name": "Chris Livingston",
+    "team_abbrev": "CLE"
+  },
+  {
+    "player_id": "db9c98225a92e37e",
+    "player_name": "Jalen Green",
+    "team_abbrev": "PHX"
+  },
+  {
+    "player_id": "fe39d719aad3d3e5",
+    "player_name": "Jordan Goodwin",
+    "team_abbrev": "PHX"
+  },
+  {
+    "player_id": "777e7e17fc13aabc",
+    "player_name": "Ryan Dunn",
+    "team_abbrev": "PHX"
+  },
+  {
+    "player_id": "437f98bdfcebb1d3",
+    "player_name": "Grayson Allen",
+    "team_abbrev": "PHX"
+  },
+  {
+    "player_id": "51ed813225d1bd19",
+    "player_name": "Obi Toppin",
+    "team_abbrev": "IND"
+  },
+  {
+    "player_id": "7db91cff06d51496",
+    "player_name": "Ben Sheppard",
+    "team_abbrev": "IND"
+  },
+  {
+    "player_id": "d37bbae8653cdb2b",
+    "player_name": "T.J. McConnell",
+    "team_abbrev": "IND"
+  },
+  {
+    "player_id": "18b51ba0144cbe14",
+    "player_name": "Isaiah Jackson",
+    "team_abbrev": "IND"
+  },
+  {
+    "player_id": "8e2847841220bbcd",
+    "player_name": "Tyrese Haliburton",
+    "team_abbrev": "IND"
+  },
+  {
+    "player_id": "1824d575f2d7b563",
+    "player_name": "Jose Alvarado",
+    "team_abbrev": "NOP"
+  },
+  {
+    "player_id": "51a8ecf5de75d06d",
+    "player_name": "Harrison Ingram",
+    "team_abbrev": "SAS"
+  },
+  {
+    "player_id": "3daa7db59a5fce22",
+    "player_name": "David Garcia",
+    "team_abbrev": "SAS"
+  },
+  {
+    "player_id": "fee70540a411b999",
+    "player_name": "Stanley Umude",
+    "team_abbrev": "SAS"
+  },
+  {
+    "player_id": "ee971dc6bae1103b",
+    "player_name": "Pete Nance",
+    "team_abbrev": "MIL"
+  },
+  {
+    "player_id": "d351f8d5e3297910",
+    "player_name": "Alex Antetokounmpo",
+    "team_abbrev": "MIL"
+  },
+  {
+    "player_id": "78029bdea74b5c5a",
+    "player_name": "Cam Whitmore",
+    "team_abbrev": "WAS"
+  },
+  {
+    "player_id": "df23aea3f6aa1d75",
+    "player_name": "Corey Kispert",
+    "team_abbrev": "WAS"
+  },
+  {
+    "player_id": "62f552904dd61737",
+    "player_name": "Kyshawn George",
+    "team_abbrev": "WAS"
+  },
+  {
+    "player_id": "7c867e98ba4b14eb",
+    "player_name": "Malaki Branham",
+    "team_abbrev": "WAS"
+  },
+  {
+    "player_id": "e3c0f9a6e4537988",
+    "player_name": "Jaylin Williams",
+    "team_abbrev": "OKC"
+  },
+  {
+    "player_id": "452fc5e6c1df481b",
+    "player_name": "Nikola Topic",
+    "team_abbrev": "OKC"
+  },
+  {
+    "player_id": "4c503ee2e9456e75",
+    "player_name": "Thomas Sorber",
+    "team_abbrev": "OKC"
+  },
+  {
+    "player_id": "ae614175530c8d81",
+    "player_name": "Isaiah Hartenstein",
+    "team_abbrev": "OKC"
+  },
+  {
+    "player_id": "fef6b1fe672b7af6",
+    "player_name": "Ousmane Dieng",
+    "team_abbrev": "OKC"
+  },
+  {
+    "player_id": "57d6d02d057068e9",
+    "player_name": "Brooks Barnhizer",
+    "team_abbrev": "OKC"
+  },
+  {
+    "player_id": "46ba27c7fbdffdf6",
+    "player_name": "Blake Wesley",
+    "team_abbrev": "POR"
+  },
+  {
+    "player_id": "680d3ab5377b7cf0",
+    "player_name": "Matisse Thybulle",
+    "team_abbrev": "POR"
+  },
+  {
+    "player_id": "c3ce787b02803b12",
+    "player_name": "Kris Murray",
+    "team_abbrev": "POR"
+  },
+  {
+    "player_id": "d55c80fa50abdbcc",
+    "player_name": "Damian Lillard",
+    "team_abbrev": "POR"
+  },
+  {
+    "player_id": "bce94fa8c61d48c2",
+    "player_name": "Jrue Holiday",
+    "team_abbrev": "POR"
+  },
+  {
+    "player_id": "1842e6cbaa8c31cf",
+    "player_name": "Devin Vassell",
+    "team_abbrev": "SAS"
+  },
+  {
+    "player_id": "ddf0602647d253e9",
+    "player_name": "Tamar Bates",
+    "team_abbrev": "DEN"
+  },
+  {
+    "player_id": "8b70b5caff943394",
+    "player_name": "Christian Braun",
+    "team_abbrev": "DEN"
+  },
+  {
+    "player_id": "69c1fe573a314bbf",
+    "player_name": "Aaron Gordon",
+    "team_abbrev": "DEN"
+  },
+  {
+    "player_id": "179b8654e93bf924",
+    "player_name": "Cameron Johnson",
+    "team_abbrev": "DEN"
+  },
+  {
+    "player_id": "6a94a28b80e340be",
+    "player_name": "Nikola Jokic",
+    "team_abbrev": "DEN"
+  },
+  {
+    "player_id": "e96dda847f336099",
+    "player_name": "Moritz Wagner",
+    "team_abbrev": "ORL"
+  },
+  {
+    "player_id": "20e283714aaee829",
+    "player_name": "Julian Strawther",
+    "team_abbrev": "DEN"
+  },
+  {
+    "player_id": "75e32c715b1bad23",
+    "player_name": "A.J. Lawson",
+    "team_abbrev": "TOR"
+  },
+  {
+    "player_id": "d721e9cc0bd24c08",
+    "player_name": "Alijah Martin",
+    "team_abbrev": "TOR"
+  },
+  {
+    "player_id": "6425cbe0c3c85078",
+    "player_name": "Jonathan Mogbo",
+    "team_abbrev": "TOR"
+  },
+  {
+    "player_id": "7211e43895008070",
+    "player_name": "Jakob Poeltl",
+    "team_abbrev": "TOR"
+  },
+  {
+    "player_id": "ceacadaa01950de0",
+    "player_name": "Jerami Grant",
+    "team_abbrev": "POR"
+  },
+  {
+    "player_id": "9ed2b3d4af449dad",
+    "player_name": "Scoot Henderson",
+    "team_abbrev": "POR"
+  },
+  {
+    "player_id": "97bb686f3b0e4a6e",
+    "player_name": "Chucky Hepburn",
+    "team_abbrev": "TOR"
+  },
+  {
+    "player_id": "3eaac64fbff5eb79",
+    "player_name": "Taurean Prince",
+    "team_abbrev": "MIL"
+  },
+  {
+    "player_id": "389b8cedb4b177fc",
+    "player_name": "Franz Wagner",
+    "team_abbrev": "ORL"
+  },
+  {
+    "player_id": "7f5d1375a4ada7f8",
+    "player_name": "Jonathan Isaac",
+    "team_abbrev": "ORL"
+  },
+  {
+    "player_id": "04d4e75260920eb7",
+    "player_name": "Caris LeVert",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "43547f3cac3cc08c",
+    "player_name": "Bobi Klintman",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "f2cae81d67b379b8",
+    "player_name": "Isaac Jones",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "e7c9ea2ceb6fe5b7",
+    "player_name": "John Tonje",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "026eedd6db7473c9",
+    "player_name": "Georges Niang",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "2036e096a3ca2f1b",
+    "player_name": "Kevin Love",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "86cf03faabdd433e",
+    "player_name": "Walker Kessler",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "9040d0a487d67150",
+    "player_name": "Elijah Harkless",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "b1bff13b9c210da8",
+    "player_name": "Ace Bailey",
+    "team_abbrev": "UTA"
+  },
+  {
+    "player_id": "60a92954489d1d47",
+    "player_name": "Amari Williams",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "be9169f9ef63b8bb",
+    "player_name": "Jayson Tatum",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "c913c163647a9053",
+    "player_name": "Max Shulga",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "fcecde0138482b28",
+    "player_name": "Ron Harper Jr.",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "5760fdc3ddf06054",
+    "player_name": "Wendell Moore Jr.",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "c3bf7d04e1ee70af",
+    "player_name": "Chris Boucher",
+    "team_abbrev": "BOS"
+  },
+  {
+    "player_id": "ec7d94cb617c3d92",
+    "player_name": "Javon Small",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "5144c9adfc464bd8",
+    "player_name": "Olivier-Maxence Prosper",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "dfd24c481fe9252a",
+    "player_name": "Scotty Pippen Jr.",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "1930194ca8493be5",
+    "player_name": "Jahmai Mashack",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "e630ecce65cd9234",
+    "player_name": "John Konchar",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "3e2caf8dedcab4d0",
+    "player_name": "Ty Jerome",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "da32736ab322dac6",
+    "player_name": "Zach Edey",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "6e8b531d921042ea",
+    "player_name": "Brandon Clarke",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "8df7d668b3bc738d",
+    "player_name": "Kentavious Caldwell-Pope",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "5a96a7dde9c3b6bc",
+    "player_name": "Trendon Watford",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "d82cd171a0194050",
+    "player_name": "Kelly Oubre Jr.",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "f30118f62fc09c73",
+    "player_name": "Johni Broome",
+    "team_abbrev": "PHI"
+  },
+  {
+    "player_id": "e706ba3edd1b8d8d",
+    "player_name": "Vince Williams Jr.",
+    "team_abbrev": "MEM"
+  },
+  {
+    "player_id": "e32471aab4443922",
+    "player_name": "Tolu Smith",
+    "team_abbrev": "DET"
+  },
+  {
+    "player_id": "2e4fb55425bda20b",
+    "player_name": "Rui Hachimura",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "69b64a937ee838f4",
+    "player_name": "Austin Reaves",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "71b303b1c32244bd",
+    "player_name": "Colin Castleton",
+    "team_abbrev": "ORL"
+  },
+  {
+    "player_id": "1db26d6a99d1ca8f",
+    "player_name": "Desmond Bane",
+    "team_abbrev": "ORL"
+  },
+  {
+    "player_id": "f2e1a88bd41f4a6b",
+    "player_name": "Trae Young",
+    "team_abbrev": "ATL"
+  },
+  {
+    "player_id": "81e7b507162e17f2",
+    "player_name": "Malik Williams",
+    "team_abbrev": "ATL"
+  },
+  {
+    "player_id": "6b80b597f858ef8b",
+    "player_name": "Eli John Ndiaye",
+    "team_abbrev": "ATL"
+  },
+  {
+    "player_id": "5780ca8e9465407e",
+    "player_name": "Caleb Houstan",
+    "team_abbrev": "ATL"
+  },
+  {
+    "player_id": "6a9c16b42ae126a8",
+    "player_name": "Nikola Djurisic",
+    "team_abbrev": "ATL"
+  },
+  {
+    "player_id": "4ad33dc3db02bdfe",
+    "player_name": "N'Faly Dante",
+    "team_abbrev": "ATL"
+  },
+  {
+    "player_id": "487067a153857825",
+    "player_name": "Rocco Zikarsky",
+    "team_abbrev": "MIN"
+  },
+  {
+    "player_id": "28a34e9e19d1e88c",
+    "player_name": "Terrence Shannon Jr.",
+    "team_abbrev": "MIN"
+  },
+  {
+    "player_id": "747bd91ed0498a4c",
+    "player_name": "Grant Williams",
+    "team_abbrev": "CHA"
+  },
+  {
+    "player_id": "9508a70203842461",
+    "player_name": "Mason Plumlee",
+    "team_abbrev": "CHA"
+  },
+  {
+    "player_id": "440168766d15343b",
+    "player_name": "Kon Knueppel",
+    "team_abbrev": "CHA"
+  },
+  {
+    "player_id": "b08b695cba57a107",
+    "player_name": "Ryan Kalkbrenner",
+    "team_abbrev": "CHA"
+  },
+  {
+    "player_id": "74113b8a61b0b2d0",
+    "player_name": "Pat Connaughton",
+    "team_abbrev": "CHA"
+  },
+  {
+    "player_id": "2a4f649870db0148",
+    "player_name": "Miles Bridges",
+    "team_abbrev": "CHA"
+  },
+  {
+    "player_id": "9645a4e3d38dd94b",
+    "player_name": "Malevy Leons",
+    "team_abbrev": "GSW"
+  },
+  {
+    "player_id": "d82e98472c687338",
+    "player_name": "Gabe Vincent",
+    "team_abbrev": "LAL"
+  },
+  {
+    "player_id": "0052eba9a89d2d8a",
+    "player_name": "Dylan Cardwell",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "bcd05f5a1dd0cfc4",
+    "player_name": "Zach LaVine",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "daa55d15fbf9c218",
+    "player_name": "Daeqwon Plowden",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "c9430705fc7f0898",
+    "player_name": "Domantas Sabonis",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "3a7824542bdc04ad",
+    "player_name": "Jalen Suggs",
+    "team_abbrev": "ORL"
+  },
+  {
+    "player_id": "109534aef76cb5f1",
+    "player_name": "Isaiah Stevens",
+    "team_abbrev": "SAC"
+  },
+  {
+    "player_id": "04492a3c99b376e0",
+    "player_name": "Bogdan Bogdanovic",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "84c94c0a6a879ee4",
+    "player_name": "Chris Paul",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "f955d344da7164f3",
+    "player_name": "Ivica Zubac",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "258c44860a508c26",
+    "player_name": "LJ Cryer",
+    "team_abbrev": "GSW"
+  },
+  {
+    "player_id": "01250ab77ef3e995",
+    "player_name": "Seth Curry",
+    "team_abbrev": "GSW"
+  },
+  {
+    "player_id": "1a61c81d8de8483d",
+    "player_name": "Bradley Beal",
+    "team_abbrev": "LAC"
+  },
+  {
+    "player_id": "35206eb188794271",
+    "player_name": "Mark Sears",
+    "team_abbrev": "MIL"
+  }
+]

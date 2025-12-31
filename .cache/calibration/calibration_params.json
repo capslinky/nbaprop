@@ -1,0 +1,49 @@
+{
+  "by_prop_type": {
+    "assists": {
+      "intercept": 0.3,
+      "mean_outcome": 0.621053,
+      "mean_prob": 0.612704,
+      "samples": 285,
+      "slope": 0.3
+    },
+    "points": {
+      "intercept": 0.3,
+      "mean_outcome": 0.528825,
+      "mean_prob": 0.593723,
+      "samples": 902,
+      "slope": 0.3
+    },
+    "pra": {
+      "intercept": 0.264741,
+      "mean_outcome": 0.538272,
+      "mean_prob": 0.59135,
+      "samples": 405,
+      "slope": 0.462552
+    },
+    "rebounds": {
+      "intercept": 0.3,
+      "mean_outcome": 0.608295,
+      "mean_prob": 0.607345,
+      "samples": 434,
+      "slope": 0.3
+    },
+    "threes": {
+      "intercept": 0.3,
+      "mean_outcome": 0.575092,
+      "mean_prob": 0.623721,
+      "samples": 273,
+      "slope": 0.3
+    }
+  },
+  "generated_at": "2025-12-27T23:47:05.443780",
+  "global": {
+    "intercept": 0.3,
+    "mean_outcome": 0.562418,
+    "mean_prob": 0.601792,
+    "samples": 2299,
+    "slope": 0.3
+  },
+  "min_samples": 30,
+  "prob_key": "model_probability"
+}

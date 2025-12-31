@@ -1,0 +1,15 @@
+{
+  "config_hash": "1ccc671fdbb3c9edf6e9be84af7e058fca48c745ba24fe11fb1c5ea955ecadf9",
+  "git_sha": "94f8a7f58c1e9f8efe2d8d721ae1477f1f89115f",
+  "outputs": {
+    "calibration_dir": ".cache/backtests/historical/calibration_e401e36df4c54d589faf92fc09831bb8",
+    "calibration_keys": "probability,model_probability",
+    "calibration_summary": ".cache/backtests/historical/calibration_e401e36df4c54d589faf92fc09831bb8/calibration_summary.json",
+    "historical_backtest_csv": ".cache/backtests/historical/historical_backtest_e401e36df4c54d589faf92fc09831bb8.csv",
+    "historical_backtest_summary": ".cache/backtests/historical/historical_backtest_summary_e401e36df4c54d589faf92fc09831bb8.json",
+    "manifest": ".cache/backtests/historical/manifest_e401e36df4c54d589faf92fc09831bb8.json"
+  },
+  "run_id": "e401e36df4c54d589faf92fc09831bb8",
+  "source_versions": {},
+  "started_at": "2025-12-23T19:19:29.457200"
+}

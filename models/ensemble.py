@@ -43,7 +43,7 @@ class EnsembleModel:
 
         edge = (projection - line) / line if line > 0 else 0
 
-        if abs(edge) < 0.03:
+        if abs(edge) < CONFIG.MIN_EDGE_THRESHOLD:
             side = 'pass'
         elif edge > 0:
             side = 'over'
@@ -148,7 +148,7 @@ class SmartModel:
 
         # Determine recommendation
         # Require higher edge threshold for lower confidence
-        min_edge_required = 0.03 + (1 - confidence) * 0.02  # 3-5% depending on confidence
+        min_edge_required = CONFIG.MIN_EDGE_THRESHOLD + (1 - confidence) * 0.02  # 3-5% depending on confidence
 
         if abs(adjusted_edge) < min_edge_required:
             side = 'pass'
@@ -312,11 +312,11 @@ class SmartModel:
             if home_away_factor:
                 adjustments['location'] = home_away_factor
             else:
-                adjustments['location'] = 1.025 if is_home else 0.975
+                adjustments['location'] = CONFIG.HOME_BOOST if is_home else CONFIG.AWAY_PENALTY
 
-        # 3. BACK-TO-BACK PENALTY (-8%)
+        # 3. BACK-TO-BACK PENALTY
         if is_b2b:
-            adjustments['b2b'] = 0.92
+            adjustments['b2b'] = CONFIG.B2B_PENALTY
             flags.append('B2B')
 
         # 4. PACE ADJUSTMENT
@@ -420,7 +420,7 @@ class SmartModel:
         adjusted_confidence = max(0.2, min(1.0, base_confidence + confidence_adjustments))
 
         # DETERMINE RECOMMENDATION
-        min_edge_required = 0.03 + (1 - adjusted_confidence) * 0.02
+        min_edge_required = CONFIG.MIN_EDGE_THRESHOLD + (1 - adjusted_confidence) * 0.02
 
         if abs(adjusted_edge) < min_edge_required:
             pick = 'PASS'

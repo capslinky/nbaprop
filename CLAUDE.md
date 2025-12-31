@@ -10,262 +10,195 @@ NBA player prop betting analysis system that fetches real NBA stats and betting 
 
 ```bash
 # Install dependencies
-pip install nba_api pandas numpy scipy openpyxl requests streamlit
+pip install nba_api pandas numpy scipy openpyxl requests
 
-# Run daily analysis (CLI)
+# Run daily analysis (recommended CLI)
+python -m nbaprop.cli run-daily
+
+# Run with custom config
+python -m nbaprop.cli run-daily --config config.json
+
+# Legacy entry points (still functional)
 python nba_quickstart.py --daily
-
-# Analyze specific prop
-python nba_quickstart.py --player "Luka Doncic" --prop points --line 32.5
-
-# Run backtest simulation
-python nba_quickstart.py --backtest
-
-# Launch web dashboard
-streamlit run app.py
-
-# Run daily automation
 python daily_runner.py --pre-game
-python daily_runner.py --post-game
+streamlit run app.py  # Web dashboard
 ```
 
 ## Architecture
 
-### Module Structure
+The codebase has two parallel architectures. **Use `nbaprop/` for new development.**
+
+### Primary Architecture: `nbaprop/`
 
 ```
 nbaprop/
-├── core/                      # Shared foundations
-│   ├── config.py             # Centralized Config dataclass
-│   ├── constants.py          # Team maps, star players
-│   ├── odds_utils.py         # Odds math, Kelly, EV calculations
-│   ├── exceptions.py         # Custom error types
-│   ├── rosters.py            # Team rosters and player lookups
-│   └── news_intelligence.py  # Real-time news context
-│
-├── data/                      # Data layer
-│   ├── __init__.py           # Re-exports all data fetchers
-│   └── fetchers/             # Data fetcher implementations
-│       ├── nba_fetcher.py    # NBADataFetcher (nba_api)
-│       ├── odds_fetcher.py   # OddsAPIClient (The Odds API)
-│       ├── injury_tracker.py # InjuryTracker
-│       └── async_fetcher.py  # AsyncDataFetcher
-│
-├── models/                    # Prediction models
-│   ├── __init__.py           # Re-exports all models
-│   ├── prediction.py         # Prediction dataclass
-│   ├── prop_analysis.py      # PropAnalysis dataclass
-│   ├── simple_models.py      # WeightedAverage, Situational, Median
-│   ├── ensemble.py           # EnsembleModel, SmartModel
-│   ├── unified.py            # UnifiedPropModel (production)
-│   ├── backtesting.py        # BetResult, Backtester
-│   └── generators.py         # Sample data generators
-│
-├── analysis/                  # Analysis orchestration
-│   ├── __init__.py           # Re-exports LivePropAnalyzer, Backtester
-│   └── live_analyzer.py      # LivePropAnalyzer
-│
-├── calibration/               # Model calibration tools
-├── reports/                   # Report generation
-├── tests/                     # Test suite
-│
-├── # Entry points:
-├── app.py                    # Streamlit dashboard
-├── nba_quickstart.py         # CLI entry point
-├── daily_runner.py           # Daily automation
-├── calibrate_model.py        # Calibration runner
-├── validate_system.py        # System validation
-│
-├── # Backward compatibility shims (DEPRECATED):
-├── nba_prop_model.py         # Re-exports from models/
-└── nba_integrations.py       # Re-exports from data/ and analysis/
+├── cli.py                    # Main CLI entry point
+├── config.py                 # Centralized Config dataclass
+├── constants.py              # Team maps, star players, stat normalization
+├── exceptions.py             # Custom error types
+├── utils/
+│   ├── __init__.py
+│   └── odds.py               # Odds math, Kelly, EV calculations
+├── ingestion/                # Data fetching layer
+│   ├── nba_stats.py          # Player logs, team stats (bridges to legacy)
+│   ├── odds.py               # Betting odds (bridges to legacy)
+│   ├── injuries.py           # Injury tracking (bridges to legacy)
+│   └── rosters.py            # Team rosters
+├── features/
+│   └── pipeline.py           # Feature engineering (13 adjustments)
+├── models/
+│   ├── baseline.py           # Baseline model
+│   └── scoring.py            # Prop scoring with adjustments
+├── normalization/
+│   ├── schema.py             # Data schemas
+│   └── normalize.py          # Data normalization
+├── reporting/
+│   ├── csv_output.py         # CSV export
+│   └── pdf_output.py         # PDF report generation
+├── backtest/
+│   └── runner.py             # Backtesting framework
+├── ops/
+│   ├── metrics.py            # Performance metrics
+│   └── __init__.py           # Rate limiting utilities
+└── storage/
+    └── cache.py              # Caching layer
 ```
 
-### Recommended Imports
+### Legacy Architecture (for reference)
+
+```
+core/                         # Legacy shared foundations
+├── config.py                 # Legacy Config (UPPERCASE fields)
+├── constants.py              # Team maps (now in nbaprop/constants.py)
+├── odds_utils.py             # Odds math (now in nbaprop/utils/odds.py)
+├── exceptions.py             # Errors (now in nbaprop/exceptions.py)
+└── ...
+
+models/                       # Legacy prediction models
+├── unified.py                # UnifiedPropModel (legacy)
+└── ...
+
+data/                         # Legacy data layer
+└── fetchers/                 # Data fetcher implementations
+    ├── nba_fetcher.py        # NBADataFetcher
+    ├── odds_fetcher.py       # OddsAPIClient
+    └── injury_tracker.py     # InjuryTracker
+```
+
+## Recommended Imports
 
 ```python
-# Modular imports (preferred)
+# New architecture (preferred)
+from nbaprop.config import Config
+from nbaprop.constants import TEAM_ABBREVIATIONS, normalize_team_abbrev
+from nbaprop.exceptions import NBAPropError, PlayerNotFoundError
+from nbaprop.utils.odds import kelly_criterion, calculate_ev, american_to_decimal
+
+# Legacy imports (still work, but prefer nbaprop)
 from core.config import CONFIG
-from core.constants import TEAM_ABBREVIATIONS, normalize_team_abbrev
-from core.odds_utils import kelly_criterion, calculate_ev
-
-from data import NBADataFetcher, OddsAPIClient, InjuryTracker
-from models import UnifiedPropModel, PropAnalysis
-from analysis import LivePropAnalyzer, Backtester
-
-# Legacy imports (DEPRECATED - trigger warnings)
-# These still work for backward compatibility but will issue DeprecationWarning:
-# from nba_prop_model import UnifiedPropModel  # Use: from models import ...
-# from nba_integrations import NBADataFetcher  # Use: from data import ...
-```
-
-### Entry Points
-| File | Purpose |
-|------|---------|
-| `nba_quickstart.py` | CLI entry point with config |
-| `app.py` | Streamlit web dashboard with 3 tabs |
-| `daily_runner.py` | Automated pre-game/post-game workflow |
-
-### Core Module (`core/`)
-
-**`core/config.py`** - Centralized configuration:
-```python
-from core.config import CONFIG
-
-CONFIG.MIN_EDGE_THRESHOLD  # 0.03 (3%)
-CONFIG.MIN_CONFIDENCE      # 0.40
-CONFIG.KELLY_FRACTION      # 0.25
-CONFIG.PREFERRED_BOOKS     # ['pinnacle', 'draftkings', ...]
-```
-
-**`core/constants.py`** - Single source of truth for:
-- `TEAM_ABBREVIATIONS` - All team name variants
-- `STAR_PLAYERS` - Star players by team
-- `normalize_team_abbrev()` - Normalize any team reference
-
-**`core/odds_utils.py`** - Betting math:
-- `american_to_decimal()`, `american_to_implied_prob()`
-- `calculate_ev()`, `calculate_edge()`
-- `kelly_criterion()`, `calculate_confidence()`
-
-**`core/exceptions.py`** - Custom exceptions:
-- `NBAPropError`, `DataFetchError`, `PlayerNotFoundError`
-- `InsufficientDataError`, `OddsAPIError`, `RateLimitError`
-
-### Model Layer (`models/`)
-
-**Primary Model: `UnifiedPropModel`**
-
-```python
+from core.constants import normalize_team_abbrev
+from data import NBADataFetcher, OddsAPIClient
 from models import UnifiedPropModel
-
-model = UnifiedPropModel()
-analysis = model.analyze("Luka Doncic", "points", 32.5)
-
-print(f"Projection: {analysis.projection}")
-print(f"Edge: {analysis.edge:.1%}")
-print(f"Pick: {analysis.pick}")
-print(f"Flags: {analysis.flags}")
 ```
 
-**9 Adjustment Factors Applied:**
-1. **Opponent Defense** - Factor from team defense rankings (SMASH/GOOD/NEUTRAL/HARD/TOUGH)
-2. **Home/Away** - ±2.5% adjustment
-3. **Back-to-Back** - 8% penalty for B2B games
-4. **Pace** - Combined pace factor from both teams
-5. **Game Total** - Vegas over/under impact on scoring props
-6. **Blowout Risk** - Minutes reduction in blowouts (from spread)
-7. **vs Team History** - Historical performance against opponent (capped ±10%)
-8. **Minutes Trend** - Recent minutes trends (capped ±10%)
-9. **Injury Boost** - Usage increase when teammates are out (capped +15%)
+## Configuration
 
-**Available Models:**
-- `UnifiedPropModel` - Production model with 9 contextual adjustments
-- `WeightedAverageModel` - Recency-weighted last 10 games
-- `MedianModel` - Outlier-resistant median
-- `SituationalModel` - Basic home/away and B2B adjustments
-- `EnsembleModel` - Combines weighted average + median
-
-### Data Layer (`data/`)
-
-**Data Fetchers:**
-- `NBADataFetcher` - Player game logs, team defense/pace ratings via `nba_api`
-- `OddsAPIClient` - Live betting lines from The Odds API
-- `InjuryTracker` - Player injuries, teammate usage boosts when stars are out
-
-**Usage:**
-```python
-from data import NBADataFetcher, OddsAPIClient, InjuryTracker
-
-fetcher = NBADataFetcher()
-logs = fetcher.get_player_game_logs("Luka Doncic", last_n_games=15)
-
-odds = OddsAPIClient(api_key="YOUR_KEY")
-props = odds.get_player_props(event_id, markets=["player_points"])
-
-injuries = InjuryTracker()
-status = injuries.get_player_status("LeBron James")
-```
-
-### Analysis Layer (`analysis/`)
+Configuration is in `nbaprop/config.py`. Load with environment variables or JSON:
 
 ```python
-from analysis import LivePropAnalyzer, Backtester
+from nbaprop.config import Config
 
-analyzer = LivePropAnalyzer()
-picks = analyzer.find_value_props(min_edge=0.05, min_confidence=0.4)
+# Config loads from environment variables by default
+# Key fields (lowercase in nbaprop, UPPERCASE in legacy):
+config = Config(...)  # Loaded via nbaprop.cli
 
-backtester = Backtester(initial_bankroll=1000)
-results = backtester.run_backtest(props_df, game_logs, model)
+# Adjustment factors (13 total):
+config.home_boost          # 1.025 (+2.5%)
+config.away_penalty        # 0.975 (-2.5%)
+config.b2b_penalty         # 0.92 (-8%)
+config.min_edge_threshold  # 0.03 (3%)
+config.min_confidence      # 0.40 (40%)
 ```
 
-### Data Flow
+### Adjustment Factors Applied (13 total):
+
+1. **Home/Away** - ±2.5% adjustment
+2. **Back-to-Back** - 8% penalty for B2B games
+3. **Rest Days** - Factor based on days since last game
+4. **Opponent Defense** - Factor from team defense rankings
+5. **Pace** - Combined pace factor from both teams
+6. **Game Total** - Vegas O/U impact on scoring props
+7. **Blowout Risk** - Minutes reduction from large spreads
+8. **vs Team History** - Historical performance vs opponent (±10%)
+9. **Minutes Trend** - Recent minutes trends (±10%)
+10. **Injury Boost** - Usage increase when teammates out (+15%)
+11. **True Shooting Regression** - TS% regression toward mean
+12. **Usage Rate** - Shot volume adjustments
+13. **Trend** - Hot/cold streak adjustments
+
+## Data Flow
 
 ```
-User Request (CLI/Streamlit/API)
+User Request (CLI)
          ↓
-    UnifiedPropModel.analyze()
+    nbaprop.cli.run_daily()
          ↓
 ┌────────────────────────────────────────────┐
-│  1. Fetch player game logs (last 15)       │
-│  2. Auto-detect context:                   │
-│     - Player team from matchup string      │
-│     - B2B status from game dates           │
-│  3. Load cached context (1hr TTL):         │
-│     - Team defense vs position ratings     │
-│     - Team pace factors                    │
-│  4. Check injuries:                        │
-│     - Player status (GTD/OUT/etc)          │
-│     - Teammate boosts (stars out)          │
-│  5. Calculate base projection:             │
-│     - 60% recent (L5) + 40% older (6-15)   │
-│     - Apply trend adjustment (±10%)        │
-│  6. Apply 9 multiplicative adjustments     │
-│  7. Calculate multi-factor confidence      │
-│  8. Determine edge and pick                │
+│  1. Fetch odds from The Odds API           │
+│  2. Build player list from props           │
+│  3. Fetch player game logs (last 15)       │
+│  4. Build features via pipeline.py:        │
+│     - Calculate averages, std dev          │
+│     - Compute true shooting, vs team       │
+│     - Apply injury context                 │
+│  5. Score props via scoring.py:            │
+│     - Apply 13 adjustment factors          │
+│     - Calculate edge and confidence        │
+│  6. Filter by thresholds                   │
+│  7. Generate CSV/PDF reports               │
 └────────────────────────────────────────────┘
          ↓
-    PropAnalysis Result
+    Daily picks output
 ```
 
 ## API Rate Limits
 
-- **NBA Stats API**: 1 req/sec (1.0s base delay with jitter built in)
+- **NBA Stats API**: 1 req/sec (1.0s base delay with jitter)
 - **The Odds API**: 20,000 requests/month (paid subscription)
-- **BallDontLie API**: Requires paid tier for stats endpoints
 
-## Configuration
+## Testing
 
-Configuration is centralized in `core/config.py`. Access via:
+```bash
+# Run all tests
+python -m pytest tests/
 
-```python
-from core.config import CONFIG
+# Run specific test file
+python -m pytest tests/unit/test_scoring.py -v
 
-# Analysis settings
-CONFIG.MIN_EDGE_THRESHOLD  # 0.03 (3% minimum edge)
-CONFIG.MIN_CONFIDENCE      # 0.40 (40% minimum confidence)
-CONFIG.LOOKBACK_GAMES      # 15 games to analyze
-
-# Bankroll settings
-CONFIG.KELLY_FRACTION      # 0.25 (quarter Kelly)
-CONFIG.MAX_BET_PERCENT     # 0.03 (3% max bet)
-
-# API settings
-CONFIG.ODDS_API_KEY        # Set via environment variable
-CONFIG.NBA_API_DELAY       # 1.0 second between calls
+# Run with coverage
+python -m pytest tests/ --cov=nbaprop
 ```
-
-For backward compatibility, `nba_quickstart.py` exports a dict-style CONFIG.
 
 ## Key Classes
 
 | Class | Module | Purpose |
 |-------|--------|---------|
-| `UnifiedPropModel` | `models` | Primary prediction model with all context |
-| `PropAnalysis` | `models` | Dataclass with full analysis results |
-| `LivePropAnalyzer` | `analysis` | Batch analysis with odds integration |
-| `NBADataFetcher` | `data` | NBA stats data fetching |
-| `OddsAPIClient` | `data` | Betting odds fetching |
-| `InjuryTracker` | `data` | Injury tracking and usage boosts |
-| `Backtester` | `analysis` | Historical betting simulation |
-| `Config` | `core.config` | Centralized configuration |
+| `Config` | `nbaprop.config` | Centralized configuration |
+| `score_prop()` | `nbaprop.models.scoring` | Prop scoring with 13 adjustments |
+| `build_features()` | `nbaprop.features.pipeline` | Feature engineering |
+| `CacheStore` | `nbaprop.storage` | Caching layer |
+| `UnifiedPropModel` | `models.unified` | Legacy production model |
+| `NBADataFetcher` | `data.fetchers` | NBA stats fetching |
+| `OddsAPIClient` | `data.fetchers` | Betting odds fetching |
+
+## Migration Notes
+
+The codebase is being migrated from the legacy architecture (`core/`, `models/`, `data/`) to the new `nbaprop/` package. Key differences:
+
+- **Config**: Legacy uses `core.config.CONFIG` (UPPERCASE), new uses `nbaprop.config.Config` (lowercase)
+- **Constants**: Migrated to `nbaprop.constants` with same functions
+- **Odds Utils**: Migrated to `nbaprop.utils.odds` with same functions
+- **Exceptions**: Migrated to `nbaprop.exceptions` with same classes
+- **Ingestion**: `nbaprop.ingestion.*` modules bridge to legacy fetchers
+
+New code should use `nbaprop.*` imports. Legacy imports remain functional for backward compatibility.

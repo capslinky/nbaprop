@@ -249,7 +249,7 @@ class TestParallelAnalysis:
     @pytest.mark.asyncio
     async def test_analyze_props_parallel(self):
         """Test parallel prop analysis."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -271,7 +271,7 @@ class TestParallelAnalysis:
 
     def test_run_parallel_analysis_sync(self):
         """Test synchronous wrapper for parallel analysis."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),

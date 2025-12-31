@@ -1,0 +1,267 @@
+player,prop_type,line,odds,side,projection,edge,confidence,prob_win,kelly_stake,bookmaker,flags
+Karl-Anthony Towns,rebounds,13.5,190,under,11.0,50.68,0.62,0.852,30.0,bovada,['HIGH_EDGE_SUSPICIOUS']
+Mikal Bridges,points,19.5,210,under,16.7,49.23,0.53,0.815,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,points,11.5,205,under,5.9,63.64,0.41,0.964,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Desmond Bane,pra,48.5,100,under,29.2,46.45,0.56,0.964,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,pra,19.5,115,under,12.8,46.37,0.56,0.929,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Desmond Bane,rebounds,6.5,188,under,4.4,54.48,0.47,0.892,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Desmond Bane,points,39.5,124,under,20.3,51.82,0.5,0.965,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Norman Powell,points,21.5,168,over,24.6,41.38,0.61,0.787,30.0,fanduel,['HIGH_EDGE_SUSPICIOUS']
+Desmond Bane,threes,6.5,170,under,1.8,59.44,0.39,0.965,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Stephon Castle,pra,25.5,-106,over,30.4,36.32,0.61,0.878,30.0,fanduel,"['SMALL_SAMPLE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,pra,18.5,-115,under,12.8,39.39,0.56,0.929,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Devin Booker,assists,7.5,111,under,6.2,37.78,0.57,0.852,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mikal Bridges,points,18.5,170,under,16.7,39.91,0.53,0.769,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Andrew Wiggins,pra,18.5,-115,over,24.7,35.52,0.59,0.89,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Karl-Anthony Towns,rebounds,12.5,125,under,11.0,33.7,0.62,0.781,30.0,bovada,['HIGH_EDGE_SUSPICIOUS']
+Brandon Ingram,pra,35.5,112,under,30.8,32.91,0.62,0.801,30.0,betrivers,['HIGH_EDGE_SUSPICIOUS']
+Scottie Barnes,assists,6.5,124,under,5.6,35.51,0.58,0.802,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,assists,7.5,114,under,4.8,42.73,0.45,0.895,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Sandro Mamukelashvili,points,12.5,200,under,10.9,36.87,0.5,0.702,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Keldon Johnson,rebounds,5.5,-148,over,6.8,29.62,0.6,0.893,30.0,fanduel,['HIGH_EDGE_SUSPICIOUS']
+Aaron Wiggins,pra,14.5,109,over,18.8,35.29,0.5,0.831,30.0,betonlineag,"['SMALL_SAMPLE', 'LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,pra,17.5,-135,under,12.8,31.83,0.56,0.893,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Ochai Agbaji,points,10.5,210,under,3.9,60.07,0.29,0.923,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Brandon Ingram,points,25.5,110,under,21.2,32.06,0.55,0.797,30.0,betrivers,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,points,9.5,101,under,5.9,43.1,0.41,0.928,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Brandon Ingram,assists,4.5,115,under,3.5,37.13,0.46,0.836,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Dillon Brooks,rebounds,3.5,116,under,3.0,34.26,0.48,0.806,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mark Williams,points,9.5,-125,over,14.7,30.14,0.54,0.857,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Rui Hachimura,rebounds,4.5,134,under,4.1,31.98,0.51,0.747,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Desmond Bane,points,35.5,-130,under,20.3,32.86,0.5,0.894,30.0,fanatics,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Stephon Castle,rebounds,4.5,-114,over,5.6,32.37,0.5,0.856,30.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Brandon Ingram,pra,34.5,-109,under,30.8,25.8,0.62,0.779,30.0,betrivers,['HIGH_EDGE_SUSPICIOUS']
+Norman Powell,points,22.5,120,over,24.6,26.36,0.61,0.718,30.0,fanatics,['HIGH_EDGE_SUSPICIOUS']
+Shai Gilgeous-Alexander,pra,41.5,-118,over,43.6,22.68,0.71,0.768,30.0,betrivers,['HIGH_EDGE_SUSPICIOUS']
+Cason Wallace,rebounds,3.5,128,under,3.0,34.73,0.46,0.786,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Shai Gilgeous-Alexander,points,30.5,-115,over,33.3,22.76,0.7,0.762,30.0,betrivers,['HIGH_EDGE_SUSPICIOUS']
+Isaiah Joe,points,7.5,100,over,10.9,35.14,0.45,0.851,30.0,fanatics,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Luka Doncic,pra,49.5,-120,over,52.3,22.8,0.69,0.773,30.0,betonlineag,['HIGH_EDGE_SUSPICIOUS']
+Ochai Agbaji,points,9.5,155,under,3.9,53.12,0.29,0.923,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+De'Aaron Fox,points,22.5,-120,over,25.1,24.19,0.62,0.787,30.0,fanduel,['HIGH_EDGE_SUSPICIOUS']
+Ochai Agbaji,pra,13.5,120,under,6.3,46.97,0.32,0.924,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Luke Kornet,rebounds,7.5,114,under,6.5,31.43,0.47,0.782,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Aaron Wiggins,points,9.5,-104,over,13.8,32.24,0.46,0.832,30.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mikal Bridges,rebounds,3.5,-128,over,4.9,26.12,0.56,0.823,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Bam Adebayo,pra,26.5,-125,over,30.7,25.06,0.57,0.806,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Dillon Brooks,threes,2.5,148,under,1.9,34.77,0.4,0.751,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Stephon Castle,assists,5.5,-102,over,8.2,26.91,0.52,0.774,30.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Austin Reaves,pra,34.5,-107,over,39.1,22.77,0.6,0.745,30.0,draftkings,['HIGH_EDGE_SUSPICIOUS']
+Mark Williams,pra,19.5,-105,over,24.1,25.01,0.55,0.762,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Collin Murray-Boyles,assists,1.5,123,under,1.3,32.78,0.42,0.776,30.0,williamhill_us,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Austin Reaves,pra,33.5,-115,over,39.1,22.58,0.6,0.761,30.0,betonlineag,['HIGH_EDGE_SUSPICIOUS']
+Isaiah Joe,threes,1.5,102,over,2.4,35.6,0.38,0.851,30.0,betonlineag,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Stephon Castle,points,15.5,104,over,16.6,23.85,0.56,0.729,30.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Shai Gilgeous-Alexander,pra,42.5,-108,over,43.6,18.76,0.71,0.707,30.0,fanduel,['HIGH_EDGE_SUSPICIOUS']
+De'Aaron Fox,points,23.5,-116,over,25.1,21.0,0.62,0.747,30.0,draftkings,['HIGH_EDGE_SUSPICIOUS']
+Austin Reaves,pra,32.5,-125,over,39.1,21.59,0.6,0.771,30.0,fanduel,['HIGH_EDGE_SUSPICIOUS']
+Brandon Ingram,rebounds,4.5,-155,over,6.1,24.65,0.53,0.854,30.0,betmgm,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Rui Hachimura,threes,1.5,102,over,2.0,30.16,0.43,0.797,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Ochai Agbaji,points,8.5,105,under,3.9,43.55,0.29,0.923,30.0,betmgm,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jordan Clarkson,pra,16.5,135,under,12.6,34.49,0.37,0.77,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Bam Adebayo,rebounds,7.5,111,over,9.8,23.29,0.55,0.707,30.0,williamhill_us,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Shai Gilgeous-Alexander,threes,1.5,-130,over,2.3,27.93,0.45,0.844,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Austin Reaves,points,22.5,-125,over,28.1,21.6,0.57,0.772,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Keldon Johnson,points,11.5,-130,over,15.0,22.09,0.56,0.786,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Ochai Agbaji,pra,12.5,-118,under,6.3,38.3,0.32,0.924,30.0,betmgm,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Scottie Barnes,points,22.5,112,under,21.0,19.77,0.62,0.669,30.0,betrivers,['HIGH_EDGE_SUSPICIOUS']
+Ja'Kobe Walter,assists,1.5,130,under,1.1,36.77,0.33,0.802,30.0,betmgm,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Shai Gilgeous-Alexander,points,31.5,-104,over,33.3,17.34,0.7,0.683,30.0,fanduel,['HIGH_EDGE_SUSPICIOUS']
+Josh Hart,pra,26.5,-117,over,30.2,19.31,0.62,0.732,30.0,draftkings,['HIGH_EDGE_SUSPICIOUS']
+Norman Powell,threes,4.5,130,under,2.9,41.5,0.29,0.85,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,rebounds,2.5,122,under,2.1,35.63,0.33,0.807,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mitchell Robinson,rebounds,6.5,-137,over,8.5,22.24,0.53,0.8,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,pra,16.5,-180,under,12.8,21.13,0.56,0.854,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Royce O'Neale,threes,2.5,110,over,2.6,23.83,0.49,0.714,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Cason Wallace,assists,2.5,160,under,2.2,32.26,0.36,0.707,30.0,betonlineag,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Royce O'Neale,pra,15.5,-120,over,17.9,20.36,0.57,0.749,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Royce O'Neale,rebounds,4.5,-136,over,5.3,20.1,0.58,0.777,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Austin Reaves,points,23.5,-125,over,28.1,20.26,0.57,0.758,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jakob Poeltl,rebounds,7.5,-128,over,8.4,19.74,0.58,0.759,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Karl-Anthony Towns,assists,2.5,-158,over,3.4,20.32,0.56,0.816,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Sandro Mamukelashvili,pra,14.5,-150,over,18.1,20.58,0.55,0.806,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Brandon Ingram,points,24.5,-113,under,21.2,20.59,0.55,0.736,30.0,betrivers,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Luka Doncic,pra,50.5,-110,over,52.3,16.46,0.69,0.688,30.0,fanduel,['HIGH_EDGE_SUSPICIOUS']
+Josh Hart,points,13.5,107,over,15.5,18.9,0.59,0.672,30.0,betrivers,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mikal Bridges,points,17.5,135,under,16.7,20.81,0.53,0.634,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mikal Bridges,pra,22.5,-110,over,25.2,18.43,0.59,0.708,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Anthony Black,points,11.5,-125,over,15.8,22.56,0.48,0.781,30.0,fanatics,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Ochai Agbaji,points,7.5,-128,under,3.9,36.19,0.29,0.923,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jalen Brunson,pra,38.5,107,under,36.8,15.85,0.67,0.642,30.0,betrivers,['HIGH_EDGE_SUSPICIOUS']
+Brandon Ingram,rebounds,5.5,107,over,6.1,20.03,0.53,0.683,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Karl-Anthony Towns,pra,38.5,120,under,37.9,16.82,0.62,0.623,30.0,betrivers,['HIGH_EDGE_SUSPICIOUS']
+Josh Hart,pra,28.5,116,over,30.2,16.79,0.62,0.631,30.0,betrivers,['HIGH_EDGE_SUSPICIOUS']
+Royce O'Neale,points,8.5,-114,over,9.5,21.98,0.47,0.753,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Ja'Kobe Walter,points,8.5,180,under,6.8,37.96,0.27,0.737,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Josh Hart,pra,27.5,-118,over,30.2,16.66,0.62,0.708,30.0,fanduel,['HIGH_EDGE_SUSPICIOUS']
+Jamal Shead,points,8.5,-132,under,5.9,24.98,0.41,0.819,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Devin Vassell,points,14.5,-118,over,18.0,20.77,0.49,0.749,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Andrew Wiggins,points,13.5,-115,over,15.6,19.08,0.53,0.726,30.0,fanatics,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mikal Bridges,points,14.5,-121,over,16.7,18.84,0.53,0.736,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Chet Holmgren,rebounds,8.5,-114,under,8.0,16.04,0.62,0.693,30.0,fanduel,['HIGH_EDGE_SUSPICIOUS']
+Jakob Poeltl,pra,19.5,-122,over,21.1,17.48,0.55,0.724,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mikal Bridges,pra,23.5,-103,over,25.2,15.88,0.59,0.666,30.0,betrivers,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,assists,6.5,-145,under,4.8,20.98,0.45,0.802,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mitchell Robinson,rebounds,7.5,105,over,8.5,17.51,0.53,0.663,30.0,betrivers,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Sandro Mamukelashvili,pra,16.5,110,over,18.1,16.14,0.55,0.638,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Luka Doncic,points,32.5,-108,over,33.9,13.68,0.65,0.656,30.0,fanduel,[]
+Scottie Barnes,pra,36.5,-109,under,34.8,13.15,0.65,0.653,30.0,draftkings,[]
+Mikal Bridges,points,13.5,-210,over,16.7,15.91,0.53,0.836,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jordan Clarkson,points,11.5,120,under,8.6,24.99,0.33,0.704,30.0,betrivers,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Sandro Mamukelashvili,pra,13.5,-200,over,18.1,14.98,0.55,0.816,30.0,bovada,['LOW_CONFIDENCE']
+Ochai Agbaji,points,6.5,-180,under,3.9,27.96,0.29,0.922,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Ochai Agbaji,pra,11.5,-145,under,6.3,25.66,0.32,0.848,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mitchell Robinson,assists,0.5,120,over,0.9,31.65,0.26,0.771,30.0,fanatics,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Sandro Mamukelashvili,threes,1.5,163,under,1.1,36.63,0.22,0.747,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Devin Vassell,pra,20.5,-104,over,24.2,18.05,0.44,0.69,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jakob Poeltl,pra,18.5,-160,over,21.1,14.37,0.55,0.759,30.0,bovada,['LOW_CONFIDENCE']
+Mitchell Robinson,pra,11.5,-122,over,12.8,14.6,0.54,0.696,30.0,betonlineag,['LOW_CONFIDENCE']
+Desmond Bane,assists,4.5,105,over,4.5,14.29,0.55,0.631,30.0,draftkings,['LOW_CONFIDENCE']
+Gradey Dick,pra,9.5,-105,under,7.5,22.32,0.35,0.735,30.0,betmgm,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mikal Bridges,points,15.5,-102,over,16.7,14.54,0.53,0.65,30.0,fanduel,['LOW_CONFIDENCE']
+Josh Hart,points,12.5,-116,over,15.5,16.58,0.46,0.703,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Sandro Mamukelashvili,points,9.5,-116,over,10.9,15.18,0.5,0.689,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Deandre Ayton,points,13.5,-114,over,14.7,16.4,0.46,0.697,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Shai Gilgeous-Alexander,assists,6.5,116,under,6.1,13.71,0.55,0.6,30.0,fanduel,['LOW_CONFIDENCE']
+Dillon Brooks,points,19.5,-104,over,22.4,16.33,0.46,0.673,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Rui Hachimura,points,11.5,-102,over,11.7,17.04,0.43,0.675,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Collin Murray-Boyles,rebounds,3.5,127,under,2.8,26.04,0.28,0.701,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Austin Reaves,rebounds,4.5,-136,over,5.7,16.57,0.43,0.742,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Sandro Mamukelashvili,pra,17.5,140,over,18.1,12.89,0.55,0.546,30.0,bovada,['LOW_CONFIDENCE']
+Deandre Ayton,rebounds,8.5,-128,over,10.1,16.23,0.44,0.724,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+De'Aaron Fox,rebounds,3.5,-114,over,3.9,13.59,0.52,0.669,30.0,fanduel,['LOW_CONFIDENCE']
+Jakob Poeltl,pra,20.5,-103,over,21.1,12.75,0.55,0.635,30.0,draftkings,['LOW_CONFIDENCE']
+Jake LaRavia,points,4.5,-114,over,6.5,21.35,0.33,0.746,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+De'Aaron Fox,pra,32.5,-120,over,35.4,13.11,0.51,0.677,30.0,fanduel,['LOW_CONFIDENCE']
+Ochai Agbaji,rebounds,3.5,136,under,1.8,45.65,0.14,0.88,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Sandro Mamukelashvili,pra,15.5,-128,over,18.1,15.09,0.43,0.712,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Harrison Barnes,rebounds,3.5,-132,over,4.1,13.71,0.46,0.706,30.0,fanduel,['LOW_CONFIDENCE']
+Sandro Mamukelashvili,points,10.5,120,over,10.9,12.52,0.5,0.58,30.0,betrivers,['LOW_CONFIDENCE']
+Dillon Brooks,pra,24.5,-118,over,27.3,12.83,0.49,0.67,30.0,fanduel,['LOW_CONFIDENCE']
+Mikal Bridges,points,12.5,-275,over,16.7,11.71,0.53,0.85,30.0,bovada,['LOW_CONFIDENCE']
+Ochai Agbaji,pra,10.5,-190,under,6.3,19.31,0.32,0.848,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Ja'Kobe Walter,points,7.5,130,under,6.8,22.4,0.27,0.659,30.0,bovada,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,points,7.5,-157,under,5.9,14.97,0.41,0.761,30.0,betrivers,['LOW_CONFIDENCE']
+De'Aaron Fox,threes,2.5,104,under,2.4,12.18,0.5,0.612,30.0,fanduel,['LOW_CONFIDENCE']
+Brandon Ingram,points,23.5,-124,under,21.2,10.93,0.55,0.663,30.0,draftkings,['LOW_CONFIDENCE']
+Alex Caruso,points,4.5,-114,over,5.3,16.57,0.36,0.698,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+OG Anunoby,pra,20.5,-130,over,22.1,12.56,0.48,0.691,30.0,fanatics,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Jordan Clarkson,assists,2.5,141,under,1.8,28.37,0.21,0.699,30.0,betonlineag,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+De'Aaron Fox,pra,33.5,-110,over,35.4,11.55,0.51,0.639,30.0,draftkings,['LOW_CONFIDENCE']
+Luka Doncic,rebounds,8.5,-118,over,9.4,10.01,0.58,0.641,30.0,fanduel,['LOW_CONFIDENCE']
+Oso Ighodaro,pra,9.5,-128,over,12.2,17.28,0.33,0.734,30.0,betonlineag,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Sandro Mamukelashvili,points,8.5,-165,over,10.9,14.31,0.39,0.766,30.0,bovada,['LOW_CONFIDENCE']
+Devin Vassell,assists,2.5,158,under,2.4,20.39,0.27,0.591,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jordan Clarkson,rebounds,2.5,122,under,2.2,15.71,0.34,0.608,30.0,williamhill_us,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Jamal Shead,threes,1.5,145,under,0.6,49.04,0.11,0.899,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Shai Gilgeous-Alexander,pra,43.5,-112,over,43.6,9.65,0.55,0.625,30.0,draftkings,['LOW_CONFIDENCE']
+Devin Booker,pra,34.5,-109,over,31.4,-10.72,0.49,0.414,0.0,draftkings,['LOW_CONFIDENCE']
+Jakob Poeltl,rebounds,8.5,107,over,8.4,8.87,0.58,0.572,30.0,draftkings,['LOW_CONFIDENCE']
+Chet Holmgren,threes,1.5,100,under,1.2,18.45,0.28,0.684,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Mikal Bridges,threes,2.5,158,under,2.0,30.24,0.16,0.69,30.0,betonlineag,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Luguentz Dort,points,6.5,-120,over,8.3,13.37,0.37,0.679,30.0,draftkings,['LOW_CONFIDENCE']
+Jakob Poeltl,pra,17.5,-200,over,21.1,11.06,0.43,0.777,30.0,bovada,['LOW_CONFIDENCE']
+Brandon Ingram,pra,33.5,-118,under,30.8,9.79,0.49,0.639,30.0,draftkings,['LOW_CONFIDENCE']
+Gradey Dick,points,6.5,-110,under,5.0,19.08,0.25,0.715,30.0,betmgm,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Dylan Harper,points,12.5,104,over,13.0,9.31,0.51,0.583,30.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Jordan Clarkson,rebounds,1.5,-192,over,2.2,13.66,0.34,0.794,30.0,draftkings,['LOW_CONFIDENCE']
+Jordan Clarkson,pra,15.5,-106,under,12.6,15.91,0.29,0.674,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Aaron Wiggins,threes,1.5,108,over,2.5,20.32,0.23,0.684,30.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+OG Anunoby,points,15.5,-102,over,15.9,9.7,0.47,0.602,30.0,draftkings,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Tyler Kolek,pra,6.5,110,under,8.4,-13.27,0.34,0.343,0.0,fanatics,['LOW_CONFIDENCE']
+Paolo Banchero,points,17.5,-145,over,18.7,9.35,0.48,0.685,30.0,fanatics,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Sandro Mamukelashvili,rebounds,4.5,-124,over,5.7,10.69,0.42,0.66,30.0,draftkings,['LOW_CONFIDENCE']
+OG Anunoby,pra,21.5,-107,over,22.1,9.3,0.48,0.61,30.0,draftkings,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Cason Wallace,pra,13.5,-104,under,13.3,7.53,0.59,0.585,30.0,fanduel,['LOW_CONFIDENCE']
+Harrison Barnes,threes,2.5,120,under,2.4,14.67,0.29,0.601,30.0,fanduel,['LOW_CONFIDENCE']
+Karl-Anthony Towns,pra,35.5,-115,over,37.9,8.82,0.49,0.623,30.0,fanduel,['LOW_CONFIDENCE']
+Jakob Poeltl,pra,21.5,120,over,21.1,7.6,0.55,0.531,30.0,bovada,['LOW_CONFIDENCE']
+Mikal Bridges,points,16.5,118,under,16.7,10.09,0.42,0.56,30.0,betrivers,['LOW_CONFIDENCE']
+Mitchell Robinson,rebounds,8.5,200,over,8.5,9.96,0.42,0.433,30.0,bovada,['LOW_CONFIDENCE']
+De'Aaron Fox,assists,6.5,124,under,6.5,8.7,0.47,0.533,30.0,fanduel,['LOW_CONFIDENCE']
+Jakob Poeltl,assists,2.5,145,under,2.5,18.67,0.22,0.595,30.0,betmgm,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Devin Booker,pra,33.5,-120,over,31.4,-8.34,0.49,0.462,0.0,fanduel,['LOW_CONFIDENCE']
+Ja'Kobe Walter,threes,1.5,160,under,1.4,19.98,0.2,0.584,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+OG Anunoby,points,13.5,-167,over,15.9,10.96,0.37,0.735,30.0,betrivers,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Ja'Kobe Walter,rebounds,2.5,-106,over,3.0,13.73,0.29,0.652,30.0,draftkings,['LOW_CONFIDENCE']
+Luke Kornet,points,7.5,-118,under,6.4,13.11,0.31,0.672,30.0,fanduel,['LOW_CONFIDENCE']
+Dylan Harper,pra,18.5,-112,over,19.5,7.56,0.53,0.604,30.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Jalen Brunson,points,28.5,102,under,27.8,6.29,0.63,0.558,30.0,betrivers,[]
+Chet Holmgren,pra,28.5,-122,over,27.6,-8.17,0.48,0.468,0.0,fanduel,['LOW_CONFIDENCE']
+Collin Murray-Boyles,pra,10.5,-115,under,9.4,11.48,0.34,0.65,30.0,fanatics,['LOW_CONFIDENCE']
+Josh Hart,rebounds,8.5,-105,under,9.5,-9.04,0.43,0.422,0.0,draftkings,['LOW_CONFIDENCE']
+Devin Vassell,points,15.5,-105,over,18.0,9.97,0.38,0.612,30.0,draftkings,['LOW_CONFIDENCE']
+Scottie Barnes,points,20.5,-141,over,21.0,-7.7,0.49,0.508,0.0,betrivers,['LOW_CONFIDENCE']
+Dylan Harper,assists,3.5,112,over,4.0,10.8,0.34,0.58,30.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Scottie Barnes,pra,35.5,-118,under,34.8,5.67,0.65,0.598,30.0,betrivers,[]
+Devin Booker,rebounds,3.5,-136,over,4.5,11.54,0.32,0.692,30.0,fanduel,['LOW_CONFIDENCE']
+Austin Reaves,threes,2.5,-114,over,3.2,10.49,0.34,0.638,30.0,fanduel,['LOW_CONFIDENCE']
+OG Anunoby,points,14.5,-128,over,15.9,9.68,0.37,0.658,30.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Alex Caruso,rebounds,2.5,116,under,2.8,12.31,0.29,0.586,30.0,fanduel,['LOW_CONFIDENCE']
+Mitchell Robinson,rebounds,5.5,-275,over,8.5,8.49,0.42,0.818,30.0,bovada,['LOW_CONFIDENCE']
+Sandro Mamukelashvili,points,11.5,150,over,10.9,8.69,0.39,0.487,30.0,bovada,['LOW_CONFIDENCE']
+Devin Vassell,threes,2.5,-112,over,3.2,12.52,0.27,0.654,30.0,fanduel,['LOW_CONFIDENCE']
+Scottie Barnes,threes,1.5,103,under,1.4,17.34,0.19,0.666,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Luguentz Dort,threes,1.5,-132,under,1.9,-11.32,0.29,0.456,0.0,fanduel,['LOW_CONFIDENCE']
+Jamal Shead,pra,15.5,-230,under,12.8,7.25,0.44,0.769,30.0,bovada,['LOW_CONFIDENCE']
+Ochai Agbaji,assists,1.5,142,under,0.7,38.38,0.08,0.797,30.0,williamhill_us,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Karl-Anthony Towns,points,20.5,-165,over,23.5,7.2,0.43,0.695,30.0,betrivers,['LOW_CONFIDENCE']
+Cason Wallace,threes,1.5,162,over,1.5,9.96,0.31,0.481,30.0,fanduel,['LOW_CONFIDENCE']
+Grayson Allen,assists,3.5,-104,over,3.0,-8.44,0.36,0.425,0.0,fanduel,['LOW_CONFIDENCE']
+Scottie Barnes,points,21.5,-116,under,21.0,4.91,0.62,0.586,26.53,draftkings,[]
+Scottie Barnes,rebounds,7.5,-144,over,8.2,6.91,0.44,0.659,30.0,draftkings,['LOW_CONFIDENCE']
+Ochai Agbaji,points,5.5,-275,under,3.9,10.25,0.29,0.836,30.0,bovada,['LOW_CONFIDENCE']
+Sandro Mamukelashvili,points,7.5,-240,over,10.9,7.66,0.39,0.783,30.0,bovada,['LOW_CONFIDENCE']
+Devin Booker,points,22.5,-122,under,20.7,6.54,0.45,0.615,30.0,fanduel,['LOW_CONFIDENCE']
+Gradey Dick,threes,1.5,196,under,0.6,48.55,0.06,0.823,30.0,fanduel,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Collin Murray-Boyles,points,6.5,-101,under,5.3,13.94,0.2,0.642,30.0,draftkings,['LOW_CONFIDENCE']
+Karl-Anthony Towns,points,21.5,-125,over,23.5,6.27,0.43,0.618,30.0,draftkings,['LOW_CONFIDENCE']
+De'Aaron Fox,assists,5.5,-117,over,6.5,7.27,0.37,0.612,30.0,draftkings,['LOW_CONFIDENCE']
+Harrison Barnes,points,12.5,-118,over,15.1,7.37,0.36,0.615,30.0,fanduel,['LOW_CONFIDENCE']
+Cason Wallace,rebounds,2.5,-175,over,3.0,-7.39,0.36,0.562,0.0,fanatics,['LOW_CONFIDENCE']
+Tyler Kolek,points,2.5,-150,over,4.9,7.96,0.31,0.68,30.0,fanatics,['LOW_CONFIDENCE']
+Jalen Brunson,points,26.5,-152,over,27.8,4.88,0.49,0.652,30.0,betrivers,['LOW_CONFIDENCE']
+Jordan Clarkson,pra,14.5,-120,under,12.6,8.22,0.29,0.628,30.0,bovada,['LOW_CONFIDENCE']
+Luka Doncic,assists,8.5,-125,over,9.0,5.08,0.47,0.606,28.56,fanduel,['LOW_CONFIDENCE']
+Ochai Agbaji,rebounds,2.5,-167,under,1.8,16.37,0.14,0.789,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Karl-Anthony Towns,rebounds,10.5,-185,over,11.0,-4.81,0.48,0.601,0.0,bovada,['LOW_CONFIDENCE']
+Grayson Allen,threes,2.5,-180,over,3.4,8.22,0.26,0.725,30.0,fanduel,['LOW_CONFIDENCE']
+Cason Wallace,points,7.5,-114,over,8.1,5.64,0.38,0.589,30.0,fanduel,['LOW_CONFIDENCE']
+Jakob Poeltl,points,8.5,-152,over,10.2,6.73,0.31,0.67,30.0,betrivers,['LOW_CONFIDENCE']
+Luguentz Dort,rebounds,3.5,-125,over,3.2,-7.4,0.27,0.482,0.0,fanduel,['LOW_CONFIDENCE']
+Collin Murray-Boyles,threes,0.5,155,under,0.4,32.13,0.06,0.713,30.0,betmgm,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Ochai Agbaji,pra,9.5,-275,under,6.3,7.52,0.25,0.809,30.0,bovada,['LOW_CONFIDENCE']
+Jordan Clarkson,threes,1.5,110,under,0.9,28.71,0.07,0.763,30.0,draftkings,"['LOW_CONFIDENCE', 'HIGH_EDGE_SUSPICIOUS']"
+Dylan Harper,rebounds,3.5,142,over,2.5,-10.3,0.17,0.31,0.0,fanduel,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Jordan Clarkson,points,10.5,-127,under,8.6,6.83,0.26,0.628,30.0,draftkings,['LOW_CONFIDENCE']
+Oso Ighodaro,points,4.5,-102,under,5.9,-9.39,0.19,0.411,0.0,fanduel,['LOW_CONFIDENCE']
+Jalen Brunson,points,27.5,-106,over,27.8,3.58,0.49,0.55,18.42,draftkings,['LOW_CONFIDENCE']
+Desmond Bane,assists,5.5,290,over,4.5,-3.98,0.43,0.217,0.0,fanduel,['LOW_CONFIDENCE']
+Jakob Poeltl,points,9.5,-125,over,10.2,5.41,0.31,0.61,30.0,draftkings,['LOW_CONFIDENCE']
+Brandon Ingram,threes,1.5,-146,over,1.7,-9.08,0.18,0.503,0.0,draftkings,['LOW_CONFIDENCE']
+Jordan Clarkson,points,9.5,-157,under,8.6,-6.24,0.26,0.549,0.0,betrivers,['LOW_CONFIDENCE']
+Karl-Anthony Towns,pra,37.5,100,over,37.9,3.34,0.49,0.533,16.71,betrivers,['LOW_CONFIDENCE']
+Karl-Anthony Towns,rebounds,11.5,-117,under,11.0,3.34,0.48,0.573,18.12,draftkings,['LOW_CONFIDENCE']
+Brandon Ingram,pra,32.5,-167,under,30.8,-3.23,0.49,0.593,0.0,betrivers,['LOW_CONFIDENCE']
+Ja'Kobe Walter,pra,10.5,-118,under,11.0,-4.78,0.33,0.493,0.0,betmgm,['LOW_CONFIDENCE']
+OG Anunoby,assists,1.5,-114,over,1.7,9.07,0.17,0.623,30.0,draftkings,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+OG Anunoby,rebounds,4.5,113,over,4.5,5.37,0.28,0.523,25.3,draftkings,"['SMALL_SAMPLE', 'LOW_CONFIDENCE']"
+Mark Williams,rebounds,7.5,-122,under,8.0,-4.37,0.34,0.506,0.0,fanduel,['LOW_CONFIDENCE']
+Devin Booker,assists,6.5,-132,under,6.2,-3.2,0.45,0.537,0.0,fanduel,['LOW_CONFIDENCE']
+Andrew Wiggins,threes,2.5,420,over,1.4,-5.02,0.26,0.142,0.0,draftkings,['LOW_CONFIDENCE']
+Josh Hart,assists,5.5,102,over,5.3,3.79,0.34,0.533,18.77,draftkings,['LOW_CONFIDENCE']
+Davion Mitchell,points,9.5,110,over,9.2,3.59,0.35,0.512,17.14,fanatics,['LOW_CONFIDENCE']
+Grayson Allen,points,15.5,-118,over,16.7,3.21,0.37,0.573,17.52,fanduel,['LOW_CONFIDENCE']
+Gradey Dick,assists,0.5,-165,over,0.8,12.33,0.09,0.746,30.0,betmgm,['LOW_CONFIDENCE']
+Jakob Poeltl,assists,1.5,-189,over,2.5,-6.25,0.17,0.591,0.0,draftkings,['LOW_CONFIDENCE']
+Tyler Kolek,threes,0.5,120,under,0.6,8.02,0.13,0.535,30.0,fanatics,['LOW_CONFIDENCE']
+Josh Hart,threes,1.5,106,under,2.1,-4.16,0.25,0.444,0.0,draftkings,['LOW_CONFIDENCE']
+Royce O'Neale,assists,2.5,122,under,3.2,5.25,0.2,0.503,23.89,fanduel,['LOW_CONFIDENCE']
+Sandro Mamukelashvili,threes,0.5,-260,over,1.1,5.76,0.17,0.78,30.0,bovada,['LOW_CONFIDENCE']
+Tyler Kolek,rebounds,0.5,-175,over,1.2,5.43,0.18,0.691,30.0,fanatics,['LOW_CONFIDENCE']
+Sandro Mamukelashvili,assists,1.5,-101,over,1.6,4.91,0.2,0.552,24.68,draftkings,['LOW_CONFIDENCE']
+Gradey Dick,rebounds,1.5,-162,over,1.7,-4.74,0.18,0.571,0.0,williamhill_us,['LOW_CONFIDENCE']
+Isaiah Joe,rebounds,2.5,105,under,2.5,3.05,0.25,0.518,14.9,fanatics,['LOW_CONFIDENCE']
+Gradey Dick,points,5.5,-127,under,5.0,-3.85,0.19,0.521,0.0,draftkings,['LOW_CONFIDENCE']
+Ja'Kobe Walter,points,4.5,-260,over,6.8,-3.19,0.21,0.69,0.0,bovada,['LOW_CONFIDENCE']
+Mikal Bridges,threes,1.5,-185,over,2.0,4.34,0.13,0.693,30.0,draftkings,['LOW_CONFIDENCE']

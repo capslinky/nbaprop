@@ -1,0 +1,20 @@
+{
+  "pick_counts": {
+    "OVER": 23,
+    "PASS": 659,
+    "UNDER": 32
+  },
+  "total_props": 714,
+  "window_metrics": {
+    "10": {
+      "hit_rate": 0.1253,
+      "hits": 336,
+      "samples": 2682
+    },
+    "15": {
+      "hit_rate": 0.1216,
+      "hits": 473,
+      "samples": 3890
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "graded_props": 3005,
+  "losses": 1438,
+  "pick_counts": {
+    "OVER": 1523,
+    "PASS": 22778,
+    "UNDER": 1482
+  },
+  "pushes": 0,
+  "total_props": 25783,
+  "win_rate": 0.5215,
+  "wins": 1567
+}

@@ -1,0 +1,40 @@
+{
+  "model_probability": {
+    "bin_metrics": {
+      "ece": 0.081352,
+      "mce": 0.334848,
+      "samples": 2249
+    },
+    "bins_csv": ".cache/backtests/historical/calibration_8ddceb17ceef404b8bf4eea6bef08d95/calibration_bins_model_probability.csv",
+    "chart": ".cache/backtests/historical/calibration_8ddceb17ceef404b8bf4eea6bef08d95/calibration_curve_model_probability.png",
+    "metrics": {
+      "accuracy": 0.5549,
+      "bins": 10,
+      "brier": 0.2591,
+      "ece": 0.081352,
+      "log_loss": 0.730217,
+      "mce": 0.334848,
+      "prob_key": "model_probability",
+      "samples": 2249
+    }
+  },
+  "probability": {
+    "bin_metrics": {
+      "ece": 0.081352,
+      "mce": 0.334848,
+      "samples": 2249
+    },
+    "bins_csv": ".cache/backtests/historical/calibration_8ddceb17ceef404b8bf4eea6bef08d95/calibration_bins_probability.csv",
+    "chart": ".cache/backtests/historical/calibration_8ddceb17ceef404b8bf4eea6bef08d95/calibration_curve_probability.png",
+    "metrics": {
+      "accuracy": 0.5549,
+      "bins": 10,
+      "brier": 0.2591,
+      "ece": 0.081352,
+      "log_loss": 0.730217,
+      "mce": 0.334848,
+      "prob_key": "probability",
+      "samples": 2249
+    }
+  }
+}

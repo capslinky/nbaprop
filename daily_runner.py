@@ -4,6 +4,9 @@ NBA Prop Daily Runner - Automated Workflow
 ===========================================
 Automates the entire daily prop analysis workflow:
 
+NOTE: This is the legacy pipeline. The source-of-truth pipeline is the v2 CLI
+(`python -m nbaprop.cli run-daily`). Keep this script for reference only.
+
 1. PRE-GAME (run before games, e.g., 10 AM):
    - Validate system health
    - Run daily analysis
@@ -79,9 +82,10 @@ _module_logger = get_logger(__name__)
 class DailyRunner:
     """Orchestrates the full daily prop analysis workflow."""
 
-    def __init__(self, verbose: bool = True, dry_run: bool = False):
+    def __init__(self, verbose: bool = True, dry_run: bool = False, use_v2: bool = True):
         self.verbose = verbose
         self.dry_run = dry_run
+        self.use_v2 = use_v2
         self.log_lines = []
         self.start_time = datetime.now()
 
@@ -171,7 +175,10 @@ class DailyRunner:
         Args:
             bookmakers: List of bookmaker keys to filter (e.g., ['fanduel']). None = all books.
         """
-        self.log_section("DAILY ANALYSIS")
+        if self.use_v2:
+            return self._run_v2_daily_analysis(bookmakers=bookmakers)
+
+        self.log_section("DAILY ANALYSIS (LEGACY)")
 
         if self.dry_run:
             self.log("Would run daily analysis", "DRY-RUN")
@@ -200,7 +207,7 @@ class DailyRunner:
             news_search_fn = None
             injury_tracker = None
             perplexity_key = CONFIG.PERPLEXITY_API_KEY or os.environ.get('PERPLEXITY_API_KEY')
-            if perplexity_key:
+            if CONFIG.NEWS_INTELLIGENCE_ENABLED and perplexity_key:
                 from core.news_intelligence import create_perplexity_api_search
                 news_search_fn = create_perplexity_api_search(perplexity_key)
                 self.log("News intelligence: Perplexity API enabled")
@@ -232,7 +239,10 @@ class DailyRunner:
                 injury_tracker = InjuryTracker(perplexity_fn=perplexity_injury_fn)
                 self.log("Injury tracking: Perplexity real-time enabled")
             else:
-                self.log("News intelligence: Disabled (no PERPLEXITY_API_KEY)")
+                if CONFIG.NEWS_INTELLIGENCE_ENABLED:
+                    self.log("News intelligence: Disabled (no PERPLEXITY_API_KEY)")
+                else:
+                    self.log("News intelligence: Disabled by config")
                 self.log("Injury tracking: Using web scraping only")
 
             analyzer = LivePropAnalyzer(
@@ -285,6 +295,116 @@ class DailyRunner:
             self.log(traceback.format_exc(), "DEBUG")
             return False, None, 0
 
+    def _run_v2_daily_analysis(self, bookmakers: list = None) -> Tuple[bool, Optional[str], int]:
+        """Run the v2 pipeline and hydrate legacy tracking outputs."""
+        self.log_section("DAILY ANALYSIS (v2)")
+
+        if self.dry_run:
+            self.log("Would run v2 daily analysis", "DRY-RUN")
+            return True, None, 0
+
+        try:
+            from nbaprop.cli import run_daily as run_daily_v2
+            from nbaprop.config import Config as V2Config
+            import pandas as pd
+
+            if bookmakers:
+                self.log("Bookmaker filter handled by v2 config (ODDS_BOOKMAKERS)")
+
+            run_daily_v2()
+
+            v2_config = V2Config.load()
+            runs_dir = Path(v2_config.cache_dir) / "runs"
+            manifest_path = self._find_latest_manifest(runs_dir)
+            if manifest_path is None:
+                self.log("No v2 manifest found after run", "ERROR")
+                return False, None, 0
+
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            outputs = manifest.get("outputs", {})
+            picks_path = outputs.get("picks_filtered_csv") or outputs.get("picks_csv")
+            if not picks_path:
+                self.log("No picks CSV found in v2 manifest", "ERROR")
+                return False, None, 0
+
+            picks_path = Path(picks_path)
+            if not picks_path.is_absolute():
+                picks_path = (Path(__file__).resolve().parents[0] / picks_path).resolve()
+
+            if not picks_path.exists():
+                self.log(f"v2 picks file missing: {picks_path}", "ERROR")
+                return False, None, 0
+
+            df = pd.read_csv(picks_path)
+            if df.empty:
+                self.log("v2 produced no picks", "WARN")
+                return True, str(picks_path), 0
+
+            normalized = self._normalize_v2_picks(df, v2_config)
+            self._last_analysis = normalized
+            self._last_date = v2_config.run_date or datetime.now().strftime('%Y-%m-%d')
+
+            pdf_path = outputs.get("picks_pdf")
+            if pdf_path:
+                pdf_path = Path(pdf_path)
+                if not pdf_path.is_absolute():
+                    pdf_path = (Path(__file__).resolve().parents[0] / pdf_path).resolve()
+                self._last_v2_pdf = str(pdf_path)
+
+            return True, str(picks_path), len(normalized)
+        except Exception as e:
+            self.log(f"v2 analysis error: {e}", "ERROR")
+            import traceback
+            self.log(traceback.format_exc(), "DEBUG")
+            return False, None, 0
+
+    def _find_latest_manifest(self, runs_dir: Path) -> Optional[Path]:
+        if not runs_dir.exists():
+            return None
+        manifests = sorted(
+            runs_dir.glob("manifest_*.json"),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        return manifests[0] if manifests else None
+
+    def _normalize_v2_picks(self, df: "pd.DataFrame", config: "V2Config") -> "pd.DataFrame":
+        import pandas as pd
+
+        default_book = (config.odds_bookmakers or ["fanduel"])[0]
+        if "player_name" in df.columns:
+            player_col = "player_name"
+        elif "player" in df.columns:
+            player_col = "player"
+        else:
+            player_col = None
+        if "bookmaker" in df.columns:
+            bookmaker_col = df["bookmaker"]
+        else:
+            bookmaker_col = [default_book] * len(df)
+        normalized = pd.DataFrame({
+            "player": df[player_col] if player_col else None,
+            "prop_type": df.get("prop_type"),
+            "line": df.get("line"),
+            "pick": df.get("pick"),
+            "edge": df.get("edge"),
+            "confidence": df.get("confidence"),
+            "projection": df.get("projection"),
+            "context_quality": 50,
+            "warnings": [[] for _ in range(len(df))],
+            "adjustments": df.get("adjustments"),
+            "flags": df.get("adjustment_notes"),
+            "opponent": df.get("opponent_team"),
+            "is_home": df.get("is_home"),
+            "is_b2b": df.get("b2b"),
+            "game_total": None,
+            "matchup": "NEUTRAL",
+            "bookmaker": bookmaker_col,
+            "odds": df.get("odds"),
+            "rest_days": df.get("rest_days"),
+        })
+        return normalized
+
     def generate_pdf_report(self, df=None, date_str: str = None) -> Optional[str]:
         """
         Generate PDF report from picks.
@@ -294,6 +414,14 @@ class DailyRunner:
 
         if self.dry_run:
             self.log("Would generate PDF report", "DRY-RUN")
+            return None
+
+        if self.use_v2:
+            v2_pdf = getattr(self, '_last_v2_pdf', None)
+            if v2_pdf:
+                self.log(f"v2 PDF report: {v2_pdf}")
+                return v2_pdf
+            self.log("No v2 PDF report found", "WARN")
             return None
 
         try:
@@ -1281,15 +1409,22 @@ Examples:
                        help='Show what would run without executing')
     parser.add_argument('--quiet', '-q', action='store_true',
                        help='Minimal output')
+    parser.add_argument('--legacy', action='store_true',
+                       help='Use legacy analysis pipeline instead of v2')
     parser.add_argument('--book', type=str,
                        help='Filter to specific bookmaker (e.g., fanduel, draftkings, betmgm)')
 
     args = parser.parse_args()
 
-    # Parse bookmaker filter - use CONFIG.PREFERRED_BOOKS as default
-    bookmakers = [args.book] if args.book else CONFIG.PREFERRED_BOOKS
+    use_v2 = not args.legacy
+    if use_v2 and args.book:
+        os.environ["ODDS_BOOKMAKERS"] = args.book
+        bookmakers = None
+    else:
+        # Parse bookmaker filter - use CONFIG.PREFERRED_BOOKS as default
+        bookmakers = [args.book] if args.book else CONFIG.PREFERRED_BOOKS
 
-    runner = DailyRunner(verbose=not args.quiet, dry_run=args.dry_run)
+    runner = DailyRunner(verbose=not args.quiet, dry_run=args.dry_run, use_v2=use_v2)
 
     # Log current date context for debugging
     from datetime import date

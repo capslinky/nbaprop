@@ -104,9 +104,13 @@ def load_rosters_from_json(filepath: str = None) -> Dict[str, TeamRoster]:
     global TEAM_ROSTERS
 
     if filepath is None:
-        # Default path relative to this file
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        filepath = os.path.join(base_dir, "data", "rosters_2025_26.json")
+        override = os.environ.get("NBAPROP_ROSTERS_PATH")
+        if override:
+            filepath = override
+        else:
+            # Default path relative to this file
+            base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            filepath = os.path.join(base_dir, "data", "rosters_2025_26.json")
 
     if not os.path.exists(filepath):
         return TEAM_ROSTERS
@@ -226,6 +230,80 @@ def get_player_avg_minutes(player_name: str) -> float:
     if info:
         return info["player"]["avg_minutes"]
     return 0.0
+
+
+def get_player_team(player_name: str) -> Optional[str]:
+    """
+    Get player's team abbreviation.
+
+    Args:
+        player_name: Full player name
+
+    Returns:
+        3-letter team abbreviation, or None if not found
+    """
+    info = get_player_info(player_name)
+    if info:
+        return info["team"]
+    return None
+
+
+def get_player_role(player_name: str) -> Optional[str]:
+    """
+    Get player's role (STARTER, ROTATION, BENCH).
+
+    Args:
+        player_name: Full player name
+
+    Returns:
+        Role string, or None if not found
+    """
+    info = get_player_info(player_name)
+    if info:
+        return info["player"]["role"]
+    return None
+
+
+def get_teammates(player_name: str) -> List[str]:
+    """
+    Get all teammates for a player.
+
+    Args:
+        player_name: Full player name
+
+    Returns:
+        List of teammate names
+    """
+    info = get_player_info(player_name)
+    if not info:
+        return []
+
+    team_abbrev = info["team"]
+    roster = TEAM_ROSTERS.get(team_abbrev)
+    if not roster:
+        return []
+
+    return [p.name for p in roster.players if p.name.lower() != player_name.lower()]
+
+
+def get_team_star_players(player_name: str) -> List[str]:
+    """
+    Get star players on the same team as the given player.
+
+    Useful for checking if a star teammate is out, which boosts usage.
+
+    Args:
+        player_name: Full player name
+
+    Returns:
+        List of star player names on the same team
+    """
+    info = get_player_info(player_name)
+    if not info:
+        return []
+
+    team_abbrev = info["team"]
+    return get_team_stars(team_abbrev)
 
 
 # =============================================================================

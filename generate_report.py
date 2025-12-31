@@ -195,7 +195,7 @@ class PicksReportGenerator:
 
         # NEWS FLAGS (if present) - show first for visibility
         news_flags = row.get('news_flags', '')
-        if news_flags and news_flags.strip():
+        if news_flags and isinstance(news_flags, str) and news_flags.strip():
             parts.append(news_flags)
 
         # Core reasoning: projection vs line
@@ -232,12 +232,12 @@ class PicksReportGenerator:
 
         # News notes (if present and different from flags)
         news_notes = row.get('news_notes', '')
-        if news_notes and news_notes.strip() and news_notes not in str(news_flags):
+        if news_notes and isinstance(news_notes, str) and news_notes.strip() and news_notes not in str(news_flags):
             parts.append(f"📰 {news_notes}")
 
         # News sources (if present)
         news_sources = row.get('news_sources', '')
-        if news_sources and news_sources.strip():
+        if news_sources and isinstance(news_sources, str) and news_sources.strip():
             # Truncate long URLs for display
             sources_list = news_sources.split(' | ')[:2]  # Max 2 sources
             short_sources = [s[:50] + '...' if len(s) > 50 else s for s in sources_list]

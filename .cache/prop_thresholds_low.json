@@ -1,0 +1,16 @@
+{
+  "min_edge": {
+    "points": 0.02,
+    "rebounds": 0.02,
+    "assists": 0.02,
+    "pra": 0.02,
+    "threes": 0.02
+  },
+  "min_confidence": {
+    "points": 0.35,
+    "rebounds": 0.35,
+    "assists": 0.35,
+    "pra": 0.35,
+    "threes": 0.35
+  }
+}

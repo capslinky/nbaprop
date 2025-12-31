@@ -2,6 +2,19 @@
 
 A comprehensive Python toolkit for analyzing NBA player props and backtesting betting strategies.
 
+## Source-of-Truth Pipeline (v2)
+
+The primary, supported pipeline is the v2 CLI under `nbaprop/`. Legacy scripts
+like `daily_runner.py` and `nba_quickstart.py` remain for reference only.
+
+```bash
+# Daily picks (v2)
+python -m nbaprop.cli run-daily
+
+# Backtest (v2)
+python -m nbaprop.cli run-backtest
+```
+
 ## Features
 
 - **Real-time NBA Data** - Fetches live player stats via NBA Stats API
@@ -24,7 +37,8 @@ pip install nba_api pandas numpy scipy openpyxl requests
 ### 1. Analyze a Single Prop
 
 ```python
-from nba_integrations import NBADataFetcher, LivePropAnalyzer
+from data import NBADataFetcher
+from analysis import LivePropAnalyzer
 
 fetcher = NBADataFetcher()
 analyzer = LivePropAnalyzer(nba_fetcher=fetcher)
@@ -63,7 +77,7 @@ print(results)
 Get a free API key at [the-odds-api.com](https://the-odds-api.com/) (500 requests/month free).
 
 ```python
-from nba_integrations import OddsAPIClient
+from data import OddsAPIClient
 
 odds = OddsAPIClient(api_key="YOUR_API_KEY")
 
@@ -91,10 +105,7 @@ for _, play in value_plays.iterrows():
 ### 5. Run Backtest
 
 ```python
-from nba_prop_model import Backtester, EnsembleModel
-
-# Using simulated data (for demo)
-from nba_prop_model import generate_sample_dataset, generate_prop_lines
+from models import Backtester, EnsembleModel, generate_sample_dataset, generate_prop_lines
 game_logs = generate_sample_dataset()
 props = generate_prop_lines(game_logs)
 
@@ -113,9 +124,12 @@ backtester.print_report()
 ## File Structure
 
 ```
-nba_prop_model.py      - Core prediction models and backtesting engine
-nba_integrations.py    - Real data fetchers (NBA API + Odds API)
-nba_quickstart.py      - Quick start scripts and CLI interface
+models/                - Prediction models and backtesting engine
+data/                  - Data fetchers (NBA API + Odds API)
+analysis/              - LivePropAnalyzer and batch analysis
+core/                  - Configuration, constants, utilities
+nbaprop/               - V2 CLI pipeline (recommended)
+nba_quickstart.py      - Quick start scripts and legacy CLI
 ```
 
 ## Prediction Models

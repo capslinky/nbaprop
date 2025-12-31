@@ -1,0 +1,367 @@
+player,prop_type,line,projection,raw_edge,avg_edge,confidence,grade,recommended_side,recent_avg,season_avg,hit_rate_over,hit_rate_under,trend,games_analyzed,bookmaker,odds,implied_prob,our_prob,adjustments,is_b2b,minutes_factor
+Bobby Portis,rebounds,8.5,6.3,-25.8,58.6,80.0,101.5,UNDER,6.8,5.8,12.0,88.0,HOT,26,bovada,175,36.4,95.0,Rested: 1.03x,False,1.06
+Donovan Mitchell,assists,6.5,5.5,-14.6,49.0,78.0,98.7,UNDER,5.2,5.4,25.0,75.0,NEUTRAL,24,bovada,200,33.3,82.3,None,False,1.0
+Ryan Rollins,assists,7.5,6.7,-10.5,49.4,77.0,98.6,UNDER,6.6,6.0,23.0,77.0,HOT,26,bovada,205,32.8,82.2,Rested: 1.03x,False,0.96
+Andrew Nembhard,assists,8.5,7.2,-15.2,61.7,75.0,97.6,UNDER,7.8,6.6,12.0,88.0,HOT,17,bovada,200,33.3,95.0,None,False,1.03
+Derik Queen,rebounds,8.5,8.3,-1.9,43.2,80.0,94.7,UNDER,7.2,6.3,19.0,81.0,HOT,26,bovada,160,38.5,81.7,Home: 1.06x | Rested: 1.03x | Mins: 1.15x,False,1.28
+Marvin Bagley III,rebounds,9.5,7.9,-16.8,59.9,70.0,94.1,UNDER,7.6,5.3,5.0,95.0,HOT,19,bovada,185,35.1,95.0,Home: 1.06x | Mins: 1.15x,False,1.42
+Jarrett Allen,rebounds,10.5,7.4,-29.8,58.6,69.0,93.9,UNDER,7.0,7.6,13.0,87.0,COLD,15,bovada,175,36.4,95.0,Rested: 1.03x,False,0.98
+Jay Huff,rebounds,7.5,4.8,-35.8,62.7,68.0,93.0,UNDER,3.8,3.7,8.0,92.0,NEUTRAL,25,bovada,210,32.3,95.0,Mins: 1.15x,False,1.37
+Marvin Bagley III,rebounds,8.5,7.9,-7.1,48.5,70.0,92.7,UNDER,7.6,5.3,5.0,95.0,HOT,19,bovada,115,46.5,95.0,Home: 1.06x | Mins: 1.15x,False,1.42
+Jay Huff,rebounds,6.5,4.8,-26.0,52.4,67.0,92.1,UNDER,3.8,3.7,12.0,88.0,NEUTRAL,25,betmgm,135,42.6,95.0,Mins: 1.15x,False,1.37
+Vit Krejci,assists,2.5,1.8,-26.9,49.0,66.0,91.0,UNDER,1.6,1.8,23.0,77.0,COLD,22,betmgm,140,41.7,90.7,None,False,1.06
+Justin Champagnie,rebounds,8.5,7.7,-8.9,62.7,63.0,89.6,UNDER,6.8,4.0,5.0,95.0,HOT,21,bovada,210,32.3,95.0,Home: 1.24x | Mins: 1.15x,False,1.63
+Gary Trent Jr,rebounds,2.5,1.3,-46.1,52.3,63.0,89.5,UNDER,1.2,1.3,12.0,88.0,COLD,26,betonlineag,134,42.7,95.0,Home: 1.09x | Rested: 1.03x,False,0.96
+C.J. McCollum,assists,4.5,4.2,-6.2,40.6,74.0,88.5,UNDER,4.2,3.5,22.0,78.0,HOT,23,bovada,145,40.8,81.4,Home: 1.10x,False,1.08
+Bennedict Mathurin,rebounds,7.5,6.1,-18.1,61.4,61.0,88.3,UNDER,5.4,5.6,14.0,86.0,NEUTRAL,14,bovada,200,33.3,94.7,Home: 1.17x,False,0.94
+Miles Bridges,assists,5.5,4.3,-21.4,47.0,65.0,87.8,UNDER,4.2,3.7,28.0,72.0,HOT,25,bovada,180,35.7,82.7,Home: 1.12x,False,0.94
+Kyshawn George,assists,5.5,4.0,-27.5,44.1,67.0,86.9,UNDER,4.2,4.7,33.0,67.0,COLD,21,bovada,175,36.4,80.4,Home: 0.88x,False,0.99
+Bobby Portis,rebounds,7.5,6.3,-16.0,33.2,76.0,82.9,UNDER,6.8,5.8,27.0,73.0,HOT,26,betonlineag,109,47.8,81.1,Rested: 1.03x,False,1.06
+Dyson Daniels,rebounds,7.5,6.0,-20.6,34.7,72.0,81.5,UNDER,5.4,6.3,42.0,58.0,COLD,26,bovada,200,33.3,68.0,None,False,1.03
+Kyle Kuzma,pra,25.5,20.7,-18.7,43.9,76.0,80.8,UNDER,19.8,20.1,20.0,80.0,NEUTRAL,25,bovada,120,45.5,89.3,Rested: 1.03x,False,0.99
+Michael Porter Jr,rebounds,8.5,7.6,-10.2,37.8,66.0,80.2,UNDER,6.8,7.4,35.0,65.0,COLD,20,bovada,210,32.3,70.1,Home: 1.07x,False,1.0
+Miles Bridges,rebounds,7.5,5.2,-30.5,34.4,70.0,80.1,UNDER,5.6,6.2,40.0,60.0,COLD,25,bovada,145,40.8,75.3,Home: 0.94x,False,0.94
+Jalen Smith,rebounds,4.5,7.4,64.2,39.8,63.0,79.9,OVER,6.4,6.1,68.0,32.0,HOT,19,betonlineag,-123,55.2,95.0,Mins: 1.15x,False,1.21
+Jarrett Allen,rebounds,9.5,7.4,-22.4,37.4,65.0,79.5,UNDER,7.0,7.6,27.0,73.0,COLD,15,betrivers,112,47.2,84.5,Rested: 1.03x,False,0.98
+Andrew Nembhard,assists,7.5,7.2,-3.9,32.5,71.0,79.2,UNDER,7.8,6.6,24.0,76.0,HOT,17,betonlineag,118,45.9,78.4,None,False,1.03
+Josh Giddey,points,25.5,20.9,-17.9,53.4,78.0,78.3,UNDER,20.6,20.5,23.0,77.0,NEUTRAL,22,bovada,205,32.8,86.2,None,False,1.02
+Trey Murphy III,rebounds,4.5,6.5,44.8,30.1,73.0,77.9,OVER,7.2,6.4,75.0,25.0,HOT,24,bovada,-185,64.9,95.0,Rested: 1.03x,False,1.01
+Pascal Siakam,points,28.5,25.6,-10.3,46.8,81.0,77.4,UNDER,25.6,24.3,25.0,75.0,HOT,24,bovada,200,33.3,80.2,None,False,0.96
+Miles Bridges,points,25.5,21.6,-15.2,47.9,79.0,77.1,UNDER,17.4,21.4,24.0,76.0,COLD,25,bovada,180,35.7,83.6,Home: 1.12x,False,0.94
+De'Andre Hunter,rebounds,4.5,3.5,-21.3,29.1,73.0,76.8,UNDER,3.2,4.3,36.0,64.0,COLD,22,draftkings,121,45.2,74.3,None,False,0.97
+Lonzo Ball,rebounds,3.5,5.8,65.7,33.6,66.0,76.5,OVER,5.6,4.5,68.0,32.0,HOT,19,betrivers,-159,61.4,95.0,Home: 1.12x,False,1.03
+Gary Trent Jr,points,13.5,9.9,-26.5,57.0,74.0,76.1,UNDER,9.4,9.8,19.0,81.0,NEUTRAL,26,bovada,170,37.0,94.0,Rested: 1.03x,False,0.96
+De'Andre Hunter,assists,2.5,1.7,-31.6,39.3,58.0,75.9,UNDER,1.6,2.4,36.0,64.0,COLD,22,betonlineag,149,40.2,79.4,Home: 0.94x,False,0.97
+Myles Turner,points,14.5,9.9,-32.1,50.6,74.0,75.8,UNDER,10.6,12.3,27.0,73.0,COLD,26,bovada,160,38.5,89.1,Rested: 1.03x | Mins: 0.85x,False,0.85
+Dyson Daniels,assists,6.5,5.6,-13.7,30.6,69.0,75.7,UNDER,4.6,5.7,35.0,65.0,COLD,26,bovada,140,41.7,72.3,Home: 1.06x,False,1.03
+Egor Demin,assists,4.5,4.2,-6.4,30.5,69.0,75.6,UNDER,3.6,3.5,27.0,73.0,NEUTRAL,22,betonlineag,120,45.5,75.9,Home: 1.15x,False,1.02
+Kon Knueppel,points,22.5,15.8,-29.7,50.1,73.0,75.2,UNDER,19.8,18.6,32.0,68.0,HOT,25,bovada,205,32.8,82.8,Home: 0.82x,False,1.02
+Kyle Kuzma,pra,24.5,20.7,-15.3,36.5,76.0,74.9,UNDER,19.8,20.1,20.0,80.0,NEUTRAL,25,bovada,-105,51.2,87.7,Rested: 1.03x,False,0.99
+Josh Giddey,threes,2.5,1.8,-28.6,57.1,65.0,74.8,UNDER,1.8,1.8,23.0,77.0,NEUTRAL,22,bovada,190,34.5,91.6,Home: 0.94x,False,1.02
+VJ Edgecombe,threes,2.5,1.3,-46.4,60.5,64.0,74.5,UNDER,2.0,2.0,19.0,81.0,NEUTRAL,21,bovada,190,34.5,95.0,Home: 0.79x | Mins: 0.86x,False,0.86
+Josh Giddey,rebounds,6.5,8.5,30.9,21.7,79.0,74.5,OVER,7.4,9.4,86.0,14.0,COLD,22,bovada,-275,73.3,95.0,None,False,1.02
+Nickeil Alexander-Walker,points,24.5,23.2,-5.2,45.4,77.0,74.3,UNDER,23.2,20.7,25.0,75.0,HOT,24,bovada,210,32.3,77.6,None,False,1.0
+Ryan Rollins,points,21.5,17.0,-21.0,47.0,74.0,73.9,UNDER,14.4,17.2,31.0,69.0,COLD,26,bovada,205,32.8,79.7,Home: 1.06x | Rested: 1.03x,False,0.96
+Jalen Johnson,points,28.5,28.4,-0.3,42.7,79.0,73.4,UNDER,28.0,23.2,22.0,78.0,HOT,23,bovada,180,35.7,78.4,Mins: 1.10x,False,1.1
+Carlton Carrington,points,14.5,14.4,-0.4,59.9,69.0,73.4,UNDER,12.6,7.8,4.0,96.0,HOT,23,bovada,185,35.1,95.0,Home: 1.21x | Mins: 1.15x,False,1.16
+Donovan Mitchell,assists,4.5,5.5,23.3,21.1,78.0,73.1,OVER,5.2,5.4,75.0,25.0,NEUTRAL,24,bovada,-190,65.5,86.6,None,False,1.0
+Kyshawn George,points,18.5,14.0,-24.3,53.9,69.0,73.0,UNDER,13.0,15.1,24.0,76.0,COLD,21,bovada,190,34.5,88.4,None,False,0.99
+Pascal Siakam,points,27.5,25.6,-7.1,40.8,81.0,73.0,UNDER,25.6,24.3,25.0,75.0,HOT,24,bovada,165,37.7,78.5,None,False,0.96
+Jay Huff,points,13.5,12.8,-5.2,49.6,68.0,72.7,UNDER,10.0,7.9,16.0,84.0,HOT,25,bovada,170,37.0,86.6,Home: 1.17x | Mins: 1.15x,False,1.37
+VJ Edgecombe,assists,4.5,3.8,-14.5,27.6,68.0,72.5,UNDER,4.0,4.0,33.0,67.0,NEUTRAL,21,draftkings,116,46.3,73.9,Home: 1.14x | Mins: 0.86x,False,0.86
+Josh Giddey,points,24.5,20.9,-14.6,43.0,77.0,72.5,UNDER,20.6,20.5,27.0,73.0,NEUTRAL,22,bovada,170,37.0,80.0,None,False,1.02
+Dominick Barlow,points,11.5,8.1,-29.7,59.3,67.0,72.3,UNDER,8.2,8.0,13.0,87.0,NEUTRAL,15,bovada,180,35.7,95.0,None,False,1.0
+Dean Wade,rebounds,4.5,4.1,-9.7,28.8,66.0,72.2,UNDER,4.0,3.8,33.0,67.0,NEUTRAL,24,fanduel,134,42.7,71.5,None,False,1.02
+Darius Garland,points,23.5,15.2,-35.4,60.5,66.0,71.8,UNDER,15.4,14.4,0.0,100.0,HOT,10,bovada,190,34.5,95.0,Home: 0.93x | Mins: 1.11x,False,1.11
+Darius Garland,points,22.5,15.2,-32.6,56.5,66.0,71.8,UNDER,15.4,14.4,0.0,100.0,HOT,10,bovada,160,38.5,95.0,Home: 0.93x | Mins: 1.11x,False,1.11
+Darius Garland,points,21.5,15.2,-29.4,51.5,66.0,71.8,UNDER,15.4,14.4,0.0,100.0,HOT,10,bovada,130,43.5,95.0,Home: 0.93x | Mins: 1.11x,False,1.11
+Noah Clowney,rebounds,3.5,5.5,57.0,28.7,66.0,71.8,OVER,4.6,3.8,62.0,38.0,HOT,24,betrivers,-165,62.3,91.0,Home: 1.16x | Mins: 1.14x,False,1.14
+Noah Clowney,assists,1.5,2.8,84.5,33.5,59.0,71.7,OVER,2.6,1.8,58.0,42.0,HOT,24,betmgm,-160,61.5,95.0,Home: 1.09x | Mins: 1.14x,False,1.14
+Terance Mann,assists,4.5,4.5,-0.6,31.2,62.0,71.4,UNDER,4.0,3.7,36.0,64.0,HOT,22,bovada,205,32.8,63.9,Home: 1.11x,False,0.97
+Bennedict Mathurin,points,25.5,18.2,-28.7,61.2,65.0,71.3,UNDER,17.2,20.4,21.0,79.0,COLD,14,bovada,215,31.7,92.9,None,False,0.94
+Nikola Vucevic,rebounds,9.5,8.4,-11.5,26.6,68.0,71.2,UNDER,7.0,9.2,43.0,57.0,COLD,23,bovada,180,35.7,62.3,Home: 1.06x,False,0.92
+Kon Knueppel,points,21.5,15.8,-26.4,44.2,73.0,71.0,UNDER,19.8,18.6,32.0,68.0,HOT,25,bovada,170,37.0,81.2,Home: 0.82x,False,1.02
+Dominick Barlow,points,10.5,8.1,-23.0,49.0,65.0,70.5,UNDER,8.2,8.0,20.0,80.0,NEUTRAL,15,bovada,135,42.6,91.5,None,False,1.0
+Kyshawn George,points,17.5,14.0,-20.0,46.2,69.0,70.3,UNDER,13.0,15.1,24.0,76.0,COLD,21,bovada,150,40.0,86.2,None,False,0.99
+De'Andre Hunter,points,18.5,13.3,-28.0,44.4,71.0,70.3,UNDER,11.0,15.9,32.0,68.0,COLD,22,bovada,165,37.7,82.2,None,False,0.97
+Egor Demin,points,10.5,8.8,-15.7,52.9,63.0,70.3,UNDER,6.6,8.1,23.0,77.0,COLD,22,bovada,210,32.3,85.1,Home: 1.11x,False,1.02
+KJ Simpson,pra,19.5,18.6,-4.5,45.2,57.0,70.3,UNDER,13.2,11.0,8.0,92.0,HOT,12,bovada,105,48.8,93.9,Home: 1.38x | Mins: 1.15x,False,1.23
+Andrew Nembhard,points,21.5,17.3,-19.4,47.5,66.0,69.9,UNDER,19.6,17.9,29.0,71.0,HOT,17,bovada,205,32.8,80.3,Home: 0.93x,False,1.03
+Jeremiah Fears,points,17.5,15.0,-14.4,39.2,77.0,69.6,UNDER,15.8,15.5,35.0,65.0,NEUTRAL,26,bovada,200,33.3,72.6,Home: 0.94x | Rested: 1.03x,False,1.07
+Nicolas Claxton,rebounds,7.5,9.7,29.9,20.4,74.0,69.6,OVER,9.8,7.8,62.0,38.0,HOT,24,draftkings,-133,57.1,77.4,Home: 1.10x,False,1.06
+Miles Bridges,points,24.5,21.6,-11.7,37.9,78.0,69.3,UNDER,17.4,21.4,28.0,72.0,COLD,25,bovada,150,40.0,77.9,Home: 1.12x,False,0.94
+Nikola Vucevic,points,18.5,15.3,-17.1,43.0,71.0,69.3,UNDER,13.2,15.7,30.0,70.0,COLD,23,bovada,185,35.1,78.1,None,False,0.92
+Ryan Rollins,points,20.5,17.0,-17.2,40.1,74.0,69.0,UNDER,14.4,17.2,31.0,69.0,COLD,26,bovada,165,37.7,77.8,Home: 1.06x | Rested: 1.03x,False,0.96
+Saddiq Bey,assists,1.5,3.6,139.4,31.4,58.0,68.8,OVER,2.6,2.3,64.0,36.0,HOT,25,betmgm,-175,63.6,95.0,Home: 1.17x | Rested: 1.03x | Mins: 1.13x,False,1.13
+Nicolas Claxton,points,16.5,13.6,-17.7,39.1,75.0,68.5,UNDER,13.4,13.6,38.0,62.0,NEUTRAL,24,bovada,210,32.3,71.3,None,False,1.06
+Jalen Johnson,threes,2.5,2.5,-1.4,46.7,58.0,68.4,UNDER,2.4,1.6,22.0,78.0,HOT,23,bovada,210,32.3,79.0,Home: 1.07x | Mins: 1.10x,False,1.1
+Jarrett Allen,points,17.5,11.0,-36.9,59.0,60.0,68.2,UNDER,10.0,14.3,27.0,73.0,COLD,15,bovada,205,32.8,91.8,Home: 0.85x | Rested: 1.03x,False,0.98
+Jarrett Allen,points,16.5,11.0,-33.1,51.4,60.0,68.2,UNDER,10.0,14.3,27.0,73.0,COLD,15,bovada,160,38.5,89.9,Home: 0.85x | Rested: 1.03x,False,0.98
+Onyeka Okongwu,assists,2.5,3.5,40.8,23.9,67.0,68.0,OVER,4.0,3.0,60.0,40.0,HOT,25,williamhill_us,-130,56.5,80.4,None,False,1.06
+Josh Giddey,points,23.5,20.9,-10.9,36.5,77.0,67.9,UNDER,20.6,20.5,27.0,73.0,NEUTRAL,22,bovada,140,41.7,78.2,None,False,1.02
+Michael Porter Jr,threes,4.5,4.3,-4.0,39.2,67.0,67.8,UNDER,4.8,3.6,30.0,70.0,HOT,20,bovada,205,32.8,72.0,None,False,1.0
+Jarrett Allen,rebounds,8.5,7.4,-13.3,24.4,65.0,67.6,UNDER,7.0,7.6,27.0,73.0,COLD,15,betonlineag,-125,55.6,80.0,Rested: 1.03x,False,0.98
+Darius Garland,points,20.5,15.2,-26.0,46.2,63.0,67.4,UNDER,15.4,14.4,10.0,90.0,HOT,10,bovada,105,48.8,95.0,Home: 0.93x | Mins: 1.11x,False,1.11
+Jay Huff,rebounds,5.5,4.8,-12.5,25.5,63.0,67.1,UNDER,3.8,3.7,24.0,76.0,NEUTRAL,25,draftkings,-131,56.7,82.3,Mins: 1.15x,False,1.37
+Moussa Diabate,pra,11.5,14.3,24.7,26.0,77.0,66.8,OVER,12.0,17.2,79.0,21.0,COLD,24,bovada,-190,65.5,91.5,None,False,0.92
+Lonzo Ball,assists,3.5,4.1,16.2,21.1,68.0,66.4,OVER,4.0,4.8,74.0,26.0,COLD,19,draftkings,-154,60.6,81.8,Home: 0.93x,False,1.03
+Joel Embiid,points,28.5,25.7,-9.9,49.2,57.0,66.4,UNDER,22.8,20.3,20.0,80.0,HOT,10,bovada,180,35.7,84.9,Home: 1.08x | Mins: 1.11x,False,1.11
+Day'Ron Sharpe,assists,2.5,2.1,-15.9,28.0,59.0,66.4,UNDER,2.4,1.8,39.0,61.0,HOT,23,betmgm,145,40.8,68.8,None,False,0.98
+Bennedict Mathurin,rebounds,6.5,6.1,-5.4,28.7,57.0,65.7,UNDER,5.4,5.6,29.0,71.0,NEUTRAL,14,betmgm,120,45.5,74.2,Home: 1.17x,False,0.94
+Nickeil Alexander-Walker,points,23.5,23.2,-1.2,34.4,76.0,65.7,UNDER,23.2,20.7,29.0,71.0,HOT,24,bovada,170,37.0,71.4,None,False,1.0
+Kyle Kuzma,pra,23.5,20.7,-11.7,26.7,74.0,65.6,UNDER,19.8,20.1,28.0,72.0,NEUTRAL,25,betmgm,-105,51.2,77.9,Rested: 1.03x,False,0.99
+Matas Buzelis,points,16.5,15.9,-3.4,36.2,73.0,65.3,UNDER,16.0,13.8,29.0,71.0,HOT,24,bovada,175,36.4,72.5,Home: 1.12x,False,1.08
+Andrew Nembhard,rebounds,3.5,3.2,-7.9,28.7,56.0,65.2,UNDER,3.6,2.3,29.0,71.0,HOT,17,fanduel,118,45.9,74.5,Home: 1.09x,False,1.03
+De'Andre Hunter,threes,2.5,1.8,-27.5,41.6,59.0,65.0,UNDER,1.2,2.0,32.0,68.0,COLD,22,fanduel,148,40.3,81.9,None,False,0.97
+Josh Giddey,rebounds,9.5,8.5,-10.4,19.5,68.0,64.9,UNDER,7.4,9.4,50.0,50.0,COLD,22,bovada,180,35.7,55.2,None,False,1.02
+Terance Mann,assists,2.5,4.5,78.9,22.8,63.0,64.6,OVER,4.0,3.7,68.0,32.0,HOT,22,bovada,-260,72.2,95.0,Home: 1.11x,False,0.97
+Josh Giddey,rebounds,7.5,8.5,13.4,14.9,74.0,64.5,OVER,7.4,9.4,68.0,32.0,COLD,22,bovada,-150,60.0,74.9,None,False,1.02
+Gary Trent Jr,points,12.5,9.9,-20.6,36.0,71.0,64.2,UNDER,9.4,9.8,31.0,69.0,NEUTRAL,26,bovada,130,43.5,79.5,Rested: 1.03x,False,0.96
+Moussa Diabate,pra,10.5,14.3,36.6,22.8,77.0,64.2,OVER,12.0,17.2,79.0,21.0,COLD,24,bovada,-260,72.2,95.0,None,False,0.92
+Nikola Vucevic,points,17.5,15.3,-12.3,35.7,71.0,64.1,UNDER,13.2,15.7,30.0,70.0,COLD,23,bovada,150,40.0,75.7,None,False,0.92
+Jarace Walker,assists,0.5,1.3,167.7,25.8,58.0,63.6,OVER,1.0,2.1,76.0,24.0,COLD,25,betmgm,-225,69.2,95.0,Home: 1.20x | Mins: 0.85x,False,0.75
+Bobby Portis,threes,1.5,3.2,113.7,41.5,56.0,63.5,OVER,2.8,1.8,54.0,46.0,HOT,26,fanduel,-115,53.5,95.0,Home: 1.25x | Rested: 1.03x,False,1.06
+Myles Turner,points,13.5,9.9,-27.0,34.5,71.0,63.4,UNDER,10.6,12.3,35.0,65.0,COLD,26,bovada,125,44.4,78.9,Rested: 1.03x | Mins: 0.85x,False,0.85
+Michael Porter Jr,rebounds,5.5,7.6,38.8,18.0,67.0,62.9,OVER,6.8,7.4,70.0,30.0,COLD,20,bovada,-250,71.4,89.4,Home: 1.07x,False,1.0
+Jeremiah Fears,points,12.5,15.0,19.9,26.4,81.0,62.9,OVER,15.8,15.5,81.0,19.0,NEUTRAL,26,bovada,-180,64.3,90.7,Home: 0.94x | Rested: 1.03x,False,1.07
+Nicolas Claxton,points,15.5,13.6,-12.4,30.9,75.0,62.7,UNDER,13.4,13.6,38.0,62.0,NEUTRAL,24,bovada,165,37.7,68.7,None,False,1.06
+Miles Bridges,rebounds,5.5,5.2,-5.2,-18.1,67.0,62.6,UNDER,5.6,6.2,52.0,48.0,COLD,25,bovada,-220,68.8,50.6,Home: 0.94x,False,0.94
+Vit Krejci,points,11.5,8.5,-26.2,44.0,57.0,62.5,UNDER,9.0,10.0,36.0,64.0,COLD,22,bovada,205,32.8,76.7,Home: 0.90x,False,1.06
+Bennedict Mathurin,points,24.5,18.2,-25.8,40.8,61.0,62.4,UNDER,17.2,20.4,36.0,64.0,COLD,14,bovada,175,36.4,77.2,None,False,0.94
+Tre Johnson,pra,15.5,10.3,-33.7,32.3,61.0,62.4,UNDER,11.0,15.2,44.0,56.0,COLD,16,bovada,145,40.8,73.1,Home: 0.93x | Mins: 0.85x,False,0.82
+Jalen Johnson,rebounds,9.5,12.1,27.3,13.0,73.0,62.2,OVER,13.6,10.5,61.0,39.0,HOT,23,bovada,-160,61.5,74.5,Home: 0.90x | Mins: 1.10x,False,1.1
+Kon Knueppel,points,20.5,15.8,-22.8,32.9,71.0,62.2,UNDER,19.8,18.6,36.0,64.0,HOT,25,bovada,135,42.6,75.4,Home: 0.82x,False,1.02
+Joel Embiid,points,27.5,25.7,-6.6,43.3,57.0,62.1,UNDER,22.8,20.3,20.0,80.0,HOT,10,bovada,150,40.0,83.3,Home: 1.08x | Mins: 1.11x,False,1.11
+Donovan Mitchell,threes,4.5,4.3,-4.9,30.5,68.0,61.9,UNDER,4.6,4.2,38.0,62.0,HOT,24,bovada,190,34.5,65.0,None,False,1.0
+Jose Alvarado,points,7.5,13.8,84.0,40.5,61.0,61.8,OVER,10.0,8.9,56.0,44.0,HOT,25,betmgm,-120,54.5,95.0,Home: 1.13x | Rested: 1.03x | Mins: 1.15x,False,1.16
+Lonzo Ball,rebounds,4.5,5.8,28.9,21.2,61.0,61.8,OVER,5.6,4.5,53.0,47.0,HOT,19,betonlineag,118,45.9,67.1,Home: 1.12x,False,1.03
+Terance Mann,assists,3.5,4.5,27.8,22.6,59.0,61.6,OVER,4.0,3.7,55.0,45.0,HOT,22,fanduel,118,45.9,68.4,Home: 1.11x,False,0.97
+Donovan Mitchell,points,33.5,33.3,-0.6,27.7,76.0,61.2,UNDER,36.2,31.2,38.0,62.0,HOT,24,bovada,185,35.1,62.8,None,False,1.0
+Egor Demin,rebounds,3.5,2.7,-23.8,24.9,55.0,61.2,UNDER,1.4,3.2,41.0,59.0,COLD,22,betonlineag,117,46.1,71.0,None,False,1.02
+Jeremiah Fears,points,11.5,15.0,30.3,24.0,81.0,61.1,OVER,15.8,15.5,81.0,19.0,NEUTRAL,26,bovada,-245,71.0,95.0,Home: 0.94x | Rested: 1.03x,False,1.07
+Sion James,threes,1.5,1.1,-27.6,38.1,56.0,60.9,UNDER,1.2,1.2,40.0,60.0,NEUTRAL,25,bovada,180,35.7,73.8,None,False,0.95
+Jalen Johnson,assists,7.5,12.5,66.9,16.9,65.0,60.7,OVER,10.8,8.0,52.0,48.0,HOT,23,bovada,-220,68.8,85.6,Home: 1.15x | Mins: 1.10x,False,1.1
+C.J. McCollum,rebounds,3.5,3.1,-12.0,20.4,61.0,60.7,UNDER,2.6,3.1,39.0,61.0,COLD,23,betmgm,115,46.5,66.9,Home: 1.09x,False,1.08
+De'Andre Hunter,points,17.5,13.3,-23.8,32.1,70.0,60.7,UNDER,11.0,15.9,36.0,64.0,COLD,22,bovada,130,43.5,75.6,None,False,0.97
+Zaccharie Risacher,pra,17.5,16.7,-4.5,22.0,72.0,60.7,UNDER,13.0,15.4,35.0,65.0,COLD,23,bovada,120,45.5,67.5,Home: 1.19x,False,0.98
+Myles Turner,rebounds,5.5,3.5,-37.0,17.5,64.0,60.6,UNDER,2.4,5.6,54.0,46.0,COLD,26,betrivers,112,47.2,64.6,Rested: 1.03x | Mins: 0.85x,False,0.85
+Donovan Mitchell,points,27.5,33.3,21.1,24.0,80.0,60.5,OVER,36.2,31.2,75.0,25.0,HOT,24,bovada,-160,61.5,85.6,None,False,1.0
+Miles Bridges,points,23.5,21.6,-8.0,26.5,77.0,60.4,UNDER,17.4,21.4,32.0,68.0,COLD,25,bovada,120,45.5,72.0,Home: 1.12x,False,0.94
+Miles Bridges,rebounds,6.5,5.2,-19.8,13.8,69.0,60.2,UNDER,5.6,6.2,44.0,56.0,COLD,25,draftkings,-109,52.2,65.9,Home: 0.94x,False,0.94
+Myles Turner,threes,2.5,1.9,-25.6,32.7,62.0,60.1,UNDER,2.0,2.2,42.0,58.0,COLD,26,bovada,165,37.7,70.5,Rested: 1.03x | Mins: 0.85x,False,0.85
+Kon Knueppel,rebounds,4.5,4.4,-1.9,-17.4,64.0,60.1,UNDER,4.4,5.4,60.0,40.0,COLD,25,betmgm,-140,58.3,40.9,Home: 0.95x,False,1.02
+De'Andre Hunter,rebounds,3.5,3.5,1.1,9.4,74.0,59.7,OVER,3.2,4.3,68.0,32.0,COLD,22,fanduel,-146,59.3,68.7,None,False,0.97
+Moussa Diabate,pra,12.5,14.3,14.8,19.0,74.0,59.7,OVER,12.0,17.2,71.0,29.0,COLD,24,bovada,-145,59.2,78.2,None,False,0.92
+Patrick Williams,rebounds,2.5,3.4,36.4,16.1,65.0,59.6,OVER,4.6,3.3,61.0,39.0,HOT,23,draftkings,-170,63.0,79.1,Home: 0.84x,False,1.07
+Matas Buzelis,rebounds,4.5,5.0,11.9,16.1,65.0,59.5,OVER,5.2,5.5,67.0,33.0,COLD,24,betrivers,-130,56.5,72.6,Home: 0.94x,False,1.08
+Dyson Daniels,rebounds,5.5,6.0,8.3,9.1,74.0,59.5,OVER,5.4,6.3,65.0,35.0,COLD,26,draftkings,-153,60.5,69.5,None,False,1.03
+Josh Giddey,rebounds,8.5,8.5,0.1,11.5,71.0,59.5,OVER,7.4,9.4,59.0,41.0,COLD,22,bovada,110,47.6,59.1,None,False,1.02
+Nikola Vucevic,rebounds,6.5,8.4,29.3,10.9,72.0,59.5,OVER,7.0,9.2,70.0,30.0,COLD,23,bovada,-275,73.3,84.2,Home: 1.06x,False,0.92
+Donovan Mitchell,points,26.5,33.3,25.7,22.3,80.0,59.3,OVER,36.2,31.2,75.0,25.0,HOT,24,bovada,-190,65.5,87.9,None,False,1.0
+Jalen Johnson,rebounds,8.5,12.1,42.3,9.8,73.0,59.2,OVER,13.6,10.5,61.0,39.0,HOT,23,bovada,-260,72.2,82.0,Home: 0.90x | Mins: 1.10x,False,1.1
+Jaylon Tyson,threes,1.5,2.6,74.6,34.7,58.0,59.1,OVER,1.8,2.1,62.0,38.0,COLD,21,betonlineag,-152,60.3,95.0,Home: 1.17x | Mins: 1.15x,False,1.16
+Josh Giddey,points,22.5,20.9,-7.0,25.1,76.0,58.9,UNDER,20.6,20.5,32.0,68.0,NEUTRAL,22,bovada,115,46.5,71.7,None,False,1.02
+Nikola Vucevic,rebounds,7.5,8.4,12.1,11.3,70.0,58.9,OVER,7.0,9.2,65.0,35.0,COLD,23,bovada,-150,60.0,71.3,Home: 1.06x,False,0.92
+Terance Mann,rebounds,3.5,4.1,17.4,20.2,58.0,58.9,OVER,3.6,3.5,59.0,41.0,NEUTRAL,22,draftkings,110,47.6,67.8,Home: 1.08x,False,0.97
+Zaccharie Risacher,pra,13.5,16.7,23.7,17.0,74.0,58.2,OVER,13.0,15.4,74.0,26.0,COLD,23,bovada,-220,68.8,85.8,Home: 1.19x,False,0.98
+Gary Trent Jr,threes,2.5,2.1,-16.2,28.3,64.0,58.1,UNDER,1.8,2.2,38.0,62.0,COLD,26,fanduel,142,41.3,69.6,Rested: 1.03x,False,0.96
+Joel Embiid,points,26.5,25.7,-3.0,37.1,57.0,57.7,UNDER,22.8,20.3,20.0,80.0,HOT,10,bovada,125,44.4,81.5,Home: 1.08x | Mins: 1.11x,False,1.11
+Carlton Carrington,threes,1.5,2.9,93.8,34.2,55.0,57.6,OVER,2.6,1.7,52.0,48.0,HOT,23,betmgm,-155,60.8,95.0,Home: 1.16x | Mins: 1.15x,False,1.16
+Moussa Diabate,pra,13.5,14.3,6.3,17.4,73.0,57.6,OVER,12.0,17.2,67.0,33.0,COLD,24,bovada,-110,52.4,69.8,None,False,0.92
+Ryan Rollins,rebounds,4.5,4.2,-6.6,12.1,67.0,57.5,UNDER,4.0,4.1,46.0,54.0,NEUTRAL,26,draftkings,122,45.0,57.1,Rested: 1.03x,False,0.96
+Isaiah Jackson,pra,13.5,10.8,-20.3,20.9,68.0,57.5,UNDER,11.0,14.3,36.0,64.0,COLD,25,betonlineag,-114,53.3,74.2,Mins: 0.85x,False,0.86
+Donovan Mitchell,points,25.5,33.3,30.6,19.7,80.0,57.4,OVER,36.2,31.2,75.0,25.0,HOT,24,bovada,-240,70.6,90.3,None,False,1.0
+Pascal Siakam,points,26.5,25.6,-3.6,21.7,77.0,57.3,UNDER,25.6,24.3,38.0,62.0,HOT,24,bovada,135,42.6,64.3,None,False,0.96
+Jeremiah Fears,points,13.5,15.0,11.0,21.2,78.0,57.3,OVER,15.8,15.5,69.0,31.0,NEUTRAL,26,draftkings,-115,53.5,74.7,Home: 0.94x | Rested: 1.03x,False,1.07
+Jarace Walker,points,5.5,8.2,48.7,25.3,72.0,57.1,OVER,7.2,9.6,80.0,20.0,COLD,25,bovada,-230,69.7,95.0,Home: 1.14x | Mins: 0.85x,False,0.75
+Kyle Kuzma,pra,22.5,20.7,-7.8,15.9,74.0,57.0,UNDER,19.8,20.1,28.0,72.0,NEUTRAL,25,bovada,-150,60.0,75.9,Rested: 1.03x,False,0.99
+Jeremiah Fears,points,16.5,15.0,-9.2,23.1,74.0,56.7,UNDER,15.8,15.5,42.0,58.0,NEUTRAL,26,bovada,155,39.2,62.3,Home: 0.94x | Rested: 1.03x,False,1.07
+Ryan Rollins,points,19.5,17.0,-12.9,24.5,72.0,56.5,UNDER,14.4,17.2,38.0,62.0,COLD,26,bovada,130,43.5,68.0,Home: 1.06x | Rested: 1.03x,False,0.96
+Nickeil Alexander-Walker,points,16.5,23.2,40.7,20.6,77.0,56.5,OVER,23.2,20.7,75.0,25.0,HOT,24,bovada,-290,74.4,95.0,None,False,1.0
+Nicolas Claxton,points,14.5,13.6,-6.3,22.2,75.0,56.4,UNDER,13.4,13.6,38.0,62.0,NEUTRAL,24,bovada,130,43.5,65.7,None,False,1.06
+Patrick Williams,rebounds,3.5,3.4,-2.6,13.6,64.0,56.4,UNDER,4.6,3.3,43.0,57.0,HOT,23,williamhill_us,126,44.2,57.8,Home: 0.84x,False,1.07
+Nicolas Claxton,assists,3.5,5.0,43.8,16.9,59.0,56.3,OVER,6.6,4.5,54.0,46.0,HOT,24,williamhill_us,-145,59.2,76.1,Home: 0.90x,False,1.06
+Kyshawn George,points,16.5,14.0,-15.2,28.8,66.0,56.2,UNDER,13.0,15.1,33.0,67.0,COLD,21,betrivers,120,45.5,74.3,None,False,0.99
+Egor Demin,points,9.5,8.8,-6.9,32.4,61.0,56.1,UNDER,6.6,8.1,32.0,68.0,COLD,22,bovada,155,39.2,71.6,Home: 1.11x,False,1.02
+Dyson Daniels,rebounds,6.5,6.0,-8.4,8.7,70.0,56.0,UNDER,5.4,6.3,50.0,50.0,COLD,26,betrivers,120,45.5,54.2,None,False,1.03
+Pascal Siakam,points,21.5,25.6,18.9,16.7,81.0,55.7,OVER,25.6,24.3,75.0,25.0,HOT,24,bovada,-210,67.7,84.4,None,False,0.96
+Miles Bridges,points,22.5,21.6,-3.9,19.9,77.0,55.7,UNDER,17.4,21.4,32.0,68.0,COLD,25,bovada,100,50.0,69.9,Home: 1.12x,False,0.94
+Jalen Johnson,points,20.5,28.4,38.6,18.9,78.0,55.6,OVER,28.0,23.2,74.0,26.0,HOT,23,bovada,-290,74.4,93.2,Mins: 1.10x,False,1.1
+Donovan Mitchell,points,28.5,33.3,16.9,18.6,78.0,55.3,OVER,36.2,31.2,67.0,33.0,HOT,24,bovada,-130,56.5,75.1,None,False,1.0
+Ryan Rollins,threes,2.5,1.9,-23.0,27.5,60.0,55.2,UNDER,1.8,2.3,42.0,58.0,COLD,26,betmgm,140,41.7,69.2,Home: 0.94x | Rested: 1.03x,False,0.96
+Zaccharie Risacher,pra,14.5,16.7,15.2,14.2,73.0,55.2,OVER,13.0,15.4,70.0,30.0,COLD,23,bovada,-170,63.0,77.2,Home: 1.19x,False,0.98
+Michael Porter Jr,threes,2.5,4.3,72.9,21.3,68.0,55.1,OVER,4.8,3.6,75.0,25.0,HOT,20,bovada,-280,73.7,95.0,None,False,1.0
+Tre Jones,assists,3.5,4.5,28.7,15.5,59.0,55.1,OVER,5.0,4.9,67.0,33.0,NEUTRAL,18,bovada,-190,65.5,81.0,Home: 0.95x,False,0.98
+Jalen Smith,points,7.5,9.9,31.7,28.7,63.0,54.9,OVER,9.4,9.7,68.0,32.0,NEUTRAL,19,betmgm,-125,55.6,84.2,Home: 0.90x | Mins: 1.15x,False,1.21
+Trey Murphy III,rebounds,6.5,6.5,0.2,11.5,64.0,54.7,OVER,7.2,6.4,46.0,54.0,HOT,24,bovada,190,34.5,45.9,Rested: 1.03x,False,1.01
+Pascal Siakam,points,20.5,25.6,24.7,15.1,81.0,54.6,OVER,25.6,24.3,75.0,25.0,HOT,24,bovada,-260,72.2,87.3,None,False,0.96
+Jarace Walker,points,9.5,8.2,-13.9,27.2,65.0,54.6,UNDER,7.2,9.6,44.0,56.0,COLD,25,bovada,180,35.7,63.0,Home: 1.14x | Mins: 0.85x,False,0.75
+Trey Murphy III,rebounds,5.5,6.5,18.5,10.4,65.0,54.6,OVER,7.2,6.4,50.0,50.0,HOT,24,bovada,105,48.8,59.2,Rested: 1.03x,False,1.01
+Andrew Nembhard,points,20.5,17.3,-15.4,28.8,63.0,54.5,UNDER,19.6,17.9,41.0,59.0,HOT,17,bovada,165,37.7,66.5,Home: 0.93x,False,1.03
+Jeremiah Fears,points,14.5,15.0,3.3,18.0,77.0,54.4,OVER,15.8,15.5,65.0,35.0,NEUTRAL,26,betrivers,104,49.0,67.1,Home: 0.94x | Rested: 1.03x,False,1.07
+Tre Jones,points,9.5,11.6,22.1,22.2,71.0,54.4,OVER,13.8,12.8,78.0,22.0,HOT,18,bovada,-200,66.7,88.8,Home: 0.87x,False,0.98
+Noah Clowney,threes,1.5,3.4,127.0,28.9,57.0,54.3,OVER,2.8,2.2,67.0,33.0,HOT,24,betrivers,-195,66.1,95.0,Home: 1.11x | Mins: 1.14x,False,1.14
+Luke Kennard,pra,12.5,8.6,-31.2,18.6,65.0,54.2,UNDER,10.8,11.5,43.0,57.0,COLD,23,betmgm,-115,53.5,72.1,Home: 0.78x,False,0.92
+Pascal Siakam,points,22.5,25.6,13.6,15.4,80.0,54.1,OVER,25.6,24.3,71.0,29.0,HOT,24,bovada,-165,62.3,77.6,None,False,0.96
+Michael Porter Jr,points,30.5,29.6,-3.1,23.2,69.0,54.0,UNDER,30.6,26.2,45.0,55.0,HOT,20,bovada,200,33.3,56.6,None,False,1.0
+VJ Edgecombe,rebounds,4.5,4.2,-7.2,-14.3,59.0,54.0,UNDER,5.0,5.6,67.0,33.0,COLD,21,betmgm,-105,51.2,36.9,Home: 0.91x | Mins: 0.86x,False,0.86
+Myles Turner,rebounds,4.5,3.5,-23.0,-11.1,63.0,53.9,UNDER,2.4,5.6,58.0,42.0,COLD,26,bovada,-185,64.9,53.8,Rested: 1.03x | Mins: 0.85x,False,0.85
+Michael Porter Jr,threes,3.5,4.3,23.5,23.0,64.0,53.8,OVER,4.8,3.6,60.0,40.0,HOT,20,betrivers,105,48.8,71.7,None,False,1.0
+Kyshawn George,assists,3.5,4.0,13.9,7.0,69.0,53.7,OVER,4.2,4.7,71.0,29.0,COLD,21,bovada,-250,71.4,78.4,Home: 0.88x,False,0.99
+Trey Murphy III,threes,1.5,2.4,61.3,21.7,65.0,53.6,OVER,1.8,2.7,71.0,29.0,COLD,24,bovada,-275,73.3,95.0,Rested: 1.03x,False,1.01
+Jalen Johnson,rebounds,10.5,12.1,15.2,6.7,69.0,53.6,OVER,13.6,10.5,48.0,52.0,HOT,23,betmgm,105,48.8,55.4,Home: 0.90x | Mins: 1.10x,False,1.1
+Bobby Portis,rebounds,6.5,6.3,-3.0,3.7,72.0,53.4,UNDER,6.8,5.8,38.0,62.0,HOT,26,draftkings,-146,59.3,63.1,Rested: 1.03x,False,1.06
+Dean Wade,points,5.5,4.1,-24.7,26.4,64.0,53.4,UNDER,5.2,5.2,33.0,67.0,NEUTRAL,24,fanduel,-111,52.6,79.0,Home: 0.83x,False,1.02
+Darius Garland,points,19.5,15.2,-22.2,31.1,57.0,53.3,UNDER,15.4,14.4,30.0,70.0,HOT,10,betrivers,100,50.0,81.1,Home: 0.93x | Mins: 1.11x,False,1.11
+Tre Jones,points,8.5,11.6,36.5,20.6,71.0,53.3,OVER,13.8,12.8,78.0,22.0,HOT,18,bovada,-290,74.4,95.0,Home: 0.87x,False,0.98
+Jaylon Tyson,points,12.5,19.5,56.1,27.6,62.0,53.2,OVER,17.8,13.0,52.0,48.0,HOT,21,williamhill_us,-112,52.8,80.4,Home: 1.08x | Mins: 1.15x,False,1.16
+Nicolas Claxton,points,11.5,13.6,18.1,15.6,77.0,53.0,OVER,13.4,13.6,71.0,29.0,NEUTRAL,24,bovada,-180,64.3,79.9,None,False,1.06
+De'Andre Hunter,points,13.5,13.3,-1.3,-26.2,63.0,52.8,UNDER,11.0,15.9,59.0,41.0,COLD,22,bovada,-210,67.7,41.5,None,False,0.97
+Ryan Rollins,assists,5.5,6.7,22.1,4.4,70.0,52.5,OVER,6.6,6.0,54.0,46.0,HOT,26,draftkings,-153,60.5,64.9,Rested: 1.03x,False,0.96
+Jaylon Tyson,points,10.5,19.5,85.8,25.3,63.0,52.3,OVER,17.8,13.0,57.0,43.0,HOT,21,bovada,-230,69.7,95.0,Home: 1.08x | Mins: 1.15x,False,1.16
+Noah Clowney,points,12.5,21.6,73.0,28.0,59.0,52.3,OVER,17.6,13.2,50.0,50.0,HOT,24,betrivers,-141,58.5,86.5,Home: 1.14x | Mins: 1.14x,False,1.14
+Michael Porter Jr,points,23.5,29.6,25.8,17.4,74.0,52.2,OVER,30.6,26.2,70.0,30.0,HOT,20,bovada,-190,65.5,82.9,None,False,1.0
+Derik Queen,rebounds,6.5,8.3,28.3,3.1,71.0,52.2,OVER,7.2,6.3,54.0,46.0,HOT,26,bovada,-185,64.9,68.0,Home: 1.06x | Rested: 1.03x | Mins: 1.15x,False,1.28
+Nicolas Claxton,points,10.5,13.6,29.4,14.5,77.0,52.2,OVER,13.4,13.6,71.0,29.0,NEUTRAL,24,bovada,-245,71.0,85.5,None,False,1.06
+Jarrett Allen,rebounds,7.5,7.4,-1.7,-10.6,61.0,52.1,UNDER,7.0,7.6,40.0,60.0,COLD,15,bovada,-250,71.4,60.9,Rested: 1.03x,False,0.98
+Nikola Vucevic,rebounds,8.5,8.4,-1.1,6.9,66.0,52.1,UNDER,7.0,9.2,48.0,52.0,COLD,23,fanduel,118,45.9,52.7,Home: 1.06x,False,0.92
+Sion James,assists,1.5,1.2,-20.0,11.7,60.0,52.0,UNDER,0.8,1.5,40.0,60.0,COLD,25,betmgm,-140,58.3,70.0,None,False,0.95
+Josh Giddey,points,17.5,20.9,19.6,13.4,78.0,51.9,OVER,20.6,20.5,77.0,23.0,NEUTRAL,22,bovada,-280,73.7,87.1,None,False,1.02
+Miles Bridges,assists,4.5,4.3,-4.0,10.5,61.0,51.8,UNDER,4.2,3.7,40.0,60.0,HOT,25,fanduel,-106,51.5,62.0,Home: 1.12x,False,0.94
+Bennedict Mathurin,points,23.5,18.2,-22.7,27.7,59.0,51.8,UNDER,17.2,20.4,43.0,57.0,COLD,14,bovada,145,40.8,68.5,None,False,0.94
+De'Andre Hunter,assists,1.5,1.7,14.0,12.0,59.0,51.7,OVER,1.6,2.4,68.0,32.0,COLD,22,fanduel,-172,63.2,75.2,Home: 0.94x,False,0.97
+Tre Jones,points,13.5,11.6,-14.1,23.4,64.0,51.6,UNDER,13.8,12.8,44.0,56.0,HOT,18,bovada,155,39.2,62.6,Home: 0.87x,False,0.98
+Dyson Daniels,assists,4.5,5.6,24.6,4.4,69.0,51.5,OVER,4.6,5.7,65.0,35.0,COLD,26,bovada,-275,73.3,77.7,Home: 1.06x,False,1.03
+Vit Krejci,points,10.5,8.5,-19.2,29.5,56.0,51.3,UNDER,9.0,10.0,41.0,59.0,COLD,22,bovada,155,39.2,68.7,Home: 0.90x,False,1.06
+Matas Buzelis,points,10.5,15.9,51.8,17.6,72.0,51.3,OVER,16.0,13.8,67.0,33.0,HOT,24,bovada,-300,75.0,92.6,Home: 1.12x,False,1.08
+Matas Buzelis,points,12.5,15.9,27.5,18.6,70.0,51.3,OVER,16.0,13.8,62.0,38.0,HOT,24,betrivers,-136,57.6,76.3,Home: 1.12x,False,1.08
+Sion James,threes,0.5,1.1,117.3,22.8,60.0,51.3,OVER,1.2,1.2,72.0,28.0,NEUTRAL,25,bovada,-260,72.2,95.0,None,False,0.95
+De'Andre Hunter,points,16.5,13.3,-19.2,19.9,68.0,51.2,UNDER,11.0,15.9,41.0,59.0,COLD,22,bovada,105,48.8,68.7,None,False,0.97
+Kon Knueppel,points,16.5,15.8,-4.1,-22.9,64.0,51.2,UNDER,19.8,18.6,60.0,40.0,HOT,25,bovada,-185,64.9,42.1,Home: 0.82x,False,1.02
+Josh Giddey,points,21.5,20.9,-2.6,15.0,74.0,50.9,UNDER,20.6,20.5,36.0,64.0,NEUTRAL,22,fanatics,100,50.0,65.0,None,False,1.02
+Derik Queen,rebounds,7.5,8.3,11.2,-6.1,66.0,50.9,OVER,7.2,6.3,35.0,65.0,HOT,26,fanduel,116,46.3,40.2,Home: 1.06x | Rested: 1.03x | Mins: 1.15x,False,1.28
+Derik Queen,points,11.5,22.7,97.3,24.4,61.0,50.8,OVER,17.8,13.0,54.0,46.0,HOT,26,bovada,-240,70.6,95.0,Home: 1.24x | Rested: 1.03x | Mins: 1.15x,False,1.28
+Jaylon Tyson,points,11.5,19.5,69.7,24.3,62.0,50.8,OVER,17.8,13.0,52.0,48.0,HOT,21,bovada,-170,63.0,87.2,Home: 1.08x | Mins: 1.15x,False,1.16
+Michael Porter Jr,points,22.5,29.6,31.4,15.1,74.0,50.6,OVER,30.6,26.2,70.0,30.0,HOT,20,bovada,-240,70.6,85.7,None,False,1.0
+Donovan Mitchell,threes,3.5,4.3,22.2,16.4,67.0,50.5,OVER,4.6,4.2,58.0,42.0,HOT,24,fanduel,-113,53.1,69.5,None,False,1.0
+T.J. McConnell,pra,17.5,14.4,-17.6,21.2,56.0,50.3,UNDER,13.2,16.3,40.0,60.0,COLD,15,betrivers,110,47.6,68.8,Home: 1.09x | Mins: 0.85x,False,0.85
+Gary Trent Jr,points,11.5,9.9,-13.7,18.4,68.0,50.2,UNDER,9.4,9.8,38.0,62.0,NEUTRAL,26,betonlineag,100,50.0,68.4,Rested: 1.03x,False,0.96
+Michael Porter Jr,points,24.5,29.6,20.6,15.3,72.0,49.9,OVER,30.6,26.2,65.0,35.0,HOT,20,bovada,-150,60.0,75.3,None,False,1.0
+Nikola Vucevic,points,16.5,15.3,-7.0,17.9,68.0,49.8,UNDER,13.2,15.7,39.0,61.0,COLD,23,bovada,115,46.5,64.4,None,False,0.92
+Ziaire Williams,pra,11.5,15.3,33.1,16.8,60.0,49.6,OVER,13.0,12.7,52.0,48.0,NEUTRAL,21,betonlineag,-109,52.2,68.9,Home: 1.21x,False,0.98
+Donovan Mitchell,points,29.5,33.3,12.9,12.4,75.0,49.5,OVER,36.2,31.2,58.0,42.0,HOT,24,bovada,-110,52.4,64.8,None,False,1.0
+Nickeil Alexander-Walker,rebounds,3.5,3.8,9.7,-7.7,61.0,49.4,OVER,3.8,3.5,38.0,62.0,HOT,24,betmgm,100,50.0,42.3,None,False,1.0
+Carlton Carrington,rebounds,3.5,3.4,-3.0,-6.6,63.0,49.4,UNDER,3.2,3.5,48.0,52.0,COLD,23,draftkings,-152,60.3,53.7,Home: 0.93x | Mins: 1.15x,False,1.16
+Myles Turner,points,10.5,9.9,-6.2,-20.1,65.0,49.3,UNDER,10.6,12.3,58.0,42.0,COLD,26,bovada,-190,65.5,45.4,Rested: 1.03x | Mins: 0.85x,False,0.85
+Saddiq Bey,threes,1.5,1.7,13.6,20.9,59.0,49.3,OVER,0.8,1.8,60.0,40.0,COLD,25,fanduel,118,45.9,66.8,Home: 1.07x | Rested: 1.03x | Mins: 1.13x,False,1.13
+VJ Edgecombe,assists,3.5,3.8,9.9,-4.6,65.0,49.3,OVER,4.0,4.0,57.0,43.0,NEUTRAL,21,bovada,-200,66.7,62.1,Home: 1.14x | Mins: 0.86x,False,0.86
+Noah Clowney,points,13.5,21.6,60.2,24.7,58.0,49.2,OVER,17.6,13.2,46.0,54.0,HOT,24,betrivers,-105,51.2,75.9,Home: 1.14x | Mins: 1.14x,False,1.14
+Kyshawn George,threes,1.5,2.9,90.2,21.3,58.0,49.2,OVER,2.8,2.5,67.0,33.0,HOT,21,bovada,-280,73.7,95.0,Home: 1.08x,False,0.99
+Jalen Johnson,points,21.5,28.4,32.2,11.6,75.0,48.9,OVER,28.0,23.2,65.0,35.0,HOT,23,bovada,-230,69.7,81.3,Mins: 1.10x,False,1.1
+Andrew Nembhard,points,19.5,17.3,-11.1,20.9,63.0,48.8,UNDER,19.6,17.9,41.0,59.0,HOT,17,bovada,130,43.5,64.4,Home: 0.93x,False,1.03
+Myles Turner,assists,1.5,1.1,-24.8,10.9,56.0,48.5,UNDER,1.2,1.7,54.0,46.0,COLD,26,betmgm,110,47.6,58.5,Home: 0.93x | Rested: 1.03x | Mins: 0.85x,False,0.85
+Egor Demin,assists,3.5,4.2,20.3,5.0,63.0,48.4,OVER,3.6,3.5,55.0,45.0,NEUTRAL,22,draftkings,-148,59.7,64.7,Home: 1.15x,False,1.02
+Jarace Walker,points,6.5,8.2,25.8,16.9,67.0,48.4,OVER,7.2,9.6,64.0,36.0,COLD,25,bovada,-150,60.0,76.9,Home: 1.14x | Mins: 0.85x,False,0.75
+Ryan Rollins,points,18.5,17.0,-8.2,14.2,71.0,48.4,UNDER,14.4,17.2,42.0,58.0,COLD,26,betrivers,110,47.6,61.8,Home: 1.06x | Rested: 1.03x,False,0.96
+Nicolas Claxton,rebounds,9.5,9.7,2.5,-3.9,65.0,48.3,OVER,9.8,7.8,33.0,67.0,HOT,24,bovada,160,38.5,34.6,Home: 1.10x,False,1.06
+Ryan Kalkbrenner,points,7.5,8.3,10.3,14.8,70.0,48.3,OVER,8.6,9.0,65.0,35.0,NEUTRAL,23,betmgm,-125,55.6,70.4,None,False,1.03
+Kon Knueppel,threes,3.5,2.7,-22.2,15.6,64.0,48.3,UNDER,3.4,3.4,52.0,48.0,NEUTRAL,25,betmgm,130,43.5,59.1,Home: 0.78x,False,1.02
+Jalen Johnson,assists,8.5,12.5,47.3,7.2,60.0,48.2,OVER,10.8,8.0,35.0,65.0,HOT,23,draftkings,-105,51.2,58.4,Home: 1.15x | Mins: 1.10x,False,1.1
+Nickeil Alexander-Walker,threes,2.5,3.6,45.0,19.8,58.0,48.0,OVER,4.0,2.9,54.0,46.0,HOT,24,betrivers,-132,56.9,76.7,None,False,1.0
+Donovan Mitchell,points,30.5,33.3,9.2,11.2,74.0,47.9,OVER,36.2,31.2,54.0,46.0,HOT,24,bovada,110,47.6,58.8,None,False,1.0
+Darius Garland,points,18.5,15.2,-18.0,23.4,57.0,47.8,UNDER,15.4,14.4,30.0,70.0,HOT,10,betonlineag,-125,55.6,79.0,Home: 0.93x | Mins: 1.11x,False,1.11
+Tre Jones,points,10.5,11.6,10.5,15.6,68.0,47.8,OVER,13.8,12.8,67.0,33.0,HOT,18,draftkings,-129,56.3,71.9,Home: 0.87x,False,0.98
+Matas Buzelis,points,11.5,15.9,38.6,13.5,70.0,47.7,OVER,16.0,13.8,62.0,38.0,HOT,24,bovada,-215,68.3,81.8,Home: 1.12x,False,1.08
+Jaylon Tyson,points,13.5,19.5,44.5,21.1,60.0,47.7,OVER,17.8,13.0,48.0,52.0,HOT,21,bovada,105,48.8,69.9,Home: 1.08x | Mins: 1.15x,False,1.16
+Myles Turner,points,12.5,9.9,-21.2,14.9,68.0,47.5,UNDER,10.6,12.3,46.0,54.0,COLD,26,betrivers,102,49.5,64.4,Rested: 1.03x | Mins: 0.85x,False,0.85
+Ryan Rollins,points,16.5,17.0,2.9,-16.2,66.0,47.4,OVER,14.4,17.2,42.0,58.0,COLD,26,bovada,-150,60.0,43.8,Home: 1.06x | Rested: 1.03x,False,0.96
+Dean Wade,rebounds,3.5,4.1,16.0,-6.5,60.0,47.4,OVER,4.0,3.8,46.0,54.0,NEUTRAL,24,betonlineag,-152,60.3,53.9,None,False,1.02
+Vit Krejci,rebounds,2.5,2.5,1.3,-7.2,59.0,47.3,OVER,2.2,2.3,41.0,59.0,NEUTRAL,22,williamhill_us,105,48.8,41.6,Home: 1.12x,False,1.06
+Kyshawn George,points,15.5,14.0,-9.7,17.3,64.0,47.1,UNDER,13.0,15.1,38.0,62.0,COLD,21,fanduel,102,49.5,66.8,None,False,0.99
+Myles Turner,threes,1.5,1.9,24.1,13.8,64.0,47.0,OVER,2.0,2.2,65.0,35.0,COLD,26,betmgm,-175,63.6,77.4,Rested: 1.03x | Mins: 0.85x,False,0.85
+Kyle Kuzma,pra,21.5,20.7,-3.5,4.2,73.0,47.0,UNDER,19.8,20.1,32.0,68.0,NEUTRAL,25,bovada,-190,65.5,69.8,Rested: 1.03x,False,0.99
+Zaccharie Risacher,pra,16.5,16.7,1.2,-10.7,64.0,47.0,OVER,13.0,15.4,39.0,61.0,COLD,23,fanduel,-102,50.5,39.7,Home: 1.19x,False,0.98
+Ryan Rollins,points,14.5,17.0,17.1,-13.7,68.0,46.8,OVER,14.4,17.2,50.0,50.0,COLD,26,bovada,-260,72.2,58.5,Home: 1.06x | Rested: 1.03x,False,0.96
+Miles Bridges,assists,3.5,4.3,23.5,-6.9,59.0,46.8,OVER,4.2,3.7,52.0,48.0,HOT,25,bovada,-240,70.6,63.7,Home: 1.12x,False,0.94
+Nickeil Alexander-Walker,points,17.5,23.2,32.7,10.1,73.0,46.8,OVER,23.2,20.7,62.0,38.0,HOT,24,bovada,-220,68.8,78.8,None,False,1.0
+Kon Knueppel,points,19.5,15.8,-18.9,13.8,68.0,46.6,UNDER,19.8,18.6,48.0,52.0,HOT,25,bovada,110,47.6,61.4,Home: 0.82x,False,1.02
+Bennedict Mathurin,points,22.5,18.2,-19.2,20.2,59.0,46.4,UNDER,17.2,20.4,43.0,57.0,COLD,14,bovada,115,46.5,66.8,None,False,0.94
+Jalen Smith,points,8.5,9.9,16.2,18.0,62.0,46.3,OVER,9.4,9.7,63.0,37.0,NEUTRAL,19,betonlineag,-114,53.3,71.2,Home: 0.90x | Mins: 1.15x,False,1.21
+Quentin Grimes,rebounds,4.5,5.8,29.9,7.5,57.0,46.0,OVER,7.2,4.3,43.0,57.0,HOT,23,fanduel,-104,51.0,58.4,None,False,1.09
+De'Andre Hunter,points,14.5,13.3,-8.1,-16.6,63.0,45.9,UNDER,11.0,15.9,59.0,41.0,COLD,22,bovada,-160,61.5,44.9,None,False,0.97
+Noah Clowney,points,14.5,21.6,49.1,19.9,58.0,45.8,OVER,17.6,13.2,46.0,54.0,HOT,24,draftkings,-102,50.5,70.4,Home: 1.14x | Mins: 1.14x,False,1.14
+Andrew Nembhard,points,18.5,17.3,-6.3,16.5,63.0,45.7,UNDER,19.6,17.9,41.0,59.0,HOT,17,betrivers,120,45.5,62.0,Home: 0.93x,False,1.03
+Kyshawn George,assists,4.5,4.0,-11.4,3.6,61.0,45.7,UNDER,4.2,4.7,52.0,48.0,COLD,21,draftkings,101,49.8,53.3,Home: 0.88x,False,0.99
+Ryan Rollins,points,15.5,17.0,9.5,-11.9,68.0,45.6,OVER,14.4,17.2,50.0,50.0,COLD,26,bovada,-200,66.7,54.8,Home: 1.06x | Rested: 1.03x,False,0.96
+Sion James,points,5.5,6.9,25.8,15.3,64.0,45.4,OVER,8.0,6.9,60.0,40.0,HOT,25,draftkings,-136,57.6,72.9,None,False,0.95
+Nickeil Alexander-Walker,points,18.5,23.2,25.5,8.8,72.0,45.3,OVER,23.2,20.7,58.0,42.0,HOT,24,betrivers,-165,62.3,71.1,None,False,1.0
+Onyeka Okongwu,assists,3.5,3.5,0.6,-4.5,59.0,45.2,OVER,4.0,3.0,36.0,64.0,HOT,25,bovada,145,40.8,36.3,None,False,1.06
+Nikola Vucevic,points,12.5,15.3,22.7,9.5,71.0,45.2,OVER,13.2,15.7,70.0,30.0,COLD,23,bovada,-250,71.4,80.9,None,False,0.92
+Jarace Walker,points,7.5,8.2,9.0,13.3,66.0,45.2,OVER,7.2,9.6,60.0,40.0,COLD,25,bovada,-105,51.2,64.5,Home: 1.14x | Mins: 0.85x,False,0.75
+Zion Williamson,points,19.5,22.1,13.4,16.7,61.0,45.2,OVER,21.4,22.1,70.0,30.0,NEUTRAL,10,bovada,-150,60.0,76.7,Rested: 1.03x,False,0.98
+Kon Knueppel,points,17.5,15.8,-9.6,-14.4,64.0,45.1,UNDER,19.8,18.6,60.0,40.0,HOT,25,bovada,-145,59.2,44.8,Home: 0.82x,False,1.02
+Jalen Johnson,points,26.5,28.4,7.2,-14.7,63.0,44.9,OVER,28.0,23.2,26.0,74.0,HOT,23,bovada,125,44.4,29.7,Mins: 1.10x,False,1.1
+Pascal Siakam,points,23.5,25.6,8.8,5.3,76.0,44.8,OVER,25.6,24.3,58.0,42.0,HOT,24,bovada,-135,57.4,62.7,None,False,0.96
+Zion Williamson,points,24.5,22.1,-9.7,20.4,55.0,44.6,UNDER,21.4,22.1,50.0,50.0,NEUTRAL,10,bovada,190,34.5,54.9,Rested: 1.03x,False,0.98
+Noah Clowney,rebounds,4.5,5.5,22.1,-6.5,56.0,44.5,OVER,4.6,3.8,29.0,71.0,HOT,24,fanduel,114,46.7,40.2,Home: 1.16x | Mins: 1.14x,False,1.14
+Josh Giddey,threes,1.5,1.8,19.0,13.2,60.0,44.4,OVER,1.8,1.8,64.0,36.0,NEUTRAL,22,bovada,-150,60.0,73.2,Home: 0.94x,False,1.02
+Lonzo Ball,assists,4.5,4.1,-9.6,-5.5,57.0,44.4,UNDER,4.0,4.8,63.0,37.0,COLD,19,williamhill_us,112,47.2,41.7,Home: 0.93x,False,1.03
+Nicolas Claxton,points,12.5,13.6,8.7,6.2,74.0,44.2,OVER,13.4,13.6,58.0,42.0,NEUTRAL,24,fanduel,-130,56.5,62.7,None,False,1.06
+Nickeil Alexander-Walker,points,19.5,23.2,19.1,8.1,71.0,44.1,OVER,23.2,20.7,54.0,46.0,HOT,24,betrivers,-125,55.6,63.7,None,False,1.0
+Jalen Johnson,points,25.5,28.4,11.4,-12.6,65.0,44.0,OVER,28.0,23.2,30.0,70.0,HOT,23,bovada,105,48.8,36.1,Mins: 1.10x,False,1.1
+Bennedict Mathurin,points,21.5,18.2,-15.5,16.6,59.0,43.8,UNDER,17.2,20.4,43.0,57.0,COLD,14,betrivers,107,48.3,64.9,None,False,0.94
+Zaccharie Risacher,pra,15.5,16.7,7.8,-4.8,67.0,43.8,OVER,13.0,15.4,48.0,52.0,COLD,23,betmgm,-130,56.5,51.7,Home: 1.19x,False,0.98
+Egor Demin,points,6.5,8.8,36.1,17.1,58.0,43.7,OVER,6.6,8.1,59.0,41.0,COLD,22,betrivers,-150,60.0,77.1,Home: 1.11x,False,1.02
+Miles Bridges,points,20.5,21.6,5.5,-6.8,72.0,43.6,OVER,17.4,21.4,52.0,48.0,COLD,25,bovada,-160,61.5,54.7,Home: 1.12x,False,0.94
+Zion Williamson,points,18.5,22.1,19.6,14.3,61.0,43.4,OVER,21.4,22.1,70.0,30.0,NEUTRAL,10,bovada,-190,65.5,79.8,Rested: 1.03x,False,0.98
+Patrick Williams,threes,1.5,1.7,12.1,12.3,60.0,43.4,OVER,2.0,1.5,52.0,48.0,HOT,23,draftkings,118,45.9,58.2,None,False,1.07
+Miles Bridges,points,21.5,21.6,0.6,-7.3,71.0,43.3,OVER,17.4,21.4,48.0,52.0,COLD,25,betmgm,-125,55.6,48.3,Home: 1.12x,False,0.94
+Miles Bridges,points,19.5,21.6,10.9,-5.2,73.0,43.2,OVER,17.4,21.4,56.0,44.0,COLD,25,bovada,-200,66.7,61.5,Home: 1.12x,False,0.94
+Jalen Johnson,points,27.5,28.4,3.3,-12.3,63.0,43.1,OVER,28.0,23.2,26.0,74.0,HOT,23,bovada,150,40.0,27.7,Mins: 1.10x,False,1.1
+Jalen Johnson,points,22.5,28.4,26.3,5.4,73.0,43.0,OVER,28.0,23.2,57.0,43.0,HOT,23,bovada,-180,64.3,69.7,Mins: 1.10x,False,1.1
+Egor Demin,points,7.5,8.8,18.0,16.1,58.0,43.0,OVER,6.6,8.1,59.0,41.0,COLD,22,betrivers,-108,51.9,68.1,Home: 1.11x,False,1.02
+Egor Demin,points,5.5,8.8,60.8,16.2,58.0,43.0,OVER,6.6,8.1,59.0,41.0,COLD,22,bovada,-275,73.3,89.5,Home: 1.11x,False,1.02
+Tre Johnson,pra,14.5,10.3,-29.1,10.7,57.0,42.9,UNDER,11.0,15.2,56.0,44.0,COLD,16,bovada,110,47.6,58.3,Home: 0.93x | Mins: 0.85x,False,0.82
+Kon Knueppel,points,15.5,15.8,2.1,-6.0,71.0,42.9,OVER,19.8,18.6,64.0,36.0,HOT,25,bovada,-245,71.0,65.0,Home: 0.82x,False,1.02
+Gary Trent Jr,threes,1.5,2.1,39.7,8.1,64.0,42.8,OVER,1.8,2.2,62.0,38.0,COLD,26,bovada,-275,73.3,81.4,Rested: 1.03x,False,0.96
+Kon Knueppel,threes,2.5,2.7,8.9,3.7,70.0,42.7,OVER,3.4,3.4,68.0,32.0,NEUTRAL,25,bovada,-220,68.8,72.5,Home: 0.78x,False,1.02
+Jarace Walker,points,8.5,8.2,-3.8,11.3,64.0,42.5,UNDER,7.2,9.6,48.0,52.0,COLD,25,bovada,135,42.6,53.9,Home: 1.14x | Mins: 0.85x,False,0.75
+Derik Queen,points,12.5,22.7,81.5,16.3,57.0,42.4,OVER,17.8,13.0,38.0,62.0,HOT,26,bovada,-170,63.0,79.2,Home: 1.24x | Rested: 1.03x | Mins: 1.15x,False,1.28
+Ryan Rollins,points,17.5,17.0,-3.0,5.7,71.0,42.3,UNDER,14.4,17.2,42.0,58.0,COLD,26,betrivers,-115,53.5,59.2,Home: 1.06x | Rested: 1.03x,False,0.96
+Egor Demin,rebounds,2.5,2.7,6.7,3.3,57.0,42.3,OVER,1.4,3.2,64.0,36.0,COLD,22,betmgm,-175,63.6,67.0,None,False,1.02
+Donovan Mitchell,points,31.5,33.3,5.8,5.2,71.0,42.3,OVER,36.2,31.2,46.0,54.0,HOT,24,bovada,130,43.5,48.7,None,False,1.0
+Sion James,points,6.5,6.9,6.4,11.6,62.0,42.1,OVER,8.0,6.9,56.0,44.0,HOT,25,williamhill_us,110,47.6,59.2,None,False,0.95
+Gary Trent Jr,points,9.5,9.9,4.5,-8.8,66.0,42.1,OVER,9.4,9.8,54.0,46.0,NEUTRAL,26,bovada,-185,64.9,56.1,Rested: 1.03x,False,0.96
+Michael Porter Jr,points,27.5,29.6,7.5,7.9,68.0,42.1,OVER,30.6,26.2,50.0,50.0,HOT,20,betrivers,118,45.9,53.7,None,False,1.0
+Pascal Siakam,points,24.5,25.6,4.3,-4.4,72.0,42.1,OVER,25.6,24.3,46.0,54.0,HOT,24,bovada,-110,52.4,48.0,None,False,0.96
+Kon Knueppel,assists,3.5,4.7,33.1,-3.8,56.0,42.0,OVER,5.6,3.5,44.0,56.0,HOT,25,bovada,-180,64.3,60.5,None,False,1.02
+Zion Williamson,points,17.5,22.1,26.4,12.2,61.0,41.9,OVER,21.4,22.1,70.0,30.0,NEUTRAL,10,bovada,-245,71.0,83.2,Rested: 1.03x,False,0.98
+Matas Buzelis,points,13.5,15.9,18.1,8.3,67.0,41.9,OVER,16.0,13.8,50.0,50.0,HOT,24,draftkings,-103,50.7,59.0,Home: 1.12x,False,1.08
+Moussa Diabate,pra,14.5,14.3,-1.1,-3.3,65.0,41.8,UNDER,12.0,17.2,58.0,42.0,COLD,24,bovada,120,45.5,42.2,None,False,0.92
+Bobby Portis,points,14.5,17.7,21.8,-15.5,57.0,41.8,OVER,16.2,12.0,23.0,77.0,HOT,26,fanduel,102,49.5,34.0,Home: 1.18x | Rested: 1.03x,False,1.06
+Josh Giddey,points,19.5,20.9,7.4,-4.3,72.0,41.7,OVER,20.6,20.5,55.0,45.0,NEUTRAL,22,betrivers,-167,62.5,58.2,None,False,1.02
+Andrew Nembhard,points,14.5,17.3,19.5,8.1,66.0,41.6,OVER,19.6,17.9,71.0,29.0,HOT,17,bovada,-260,72.2,80.4,Home: 0.93x,False,1.03
+Gary Trent Jr,assists,1.5,1.4,-3.5,-3.3,56.0,41.5,UNDER,1.4,1.8,54.0,46.0,COLD,26,betmgm,-105,51.2,47.9,Home: 0.94x | Rested: 1.03x,False,0.96
+Michael Porter Jr,points,29.5,29.6,0.2,8.1,66.0,41.4,OVER,30.6,26.2,45.0,55.0,HOT,20,bovada,170,37.0,45.1,None,False,1.0
+Trey Murphy III,threes,2.5,2.4,-3.2,9.9,59.0,41.2,UNDER,1.8,2.7,50.0,50.0,COLD,24,fanduel,140,41.7,51.6,Rested: 1.03x,False,1.01
+Zion Williamson,points,21.5,22.1,2.9,12.9,58.0,40.8,OVER,21.4,22.1,60.0,40.0,NEUTRAL,10,betrivers,106,48.5,61.4,Rested: 1.03x,False,0.98
+Gary Trent Jr,points,8.5,9.9,16.8,-6.1,67.0,40.8,OVER,9.4,9.8,58.0,42.0,NEUTRAL,26,bovada,-260,72.2,66.1,Rested: 1.03x,False,0.96
+Bobby Portis,points,16.5,17.7,7.0,-15.0,55.0,40.7,OVER,16.2,12.0,19.0,81.0,HOT,26,bovada,165,37.7,22.7,Home: 1.18x | Rested: 1.03x,False,1.06
+Zion Williamson,points,20.5,22.1,7.9,12.5,58.0,40.5,OVER,21.4,22.1,60.0,40.0,NEUTRAL,10,draftkings,-106,51.5,63.9,Rested: 1.03x,False,0.98
+Donovan Mitchell,points,32.5,33.3,2.5,3.7,70.0,40.5,OVER,36.2,31.2,42.0,58.0,HOT,24,bovada,155,39.2,42.9,None,False,1.0
+Ryan Rollins,threes,1.5,1.9,28.3,6.9,61.0,40.2,OVER,1.8,2.3,62.0,38.0,COLD,26,bovada,-220,68.8,75.7,Home: 0.94x | Rested: 1.03x,False,0.96
+Bobby Portis,points,15.5,17.7,13.9,-13.4,57.0,40.2,OVER,16.2,12.0,23.0,77.0,HOT,26,bovada,130,43.5,30.0,Home: 1.18x | Rested: 1.03x,False,1.06
+Jaylon Tyson,points,14.5,19.5,34.6,12.8,57.0,40.2,OVER,17.8,13.0,38.0,62.0,HOT,21,bovada,135,42.6,55.4,Home: 1.08x | Mins: 1.15x,False,1.16
+Michael Porter Jr,points,26.5,29.6,11.5,5.0,68.0,40.1,OVER,30.6,26.2,50.0,50.0,HOT,20,betrivers,-103,50.7,55.8,None,False,1.0
+Gary Trent Jr,points,10.5,9.9,-5.5,-7.6,64.0,40.0,UNDER,9.4,9.8,54.0,46.0,NEUTRAL,26,draftkings,-130,56.5,48.9,Rested: 1.03x,False,0.96
+Bobby Portis,points,13.5,17.7,30.8,-12.2,58.0,40.0,OVER,16.2,12.0,27.0,73.0,HOT,26,betmgm,-120,54.5,42.3,Home: 1.18x | Rested: 1.03x,False,1.06
+Kyshawn George,points,14.5,14.0,-3.5,-11.5,59.0,39.9,UNDER,13.0,15.1,57.0,43.0,COLD,21,draftkings,-128,56.1,44.6,None,False,0.99
+Zion Williamson,points,23.5,22.1,-5.9,13.7,55.0,39.8,UNDER,21.4,22.1,50.0,50.0,NEUTRAL,10,bovada,155,39.2,52.9,Rested: 1.03x,False,0.98
+Tre Jones,points,12.5,11.6,-7.2,8.1,63.0,39.8,UNDER,13.8,12.8,50.0,50.0,HOT,18,bovada,120,45.5,53.6,Home: 0.87x,False,0.98
+Nickeil Alexander-Walker,points,22.5,23.2,3.2,-6.7,65.0,39.7,OVER,23.2,20.7,33.0,67.0,HOT,24,bovada,140,41.7,34.9,None,False,1.0
+Tre Jones,points,11.5,11.6,0.9,6.5,64.0,39.5,OVER,13.8,12.8,56.0,44.0,HOT,18,betrivers,102,49.5,56.0,Home: 0.87x,False,0.98
+Derik Queen,points,14.5,22.7,56.5,12.9,56.0,39.4,OVER,17.8,13.0,35.0,65.0,HOT,26,bovada,100,50.0,62.9,Home: 1.24x | Rested: 1.03x | Mins: 1.15x,False,1.28
+Bobby Portis,points,17.5,17.7,0.9,-13.1,55.0,39.4,OVER,16.2,12.0,19.0,81.0,HOT,26,bovada,205,32.8,19.7,Home: 1.18x | Rested: 1.03x,False,1.06
+Bobby Portis,points,11.5,17.7,53.6,6.2,65.0,39.4,OVER,16.2,12.0,50.0,50.0,HOT,26,bovada,-240,70.6,76.8,Home: 1.18x | Rested: 1.03x,False,1.06
+Michael Porter Jr,points,28.5,29.6,3.7,5.2,66.0,39.4,OVER,30.6,26.2,45.0,55.0,HOT,20,bovada,140,41.7,46.8,None,False,1.0
+Jalen Johnson,points,24.5,28.4,16.0,-3.1,69.0,39.3,OVER,28.0,23.2,43.0,57.0,HOT,23,fanduel,-120,54.5,51.5,Mins: 1.10x,False,1.1
+Nickeil Alexander-Walker,points,21.5,23.2,8.0,-5.0,66.0,39.1,OVER,23.2,20.7,38.0,62.0,HOT,24,bovada,115,46.5,41.5,None,False,1.0
+Derik Queen,points,13.5,22.7,68.1,12.1,56.0,38.8,OVER,17.8,13.0,35.0,65.0,HOT,26,bovada,-130,56.5,68.7,Home: 1.24x | Rested: 1.03x | Mins: 1.15x,False,1.28
+Dominick Barlow,points,9.5,8.1,-14.9,10.8,57.0,38.7,UNDER,8.2,8.0,47.0,53.0,NEUTRAL,15,bovada,100,50.0,60.8,None,False,1.0
+Bennedict Mathurin,points,17.5,18.2,3.9,-7.1,61.0,38.1,OVER,17.2,20.4,64.0,36.0,COLD,14,bovada,-275,73.3,66.2,None,False,0.94
+Dominick Barlow,points,7.5,8.1,7.8,-8.3,57.0,36.9,OVER,8.2,8.0,53.0,47.0,NEUTRAL,15,bovada,-190,65.5,57.2,None,False,1.0
+Jaylon Tyson,points,15.5,19.5,25.9,9.2,56.0,36.9,OVER,17.8,13.0,33.0,67.0,HOT,21,bovada,170,37.0,46.3,Home: 1.08x | Mins: 1.15x,False,1.16
+Miles Bridges,threes,1.5,1.7,14.2,5.6,57.0,36.8,OVER,1.0,2.4,64.0,36.0,COLD,25,betmgm,-190,65.5,71.1,Home: 1.20x,False,0.94
+Vit Krejci,points,6.5,8.5,30.5,7.5,57.0,36.3,OVER,9.0,10.0,64.0,36.0,COLD,22,bovada,-250,71.4,78.9,Home: 0.90x,False,1.06
+Dominick Barlow,points,6.5,8.1,24.3,4.5,61.0,36.3,OVER,8.2,8.0,67.0,33.0,NEUTRAL,15,bovada,-290,74.4,78.8,None,False,1.0
+Andrew Nembhard,points,16.5,17.3,5.1,-6.0,59.0,36.2,OVER,19.6,17.9,47.0,53.0,HOT,17,fanduel,-125,55.6,49.6,Home: 0.93x,False,1.03
+Dominick Barlow,points,8.5,8.1,-4.9,-8.3,55.0,35.8,UNDER,8.2,8.0,53.0,47.0,NEUTRAL,15,bovada,-135,57.4,49.1,None,False,1.0
+Bobby Portis,points,12.5,17.7,41.3,-3.9,61.0,35.8,OVER,16.2,12.0,38.0,62.0,HOT,26,bovada,-170,63.0,59.1,Home: 1.18x | Rested: 1.03x,False,1.06
+Jay Huff,points,9.5,12.8,34.7,-8.1,55.0,35.7,OVER,10.0,7.9,40.0,60.0,HOT,25,bovada,-190,65.5,57.4,Home: 1.17x | Mins: 1.15x,False,1.37
+Jay Huff,points,8.5,12.8,50.6,-8.0,55.0,35.6,OVER,10.0,7.9,40.0,60.0,HOT,25,bovada,-275,73.3,65.3,Home: 1.17x | Mins: 1.15x,False,1.37
+Zion Williamson,points,22.5,22.1,-1.7,7.4,55.0,35.2,UNDER,21.4,22.1,50.0,50.0,NEUTRAL,10,bovada,130,43.5,50.8,Rested: 1.03x,False,0.98
+C.J. McCollum,points,21.5,28.1,30.7,5.4,56.0,34.3,OVER,23.0,19.0,39.0,61.0,HOT,23,betrivers,104,49.0,54.5,Home: 1.29x,False,1.08
+C.J. McCollum,points,19.5,28.1,44.1,4.4,58.0,34.3,OVER,23.0,19.0,43.0,57.0,HOT,23,betrivers,-157,61.1,65.5,Home: 1.29x,False,1.08
+C.J. McCollum,points,18.5,28.1,51.9,3.2,59.0,34.1,OVER,23.0,19.0,48.0,52.0,HOT,23,bovada,-240,70.6,73.8,Home: 1.29x,False,1.08
+Quentin Grimes,threes,2.5,2.5,-0.8,3.1,55.0,33.9,UNDER,2.6,2.3,48.0,52.0,HOT,23,draftkings,102,49.5,52.6,None,False,1.09
+Bennedict Mathurin,points,20.5,18.2,-11.3,4.2,57.0,33.7,UNDER,17.2,20.4,50.0,50.0,COLD,14,fanduel,-106,51.5,55.7,None,False,0.94
