@@ -1,0 +1,442 @@
+{
+  "date_range": {
+    "start": "2025-10-10",
+    "end": "2025-12-08"
+  },
+  "bookmaker": "fanduel",
+  "legacy": {
+    "metrics": {
+      "total_picks": 330,
+      "graded_picks": 330,
+      "wins": 168,
+      "losses": 162,
+      "pushes": 0,
+      "win_rate": 0.509090909090909,
+      "roi": -0.08114398729398288,
+      "total_units": -26.77751580701435,
+      "max_drawdown": 38.9516828889316,
+      "avg_edge": 0.1166367110088116
+    },
+    "prop_metrics": {
+      "points": {
+        "total_picks": 101,
+        "graded_picks": 101,
+        "wins": 47,
+        "losses": 54,
+        "pushes": 0,
+        "win_rate": 0.46534653465346537,
+        "roi": -0.1281929999763412,
+        "total_units": -12.947492997610462,
+        "max_drawdown": 20.757898560223857,
+        "avg_edge": 0.11537621998506392
+      },
+      "threes": {
+        "total_picks": 61,
+        "graded_picks": 61,
+        "wins": 28,
+        "losses": 33,
+        "pushes": 0,
+        "win_rate": 0.45901639344262296,
+        "roi": -0.24063403805204034,
+        "total_units": -14.67867632117446,
+        "max_drawdown": 14.863145062413595,
+        "avg_edge": 0.15419863929964636
+      },
+      "rebounds": {
+        "total_picks": 70,
+        "graded_picks": 70,
+        "wins": 42,
+        "losses": 28,
+        "pushes": 0,
+        "win_rate": 0.6,
+        "roi": 0.0843109499822838,
+        "total_units": 5.901766498759867,
+        "max_drawdown": 7.349184782608695,
+        "avg_edge": 0.10252292698592982
+      },
+      "assists": {
+        "total_picks": 38,
+        "graded_picks": 38,
+        "wins": 21,
+        "losses": 17,
+        "pushes": 0,
+        "win_rate": 0.5526315789473685,
+        "roi": -0.0383024402032586,
+        "total_units": -1.4554927277238268,
+        "max_drawdown": 7.52482965241909,
+        "avg_edge": 0.12020063536738129
+      },
+      "pra": {
+        "total_picks": 60,
+        "graded_picks": 60,
+        "wins": 30,
+        "losses": 30,
+        "pushes": 0,
+        "win_rate": 0.5,
+        "roi": -0.0599603376544241,
+        "total_units": -3.597620259265446,
+        "max_drawdown": 7.6863267732109914,
+        "avg_edge": 0.0947795064027062
+      }
+    }
+  },
+  "v2": {
+    "metrics": {
+      "total_picks": 330,
+      "graded_picks": 330,
+      "wins": 174,
+      "losses": 156,
+      "pushes": 0,
+      "win_rate": 0.5272727272727272,
+      "roi": -0.013246105274580621,
+      "total_units": -4.371214740611605,
+      "max_drawdown": 20.351427155853635,
+      "avg_edge": 0.2926324242424243
+    },
+    "prop_metrics": {
+      "assists": {
+        "total_picks": 29,
+        "graded_picks": 29,
+        "wins": 14,
+        "losses": 15,
+        "pushes": 0,
+        "win_rate": 0.4827586206896552,
+        "roi": -0.10135227454156388,
+        "total_units": -2.9392159617053526,
+        "max_drawdown": 7.5400989722116485,
+        "avg_edge": 0.2853206896551724
+      },
+      "rebounds": {
+        "total_picks": 60,
+        "graded_picks": 60,
+        "wins": 35,
+        "losses": 25,
+        "pushes": 0,
+        "win_rate": 0.5833333333333334,
+        "roi": 0.07959260675439843,
+        "total_units": 4.775556405263906,
+        "max_drawdown": 6.976854317404366,
+        "avg_edge": 0.28534500000000007
+      },
+      "pra": {
+        "total_picks": 105,
+        "graded_picks": 105,
+        "wins": 58,
+        "losses": 47,
+        "pushes": 0,
+        "win_rate": 0.5523809523809524,
+        "roi": 0.04373381461080787,
+        "total_units": 4.592050534134827,
+        "max_drawdown": 6.516462350941703,
+        "avg_edge": 0.2969876190476192
+      },
+      "points": {
+        "total_picks": 116,
+        "graded_picks": 116,
+        "wins": 56,
+        "losses": 60,
+        "pushes": 0,
+        "win_rate": 0.4827586206896552,
+        "roi": -0.08787048075472241,
+        "total_units": -10.1929757675478,
+        "max_drawdown": 14.695395699113874,
+        "avg_edge": 0.29655258620689673
+      },
+      "threes": {
+        "total_picks": 20,
+        "graded_picks": 20,
+        "wins": 11,
+        "losses": 9,
+        "pushes": 0,
+        "win_rate": 0.55,
+        "roi": -0.03033149753785922,
+        "total_units": -0.6066299507571844,
+        "max_drawdown": 3.50104821802935,
+        "avg_edge": 0.279495
+      }
+    }
+  },
+  "weight_search": {
+    "legacy": [
+      {
+        "weights": {
+          "name": "roi_heavy",
+          "roi": 0.6,
+          "win_rate": 0.2,
+          "drawdown": 0.1,
+          "volume": 0.1,
+          "edge": 0.0
+        },
+        "overall_score": 0.041328249172418875,
+        "fold_scores": [
+          0.010646577873291823,
+          0.05844710830153016,
+          0.0343002596044038
+        ],
+        "avg_score": 0.03446464859307526,
+        "stdev": 0.01951483102856102,
+        "stability": 0.014949817564514242
+      },
+      {
+        "weights": {
+          "name": "balanced",
+          "roi": 0.4,
+          "win_rate": 0.3,
+          "drawdown": 0.2,
+          "volume": 0.1,
+          "edge": 0.0
+        },
+        "overall_score": 0.04666259727093314,
+        "fold_scores": [
+          0.01917190419377859,
+          0.054237568862787064,
+          0.02620017306960253
+        ],
+        "avg_score": 0.033203215375389394,
+        "stdev": 0.01514776464966185,
+        "stability": 0.018055450725727545
+      },
+      {
+        "weights": {
+          "name": "risk_adjusted",
+          "roi": 0.3,
+          "win_rate": 0.2,
+          "drawdown": 0.4,
+          "volume": 0.1,
+          "edge": 0.0
+        },
+        "overall_score": 0.030260824552494098,
+        "fold_scores": [
+          0.0015033202847010568,
+          0.02662242519559569,
+          -0.007849870197798106
+        ],
+        "avg_score": 0.006758625094166214,
+        "stdev": 0.014555605080807428,
+        "stability": -0.007796979986641214
+      },
+      {
+        "weights": {
+          "name": "volume",
+          "roi": 0.4,
+          "win_rate": 0.2,
+          "drawdown": 0.1,
+          "volume": 0.3,
+          "edge": 0.0
+        },
+        "overall_score": 0.2575570466312154,
+        "fold_scores": [
+          0.2349692061615611,
+          0.2681675617510772,
+          0.09286683973626919
+        ],
+        "avg_score": 0.1986678692163025,
+        "stdev": 0.07603037148726881,
+        "stability": 0.12263749772903369
+      },
+      {
+        "weights": {
+          "name": "edge_balance",
+          "roi": 0.35,
+          "win_rate": 0.2,
+          "drawdown": 0.15,
+          "volume": 0.1,
+          "edge": 0.2
+        },
+        "overall_score": 0.07903981806299032,
+        "fold_scores": [
+          0.05774740904213771,
+          0.08543139369062851,
+          0.04693636873934347
+        ],
+        "avg_score": 0.06337172382403657,
+        "stdev": 0.016210930963898584,
+        "stability": 0.04716079286013798
+      },
+      {
+        "weights": {
+          "name": "edge_heavy",
+          "roi": 0.3,
+          "win_rate": 0.1,
+          "drawdown": 0.1,
+          "volume": 0.1,
+          "edge": 0.4
+        },
+        "overall_score": 0.11141703885504747,
+        "fold_scores": [
+          0.0963229138904968,
+          0.11662521851846995,
+          0.06767256440908442
+        ],
+        "avg_score": 0.09354023227268372,
+        "stdev": 0.02008146863533427,
+        "stability": 0.07345876363734946
+      },
+      {
+        "weights": {
+          "name": "roi_edge",
+          "roi": 0.5,
+          "win_rate": 0.1,
+          "drawdown": 0.1,
+          "volume": 0.0,
+          "edge": 0.3
+        },
+        "overall_score": -0.016475429704630278,
+        "fold_scores": [
+          -0.04015075397044336,
+          -0.004379207826347311,
+          0.028558708958831724
+        ],
+        "avg_score": -0.0053237509459863165,
+        "stdev": 0.028058471035630816,
+        "stability": -0.03338222198161713
+      }
+    ],
+    "v2": [
+      {
+        "weights": {
+          "name": "roi_heavy",
+          "roi": 0.6,
+          "win_rate": 0.2,
+          "drawdown": 0.1,
+          "volume": 0.1,
+          "edge": 0.0
+        },
+        "overall_score": 0.09133978315165961,
+        "fold_scores": [
+          0.1504545869061818,
+          0.0763594683961133,
+          -0.29480773795618076
+        ],
+        "avg_score": -0.022664560884628555,
+        "stdev": 0.1947972506080856,
+        "stability": -0.21746181149271415
+      },
+      {
+        "weights": {
+          "name": "balanced",
+          "roi": 0.4,
+          "win_rate": 0.3,
+          "drawdown": 0.2,
+          "volume": 0.1,
+          "edge": 0.0
+        },
+        "overall_score": 0.090549177795711,
+        "fold_scores": [
+          0.13807653489221117,
+          0.07469928279975077,
+          -0.2722462949811266
+        ],
+        "avg_score": -0.019823492429721562,
+        "stdev": 0.1803554314062966,
+        "stability": -0.20017892383601815
+      },
+      {
+        "weights": {
+          "name": "risk_adjusted",
+          "roi": 0.3,
+          "win_rate": 0.2,
+          "drawdown": 0.4,
+          "volume": 0.1,
+          "edge": 0.0
+        },
+        "overall_score": 0.0768123173196214,
+        "fold_scores": [
+          0.11305914104756239,
+          0.05794397416189648,
+          -0.30113685188023137
+        ],
+        "avg_score": -0.04337791222359083,
+        "stdev": 0.18364671452709672,
+        "stability": -0.22702462675068755
+      },
+      {
+        "weights": {
+          "name": "volume",
+          "roi": 0.4,
+          "win_rate": 0.2,
+          "drawdown": 0.1,
+          "volume": 0.3,
+          "edge": 0.0
+        },
+        "overall_score": 0.29398900420657575,
+        "fold_scores": [
+          0.3365111330584966,
+          0.2822391702826097,
+          -0.15213210939003874
+        ],
+        "avg_score": 0.1555393979836892,
+        "stdev": 0.21868192856765473,
+        "stability": -0.06314253058396552
+      },
+      {
+        "weights": {
+          "name": "edge_balance",
+          "roi": 0.35,
+          "win_rate": 0.2,
+          "drawdown": 0.15,
+          "volume": 0.1,
+          "edge": 0.2
+        },
+        "overall_score": 0.15009424474972088,
+        "fold_scores": [
+          0.18999102933696205,
+          0.13751315201280437,
+          -0.16058696171071374
+        ],
+        "avg_score": 0.055639073213017566,
+        "stdev": 0.15438859097796345,
+        "stability": -0.0987495177649459
+      },
+      {
+        "weights": {
+          "name": "edge_heavy",
+          "roi": 0.3,
+          "win_rate": 0.1,
+          "drawdown": 0.1,
+          "volume": 0.1,
+          "edge": 0.4
+        },
+        "overall_score": 0.20963931170373082,
+        "fold_scores": [
+          0.2419055237817129,
+          0.200327021225858,
+          -0.04892762844030098
+        ],
+        "avg_score": 0.13110163885575665,
+        "stdev": 0.12842662180161693,
+        "stability": 0.0026750170541397222
+      },
+      {
+        "weights": {
+          "name": "roi_edge",
+          "roi": 0.5,
+          "win_rate": 0.1,
+          "drawdown": 0.1,
+          "volume": 0.0,
+          "edge": 0.3
+        },
+        "overall_score": 0.07772684822457222,
+        "fold_scores": [
+          0.1259927423352804,
+          0.06527570395474613,
+          -0.18790325700644306
+        ],
+        "avg_score": 0.0011217297611944936,
+        "stdev": 0.13593987372929495,
+        "stability": -0.13481814396810046
+      }
+    ],
+    "selected": {
+      "weights": {
+        "name": "volume",
+        "roi": 0.4,
+        "win_rate": 0.2,
+        "drawdown": 0.1,
+        "volume": 0.3,
+        "edge": 0.0
+      },
+      "pipeline": "v2"
+    }
+  }
+}

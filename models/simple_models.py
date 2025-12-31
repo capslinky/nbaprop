@@ -7,6 +7,7 @@ Contains baseline models: WeightedAverageModel, SituationalModel, MedianModel.
 import numpy as np
 import pandas as pd
 
+from core.config import CONFIG
 from models.prediction import Prediction
 
 
@@ -43,7 +44,7 @@ class WeightedAverageModel:
         confidence = max(0, min(1, 1 - cv))
 
         # Determine recommendation
-        if abs(edge) < 0.03:
+        if abs(edge) < CONFIG.MIN_EDGE_THRESHOLD:
             side = 'pass'
         elif edge > 0:
             side = 'over'
@@ -66,10 +67,10 @@ class SituationalModel:
         self.name = "Situational"
         self.base_model = WeightedAverageModel()
 
-        # Situational adjustment factors (derived from historical analysis)
-        self.home_boost = 1.025
-        self.away_penalty = 0.975
-        self.b2b_penalty = 0.93
+        # Situational adjustment factors from config
+        self.home_boost = CONFIG.HOME_BOOST
+        self.away_penalty = CONFIG.AWAY_PENALTY
+        self.b2b_penalty = CONFIG.B2B_PENALTY
         self.def_rtg_factor = 0.008  # Per point above/below 112
 
     def predict(self, history: pd.DataFrame, current_game: dict,
@@ -99,7 +100,7 @@ class SituationalModel:
 
         edge = (projection - line) / line if line > 0 else 0
 
-        if abs(edge) < 0.03:
+        if abs(edge) < CONFIG.MIN_EDGE_THRESHOLD:
             side = 'pass'
         elif edge > 0:
             side = 'over'
@@ -134,7 +135,7 @@ class MedianModel:
         cv = std / projection if projection > 0 else 1
         confidence = max(0, min(1, 1 - cv))
 
-        if abs(edge) < 0.03:
+        if abs(edge) < CONFIG.MIN_EDGE_THRESHOLD:
             side = 'pass'
         elif edge > 0:
             side = 'over'

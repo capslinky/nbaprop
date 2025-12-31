@@ -24,7 +24,7 @@ class TestUnifiedModelIntegration:
 
     def test_full_analysis_with_all_adjustments(self):
         """Test complete analysis applies all 9 adjustment factors."""
-        from nba_prop_model import UnifiedPropModel, PropAnalysis
+        from models import UnifiedPropModel, PropAnalysis
 
         # Create mocked dependencies
         mock_fetcher = MockNBADataFetcher()
@@ -68,7 +68,7 @@ class TestUnifiedModelIntegration:
 
     def test_analysis_handles_missing_opponent_data(self):
         """Test analysis degrades gracefully with missing opponent data."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         mock_fetcher = MockNBADataFetcher()
         mock_injuries = MockInjuryTracker()
@@ -90,7 +90,7 @@ class TestUnifiedModelIntegration:
 
     def test_analysis_handles_injured_player(self):
         """Test analysis flags injured players appropriately."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         # Mock player as GTD (game-time decision)
         injuries = {
@@ -125,7 +125,7 @@ class TestUnifiedModelIntegration:
 
     def test_analysis_different_prop_types(self):
         """Test analysis works for all supported prop types."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -148,7 +148,7 @@ class TestUnifiedModelIntegration:
 
     def test_analysis_back_to_back_detection(self):
         """Test B2B games are detected and adjusted for."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         # Create mock with B2B schedule
         mock_fetcher = MockNBADataFetcher()
@@ -175,7 +175,7 @@ class TestUnifiedModelIntegration:
 
     def test_edge_calculation_accuracy(self):
         """Test edge calculation matches expected values."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -198,7 +198,7 @@ class TestPropAnalysisDataclass:
 
     def test_to_dict_contains_all_fields(self):
         """Test to_dict includes all analysis fields."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -226,7 +226,7 @@ class TestPropAnalysisDataclass:
 
     def test_explain_returns_readable_string(self):
         """Test explain() method returns human-readable summary."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -252,7 +252,7 @@ class TestErrorHandling:
 
     def test_empty_game_logs_handling(self):
         """Test graceful handling when no game logs available."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         # Mock fetcher that returns empty data
         mock_fetcher = MockNBADataFetcher()
@@ -274,7 +274,7 @@ class TestErrorHandling:
 
     def test_invalid_prop_type_handling(self):
         """Test handling of invalid prop type raises appropriate error."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
         from core.exceptions import InvalidPropTypeError
 
         model = UnifiedPropModel(
@@ -292,7 +292,7 @@ class TestErrorHandling:
 
     def test_defense_data_unavailable(self):
         """Test analysis continues when defense data unavailable."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         mock_fetcher = MockNBADataFetcher()
         mock_fetcher.get_team_defense_vs_position = lambda *args, **kwargs: pd.DataFrame()
@@ -318,7 +318,7 @@ class TestMultiplePlayerAnalysis:
 
     def test_batch_analysis_consistency(self):
         """Test multiple analyses produce consistent results."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -334,7 +334,7 @@ class TestMultiplePlayerAnalysis:
 
     def test_different_players_different_results(self):
         """Test different players can produce different results."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         # Create mock with different data per player
         class CustomMockFetcher(MockNBADataFetcher):

@@ -53,6 +53,11 @@ class PickRecord:
     matchup_rating: str = 'NEUTRAL'
     bookmaker: Optional[str] = None
     odds: int = -110
+    # New factor tracking columns
+    rest_days: Optional[int] = None
+    usage_factor: Optional[float] = None
+    shot_volume_factor: Optional[float] = None
+    ts_regression_factor: Optional[float] = None
     # CLV (Closing Line Value) fields - populated post-game
     closing_line: Optional[float] = None
     closing_odds: Optional[int] = None
@@ -104,6 +109,10 @@ class PickTracker:
                     matchup_rating TEXT,
                     bookmaker TEXT,
                     odds INTEGER DEFAULT -110,
+                    rest_days INTEGER,
+                    usage_factor REAL,
+                    shot_volume_factor REAL,
+                    ts_regression_factor REAL,
                     closing_line REAL,
                     closing_odds INTEGER,
                     clv REAL,
@@ -157,7 +166,7 @@ class PickTracker:
             conn.commit()
 
     def _migrate_add_clv_columns(self, conn):
-        """Add CLV columns to existing database if needed."""
+        """Add CLV and new factor columns to existing database if needed."""
         # Check if columns exist
         cursor = conn.execute("PRAGMA table_info(picks)")
         columns = [row[1] for row in cursor.fetchall()]
@@ -170,6 +179,16 @@ class PickTracker:
         if 'clv' not in columns:
             conn.execute("ALTER TABLE picks ADD COLUMN clv REAL")
 
+        # Add new factor tracking columns (v2.0)
+        if 'rest_days' not in columns:
+            conn.execute("ALTER TABLE picks ADD COLUMN rest_days INTEGER")
+        if 'usage_factor' not in columns:
+            conn.execute("ALTER TABLE picks ADD COLUMN usage_factor REAL")
+        if 'shot_volume_factor' not in columns:
+            conn.execute("ALTER TABLE picks ADD COLUMN shot_volume_factor REAL")
+        if 'ts_regression_factor' not in columns:
+            conn.execute("ALTER TABLE picks ADD COLUMN ts_regression_factor REAL")
+
     def record_pick(self, pick: PickRecord) -> bool:
         """Record a single pick. Returns True if successful."""
         try:
@@ -179,15 +198,17 @@ class PickTracker:
                     (date, player, prop_type, line, pick, edge, confidence,
                      projection, context_quality, warnings, adjustments, flags,
                      opponent, is_home, is_b2b, game_total, matchup_rating,
-                     bookmaker, odds)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     bookmaker, odds, rest_days, usage_factor, shot_volume_factor,
+                     ts_regression_factor)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     pick.date, pick.player, pick.prop_type, pick.line, pick.pick,
                     pick.edge, pick.confidence, pick.projection, pick.context_quality,
                     pick.warnings, pick.adjustments, pick.flags,
                     pick.opponent, 1 if pick.is_home else 0 if pick.is_home is False else None,
                     1 if pick.is_b2b else 0, pick.game_total, pick.matchup_rating,
-                    pick.bookmaker, pick.odds
+                    pick.bookmaker, pick.odds, pick.rest_days, pick.usage_factor,
+                    pick.shot_volume_factor, pick.ts_regression_factor
                 ))
                 conn.commit()
             return True
@@ -209,18 +230,38 @@ class PickTracker:
             if row.get('pick', row.get('Pick', '')) == 'PASS':
                 continue
 
+            # Get pick direction, derive from projection vs line if missing
+            pick_direction = row.get('pick', row.get('Pick', ''))
+            if not pick_direction:
+                projection = float(row.get('projection', row.get('Proj', 0)))
+                line = float(row.get('line', row.get('Line', 0)))
+                if projection > line:
+                    pick_direction = 'OVER'
+                elif projection < line:
+                    pick_direction = 'UNDER'
+                else:
+                    pick_direction = 'PASS'
+
+            # Extract new factor values from adjustments if available
+            adjustments_data = row.get('adjustments', {})
+            if isinstance(adjustments_data, str):
+                try:
+                    adjustments_data = json.loads(adjustments_data)
+                except (json.JSONDecodeError, TypeError):
+                    adjustments_data = {}
+
             pick = PickRecord(
                 date=date_str,
                 player=row.get('player', row.get('Player', '')),
                 prop_type=row.get('prop_type', row.get('Prop', '')).lower(),
                 line=float(row.get('line', row.get('Line', 0))),
-                pick=row.get('pick', row.get('Pick', '')),
+                pick=pick_direction,
                 edge=float(row.get('edge', row.get('Edge', 0))),
                 confidence=float(row.get('confidence', row.get('Conf', 0))),
                 projection=float(row.get('projection', row.get('Proj', 0))),
                 context_quality=int(row.get('context_quality', 50)),
                 warnings=json.dumps(row.get('warnings', [])),
-                adjustments=json.dumps(row.get('adjustments', {})),
+                adjustments=json.dumps(adjustments_data),
                 flags=json.dumps(row.get('flags', row.get('Flags', []))),
                 opponent=row.get('opponent', None),
                 is_home=row.get('is_home', None),
@@ -229,6 +270,11 @@ class PickTracker:
                 matchup_rating=row.get('matchup', row.get('Matchup', 'NEUTRAL')),
                 bookmaker=row.get('bookmaker', row.get('Book', None)),
                 odds=int(row.get('odds', row.get('Over', -110))),
+                # New factor tracking
+                rest_days=row.get('rest_days', adjustments_data.get('rest_days')),
+                usage_factor=adjustments_data.get('usage_rate'),
+                shot_volume_factor=adjustments_data.get('shot_volume'),
+                ts_regression_factor=adjustments_data.get('ts_regression'),
             )
 
             if self.record_pick(pick):
@@ -249,6 +295,29 @@ class PickTracker:
         except Exception as e:
             print(f"Error recording result: {e}")
             return False
+
+    def clear_results(self, date_str: str = None) -> int:
+        """
+        Clear results for a specific date or all dates.
+
+        Args:
+            date_str: Date to clear (YYYY-MM-DD), or None to clear all results
+
+        Returns:
+            Number of results cleared
+        """
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                if date_str:
+                    cursor = conn.execute("DELETE FROM results WHERE date = ?", (date_str,))
+                else:
+                    cursor = conn.execute("DELETE FROM results")
+                count = cursor.rowcount
+                conn.commit()
+            return count
+        except Exception as e:
+            print(f"Error clearing results: {e}")
+            return 0
 
     def update_clv(self, date_str: str, player: str, prop_type: str, line: float,
                    closing_line: float, closing_odds: int = None) -> bool:
@@ -598,7 +667,13 @@ class PickTracker:
 
         # Parse adjustments and analyze
         results = []
-        for adj_name in ['opp_defense', 'location', 'b2b', 'pace', 'total', 'blowout', 'minutes', 'injury_boost']:
+        # Include both old and new factor names for analysis
+        for adj_name in [
+            'opp_defense', 'location', 'b2b', 'rest', 'pace', 'total', 'blowout',
+            'vs_team', 'minutes', 'injury_boost',
+            # New v2.0 factors
+            'usage_rate', 'shot_volume', 'ts_regression'
+        ]:
             # Get picks with this adjustment active vs not active
             active_wins = 0
             active_total = 0
@@ -632,6 +707,335 @@ class PickTracker:
                 })
 
         return pd.DataFrame(results).sort_values('difference', ascending=False)
+
+    # ==================== OVERSIGHT REPORT METHODS ====================
+
+    def get_dates_missing_results(self) -> List[str]:
+        """
+        Get all dates that have picks but are missing results.
+        Only returns past dates (games should have finished).
+        """
+        today = datetime.now().strftime('%Y-%m-%d')
+
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute("""
+                SELECT DISTINCT p.date
+                FROM picks p
+                LEFT JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE r.actual IS NULL
+                  AND p.date < ?
+                ORDER BY p.date ASC
+            """, (today,))
+            return [row[0] for row in cursor.fetchall()]
+
+    def get_full_audit_trail(self, days: int = 7) -> pd.DataFrame:
+        """
+        Get all picks with results for full audit trail.
+
+        Returns DataFrame with: date, player, prop_type, line, pick, projection,
+                               actual, result (WIN/LOSS/PUSH), edge, confidence
+        """
+        cutoff = (datetime.now() - pd.Timedelta(days=days)).strftime('%Y-%m-%d')
+
+        with sqlite3.connect(self.db_path) as conn:
+            df = pd.read_sql_query(f"""
+                SELECT
+                    p.date,
+                    p.player,
+                    p.prop_type,
+                    p.line,
+                    p.pick,
+                    p.projection,
+                    p.edge,
+                    p.confidence,
+                    p.context_quality,
+                    p.matchup_rating,
+                    p.is_b2b,
+                    r.actual,
+                    CASE
+                        WHEN r.actual IS NULL THEN 'PENDING'
+                        WHEN p.pick = 'OVER' AND r.actual > p.line THEN 'WIN'
+                        WHEN p.pick = 'UNDER' AND r.actual < p.line THEN 'WIN'
+                        WHEN r.actual = p.line THEN 'PUSH'
+                        ELSE 'LOSS'
+                    END as result
+                FROM picks p
+                LEFT JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE p.date >= '{cutoff}'
+                ORDER BY p.date DESC, p.player, p.prop_type
+            """, conn)
+
+        return df
+
+    def get_daily_summary(self, days: int = 7) -> pd.DataFrame:
+        """
+        Get daily aggregated statistics.
+
+        Returns DataFrame with: date, total_picks, with_results, wins, losses,
+                               pushes, win_rate, avg_edge, avg_confidence
+        """
+        cutoff = (datetime.now() - pd.Timedelta(days=days)).strftime('%Y-%m-%d')
+
+        with sqlite3.connect(self.db_path) as conn:
+            df = pd.read_sql_query(f"""
+                SELECT
+                    p.date,
+                    COUNT(*) as total_picks,
+                    SUM(CASE WHEN r.actual IS NOT NULL THEN 1 ELSE 0 END) as with_results,
+                    SUM(CASE
+                        WHEN p.pick = 'OVER' AND r.actual > p.line THEN 1
+                        WHEN p.pick = 'UNDER' AND r.actual < p.line THEN 1
+                        ELSE 0
+                    END) as wins,
+                    SUM(CASE
+                        WHEN r.actual IS NOT NULL AND r.actual != p.line AND
+                            NOT ((p.pick = 'OVER' AND r.actual > p.line) OR
+                                 (p.pick = 'UNDER' AND r.actual < p.line))
+                        THEN 1 ELSE 0
+                    END) as losses,
+                    SUM(CASE WHEN r.actual = p.line THEN 1 ELSE 0 END) as pushes,
+                    AVG(p.edge) as avg_edge,
+                    AVG(p.confidence) as avg_confidence
+                FROM picks p
+                LEFT JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE p.date >= '{cutoff}'
+                GROUP BY p.date
+                ORDER BY p.date DESC
+            """, conn)
+
+        # Calculate win rate
+        df['win_rate'] = df.apply(
+            lambda row: row['wins'] / (row['wins'] + row['losses'])
+            if (row['wins'] + row['losses']) > 0 else None,
+            axis=1
+        )
+
+        return df
+
+    def get_data_integrity_issues(self) -> Dict:
+        """
+        Check for data integrity problems.
+
+        Returns dict with:
+        - missing_results: List of dates with picks but no results
+        - unusual_values: Picks with unusual actual values (potential errors)
+        - duplicate_picks: Any duplicate entries
+        - coverage_gaps: Date ranges with missing data
+        """
+        issues = {
+            'missing_results_dates': [],
+            'missing_results_count': 0,
+            'unusual_values': [],
+            'date_coverage': {},
+        }
+
+        with sqlite3.connect(self.db_path) as conn:
+            # Get dates with missing results
+            missing_dates = conn.execute("""
+                SELECT p.date, COUNT(*) as missing_count
+                FROM picks p
+                LEFT JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE r.actual IS NULL
+                GROUP BY p.date
+                ORDER BY p.date DESC
+            """).fetchall()
+
+            for date, count in missing_dates:
+                issues['missing_results_dates'].append({'date': date, 'count': count})
+                issues['missing_results_count'] += count
+
+            # Check for unusual values (e.g., negative stats, unreasonably high values)
+            unusual = pd.read_sql_query("""
+                SELECT p.date, p.player, p.prop_type, p.line, r.actual
+                FROM picks p
+                JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE r.actual < 0
+                   OR (p.prop_type = 'points' AND r.actual > 80)
+                   OR (p.prop_type = 'rebounds' AND r.actual > 35)
+                   OR (p.prop_type = 'assists' AND r.actual > 30)
+                   OR (p.prop_type = 'threes' AND r.actual > 15)
+                ORDER BY p.date DESC
+            """, conn)
+
+            if not unusual.empty:
+                issues['unusual_values'] = unusual.to_dict('records')
+
+            # Get date coverage
+            coverage = conn.execute("""
+                SELECT
+                    MIN(date) as first_date,
+                    MAX(date) as last_date,
+                    COUNT(DISTINCT date) as days_with_picks
+                FROM picks
+            """).fetchone()
+
+            if coverage[0]:
+                issues['date_coverage'] = {
+                    'first_date': coverage[0],
+                    'last_date': coverage[1],
+                    'days_with_picks': coverage[2],
+                }
+
+        return issues
+
+    def get_performance_breakdown(self, days: int = 7) -> Dict:
+        """
+        Get performance breakdown by various factors.
+
+        Returns dict with breakdowns by: prop_type, edge_tier, confidence_tier,
+                                        matchup_rating, direction
+        """
+        cutoff = (datetime.now() - pd.Timedelta(days=days)).strftime('%Y-%m-%d')
+
+        with sqlite3.connect(self.db_path) as conn:
+            # By prop type
+            by_prop = pd.read_sql_query(f"""
+                SELECT
+                    p.prop_type,
+                    COUNT(*) as total,
+                    SUM(CASE
+                        WHEN p.pick = 'OVER' AND r.actual > p.line THEN 1
+                        WHEN p.pick = 'UNDER' AND r.actual < p.line THEN 1
+                        ELSE 0
+                    END) as wins,
+                    SUM(CASE
+                        WHEN r.actual IS NOT NULL AND r.actual != p.line AND
+                            NOT ((p.pick = 'OVER' AND r.actual > p.line) OR
+                                 (p.pick = 'UNDER' AND r.actual < p.line))
+                        THEN 1 ELSE 0
+                    END) as losses
+                FROM picks p
+                LEFT JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE p.date >= '{cutoff}' AND r.actual IS NOT NULL
+                GROUP BY p.prop_type
+            """, conn)
+
+            # By edge tier
+            by_edge = pd.read_sql_query(f"""
+                SELECT
+                    CASE
+                        WHEN ABS(p.edge) >= 0.15 THEN 'HIGH (15%+)'
+                        WHEN ABS(p.edge) >= 0.10 THEN 'MEDIUM (10-15%)'
+                        ELSE 'LOW (<10%)'
+                    END as edge_tier,
+                    COUNT(*) as total,
+                    SUM(CASE
+                        WHEN p.pick = 'OVER' AND r.actual > p.line THEN 1
+                        WHEN p.pick = 'UNDER' AND r.actual < p.line THEN 1
+                        ELSE 0
+                    END) as wins,
+                    SUM(CASE
+                        WHEN r.actual IS NOT NULL AND r.actual != p.line AND
+                            NOT ((p.pick = 'OVER' AND r.actual > p.line) OR
+                                 (p.pick = 'UNDER' AND r.actual < p.line))
+                        THEN 1 ELSE 0
+                    END) as losses
+                FROM picks p
+                LEFT JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE p.date >= '{cutoff}' AND r.actual IS NOT NULL
+                GROUP BY edge_tier
+                ORDER BY edge_tier DESC
+            """, conn)
+
+            # By confidence tier
+            by_confidence = pd.read_sql_query(f"""
+                SELECT
+                    CASE
+                        WHEN p.confidence >= 0.70 THEN 'HIGH (70%+)'
+                        WHEN p.confidence >= 0.50 THEN 'MEDIUM (50-69%)'
+                        ELSE 'LOW (<50%)'
+                    END as conf_tier,
+                    COUNT(*) as total,
+                    SUM(CASE
+                        WHEN p.pick = 'OVER' AND r.actual > p.line THEN 1
+                        WHEN p.pick = 'UNDER' AND r.actual < p.line THEN 1
+                        ELSE 0
+                    END) as wins,
+                    SUM(CASE
+                        WHEN r.actual IS NOT NULL AND r.actual != p.line AND
+                            NOT ((p.pick = 'OVER' AND r.actual > p.line) OR
+                                 (p.pick = 'UNDER' AND r.actual < p.line))
+                        THEN 1 ELSE 0
+                    END) as losses
+                FROM picks p
+                LEFT JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE p.date >= '{cutoff}' AND r.actual IS NOT NULL
+                GROUP BY conf_tier
+                ORDER BY conf_tier DESC
+            """, conn)
+
+            # By matchup rating
+            by_matchup = pd.read_sql_query(f"""
+                SELECT
+                    COALESCE(p.matchup_rating, 'UNKNOWN') as matchup_rating,
+                    COUNT(*) as total,
+                    SUM(CASE
+                        WHEN p.pick = 'OVER' AND r.actual > p.line THEN 1
+                        WHEN p.pick = 'UNDER' AND r.actual < p.line THEN 1
+                        ELSE 0
+                    END) as wins,
+                    SUM(CASE
+                        WHEN r.actual IS NOT NULL AND r.actual != p.line AND
+                            NOT ((p.pick = 'OVER' AND r.actual > p.line) OR
+                                 (p.pick = 'UNDER' AND r.actual < p.line))
+                        THEN 1 ELSE 0
+                    END) as losses
+                FROM picks p
+                LEFT JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE p.date >= '{cutoff}' AND r.actual IS NOT NULL
+                GROUP BY matchup_rating
+            """, conn)
+
+            # By direction
+            by_direction = pd.read_sql_query(f"""
+                SELECT
+                    p.pick as direction,
+                    COUNT(*) as total,
+                    SUM(CASE
+                        WHEN p.pick = 'OVER' AND r.actual > p.line THEN 1
+                        WHEN p.pick = 'UNDER' AND r.actual < p.line THEN 1
+                        ELSE 0
+                    END) as wins,
+                    SUM(CASE
+                        WHEN r.actual IS NOT NULL AND r.actual != p.line AND
+                            NOT ((p.pick = 'OVER' AND r.actual > p.line) OR
+                                 (p.pick = 'UNDER' AND r.actual < p.line))
+                        THEN 1 ELSE 0
+                    END) as losses
+                FROM picks p
+                LEFT JOIN results r ON
+                    p.date = r.date AND p.player = r.player AND p.prop_type = r.prop_type
+                WHERE p.date >= '{cutoff}' AND r.actual IS NOT NULL
+                GROUP BY p.pick
+            """, conn)
+
+        # Calculate win rates
+        def add_win_rate(df):
+            df['win_rate'] = df.apply(
+                lambda row: row['wins'] / (row['wins'] + row['losses'])
+                if (row['wins'] + row['losses']) > 0 else None,
+                axis=1
+            )
+            return df
+
+        return {
+            'by_prop_type': add_win_rate(by_prop).to_dict('records'),
+            'by_edge_tier': add_win_rate(by_edge).to_dict('records'),
+            'by_confidence_tier': add_win_rate(by_confidence).to_dict('records'),
+            'by_matchup_rating': add_win_rate(by_matchup).to_dict('records'),
+            'by_direction': add_win_rate(by_direction).to_dict('records'),
+        }
+
+    # ==================== END OVERSIGHT REPORT METHODS ====================
 
     def enter_results_interactive(self, date_str: str = None):
         """Interactive mode to enter results for pending picks."""

@@ -1,0 +1,32 @@
+{
+  "date_range": {
+    "end": "2025-12-22",
+    "start": "2025-10-24"
+  },
+  "source_files": [
+    ".cache/runs/picks_filtered_13a747b75f1a497dbd6f0fdeed496c30.csv",
+    ".cache/runs/picks_filtered_1b20980015424906ad7d536fa7c204a3.csv",
+    ".cache/runs/picks_filtered_3207b689491c462eb48670e49996c9a6.csv",
+    ".cache/runs/picks_filtered_90e2398c067a4d49839ee996074a39dd.csv",
+    ".cache/runs/picks_filtered_a3eacd04d7b945b49f9bacfe86cc5bd5.csv",
+    ".cache/runs/picks_filtered_b5be6800a5354e25bd5ccfaeb3fa7e0d.csv",
+    ".cache/runs/picks_filtered_be5463df0c6e46cc83dd56830eae1619.csv",
+    ".cache/runs/picks_filtered_ec0b57f671744a99abc53a6113151d92.csv",
+    ".cache/runs/picks_filtered_ef059813fdd24864a6eb8cff4bf45d5d.csv",
+    ".cache/runs/picks_filtered_f1536ba80caf4780a4962ed772e52244.csv",
+    ".cache/legacy_picks/legacy_picks_combined.csv"
+  ],
+  "summary": {
+    "by_confidence_bin": {},
+    "by_edge_bin": {},
+    "by_prop_type": {},
+    "graded_picks": 0,
+    "losses": 0,
+    "missing_actuals": 2646,
+    "pass_count": 0,
+    "pushes": 0,
+    "total_picks": 2646,
+    "win_rate": null,
+    "wins": 0
+  }
+}

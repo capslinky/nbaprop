@@ -1,0 +1,117 @@
+player,team,status,injury,source,is_star,impact
+Amari Williams,BOS,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Max Shulga,BOS,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Ron Harper Jr.,BOS,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Jaylen Brown,BOS,DOUBTFUL,Injury/Illness - Illness; Non-Covid,NBA Official Report,True,STAR
+Jayson Tatum,BOS,OUT,Injury/Illness - Right Achilles; Repair,NBA Official Report,True,STAR
+Pat Connaughton,CHA,AVAILABLE,Injury/Illness - Right Calf; Strain,NBA Official Report,False,ROTATION
+Tre Mann,CHA,AVAILABLE,Injury/Illness - Right Knee; Bone Bruise,NBA Official Report,False,ROTATION
+Grant Williams,CHA,OUT,Injury/Illness - Right Knee; Surgery,NBA Official Report,False,ROTATION
+Collin Sexton,CHA,OUT,Injury/Illness - Left Quadriceps; Strain,NBA Official Report,False,ROTATION
+Antonio Reeves,CHA,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Drew Peterson,CHA,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Liam McNeeley,CHA,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Dereck Lively II,DAL,OUT,Injury/Illness - Right Foot; Injury Management,NBA Official Report,False,ROTATION
+Dante Exum,DAL,OUT,Injury/Illness - Right Knee; Surgery,NBA Official Report,False,ROTATION
+Klay Thompson,DAL,QUESTIONABLE,Injury/Illness - Left Knee; Soreness,NBA Official Report,False,ROTATION
+Kyrie Irving,DAL,OUT,Injury/Illness - Left Knee; Surgery,NBA Official Report,True,STAR
+Anthony Davis,DAL,PROBABLE,Injury/Illness - Illness; Illness,NBA Official Report,True,STAR
+Curtis Jones,DEN,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+DaRon Holmes II,DEN,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Aaron Gordon,DEN,OUT,Injury/Illness - Right Hamstring; Strain,NBA Official Report,False,ROTATION
+Christian Braun,DEN,OUT,Injury/Illness - Left Ankle; Sprain,NBA Official Report,False,ROTATION
+Tamar Bates,DEN,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Peyton Watson,DEN,QUESTIONABLE,Injury/Illness - Right Trunk; Contusion,NBA Official Report,False,ROTATION
+Tolu Smith,DET,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Wendell Moore Jr.,DET,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Chaz Lanier,DET,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Bobi Klintman,DET,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Isaac Jones,DET,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Duncan Robinson,DET,PROBABLE,Injury/Illness - Left Knee; Contusion,NBA Official Report,False,ROTATION
+Caris LeVert,DET,PROBABLE,Injury/Illness - Right Knee; Soreness,NBA Official Report,False,ROTATION
+Al Horford,GSW,OUT,Injury/Illness - Right Sciatic Nerve; Irritation,NBA Official Report,False,ROTATION
+Seth Curry,GSW,OUT,Injury/Illness - Left Glute; Injury Management,NBA Official Report,False,ROTATION
+Jonathan Kuminga,GSW,QUESTIONABLE,Injury/Illness - General; Illness,NBA Official Report,False,ROTATION
+Tari Eason,HOU,OUT,Injury/Illness - Left Lower Leg; Injury Management,NBA Official Report,False,ROTATION
+Fred VanVleet,HOU,OUT,Injury/Illness - Right Knee; ACL Repair,NBA Official Report,False,ROTATION
+Dorian Finney-Smith,HOU,OUT,Injury/Illness - Left Ankle; Surgery,NBA Official Report,False,ROTATION
+Taelon Peter,IND,DOUBTFUL,G League - Two-Way,NBA Official Report,False,ROTATION
+Kam Jones,IND,DOUBTFUL,G League - On Assignment,NBA Official Report,False,ROTATION
+Obi Toppin,IND,OUT,Injury/Illness - Right Foot; Stress Fracture,NBA Official Report,False,ROTATION
+Ben Sheppard,IND,OUT,Injury/Illness - Left Calf; Strain,NBA Official Report,False,ROTATION
+Aaron Nesmith,IND,OUT,Injury/Illness - Left Knee; MCL Sprain,NBA Official Report,False,ROTATION
+Tony Bradley,IND,QUESTIONABLE,Injury/Illness - Right Thumb; Fracture,NBA Official Report,False,ROTATION
+Tyrese Haliburton,IND,OUT,Injury/Illness - Right Achilles Tendon; Torn,NBA Official Report,True,STAR
+Derrick Jones Jr.,LAC,OUT,Injury/Illness - Right Knee; Sprain,NBA Official Report,False,ROTATION
+Bradley Beal,LAC,OUT,Injury/Illness - Left Hip; Fracture,NBA Official Report,False,ROTATION
+Yanic Konan Niederhauser,LAC,OUT,Injury/Illness - Left Knee; Soreness,NBA Official Report,False,ROTATION
+Chris Paul,LAC,OUT,Not With Team,NBA Official Report,False,ROTATION
+Cam Christie,LAC,QUESTIONABLE,Injury/Illness - Right Foot; Soreness,NBA Official Report,False,ROTATION
+Gabe Vincent,LAL,OUT,Injury/Illness - Low Back; Soreness,NBA Official Report,False,ROTATION
+Bronny James,LAL,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Rui Hachimura,LAL,OUT,Injury/Illness - Right Groin; Soreness,NBA Official Report,False,ROTATION
+Deandre Ayton,LAL,OUT,Injury/Illness - Left Elbow; Soreness,NBA Official Report,False,ROTATION
+Austin Reaves,LAL,OUT,Injury/Illness - Left Calf; Strain,NBA Official Report,True,STAR
+Vince Williams Jr.,MEM,OUT,Injury/Illness - Left Knee; Soreness,NBA Official Report,False,ROTATION
+Javon Small,MEM,OUT,Injury/Illness - Left Toe; Turf Toe,NBA Official Report,False,ROTATION
+Scotty Pippen Jr.,MEM,OUT,Injury/Illness - Left Great Toe; Surgery Recovery,NBA Official Report,False,ROTATION
+Jahmai Mashack,MEM,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+John Konchar,MEM,OUT,Injury/Illness - Left Thumb; UCL Surgery Recovery,NBA Official Report,False,ROTATION
+Ty Jerome,MEM,OUT,Injury/Illness - Right Calf; Strain,NBA Official Report,False,ROTATION
+GG Jackson,MEM,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Zach Edey,MEM,OUT,Injury/Illness - Left Ankle; Stress Reaction,NBA Official Report,False,ROTATION
+Ja Morant,MEM,OUT,Injury/Illness - Left Ankle; Sprain,NBA Official Report,True,STAR
+Dejounte Murray,NOP,OUT,Injury/Illness - Right Achilles; Rupture,NBA Official Report,False,ROTATION
+Hunter Dickinson,NOP,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Trey Alexander,NOP,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Jalen Suggs,ORL,DOUBTFUL,Injury/Illness - Left Hip; Contusion,NBA Official Report,False,ROTATION
+Colin Castleton,ORL,OUT,G League - Two-Way da,NBA Official Report,False,ROTATION
+Moritz Wagner,ORL,OUT,Injury/Illness - Left Knee; Injury recovery,NBA Official Report,False,ROTATION
+Jonathan Isaac,ORL,QUESTIONABLE,Injury/Illness - Left Hip; Contusion,NBA Official Report,False,ROTATION
+Tristan Silva,ORL,QUESTIONABLE,Injury/Illness - Right Shoulder; Contusion,NBA Official Report,False,ROTATION
+Franz Wagner,ORL,OUT,Injury/Illness - Left High Ankle; Sprain,NBA Official Report,True,STAR
+Johni Broome,PHI,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Kelly Oubre Jr.,PHI,OUT,Injury/Illness - Left Knee; Sprain,NBA Official Report,False,ROTATION
+Hunter Sallis,PHI,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Trendon Watford,PHI,OUT,Injury/Illness - Left Adductor; Strain,NBA Official Report,False,ROTATION
+Joel Embiid,PHI,DOUBTFUL,Injury/Illness - Right Knee; Injury Management; Illness,NBA Official Report,True,STAR
+Paul George,PHI,OUT,Injury/Illness - Left Knee; Injury Management,NBA Official Report,True,STAR
+Jordan Goodwin,PHX,AVAILABLE,Injury/Illness - Jaw; Sprain (Mask),NBA Official Report,False,ROTATION
+Jalen Green,PHX,OUT,Injury/Illness - Right Hamstring; Strain,NBA Official Report,False,ROTATION
+Koby Brea,PHX,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Isaiah Livers,PHX,QUESTIONABLE,Injury/Illness - Right Hip; Strain,NBA Official Report,False,ROTATION
+Grayson Allen,PHX,QUESTIONABLE,Injury/Illness - Right Knee; Soreness,NBA Official Report,False,ROTATION
+Blake Wesley,POR,OUT,Injury/Illness - Right Foot; Fracture,NBA Official Report,False,ROTATION
+Matisse Thybulle,POR,OUT,Injury/Illness - Left Thumb; Ligament Tear,NBA Official Report,False,ROTATION
+Damian Lillard,POR,OUT,Injury/Illness - Left Achilles Tendon; Injury Management,NBA Official Report,False,ROTATION
+Jrue Holiday,POR,OUT,Injury/Illness - Right Calf; Strain,NBA Official Report,False,ROTATION
+Scoot Henderson,POR,OUT,Injury/Illness - Left Hamstring; Tear,NBA Official Report,False,ROTATION
+Javonte Cooke,POR,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Jerami Grant,POR,QUESTIONABLE,Injury/Illness - Left Achilles Tendon; Soreness,NBA Official Report,False,ROTATION
+Isaiah Stevens,SAC,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Daeqwon Plowden,SAC,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Drew Eubanks,SAC,OUT,Injury/Illness - Left Thumb; Avulsion Fracture,NBA Official Report,False,ROTATION
+Devin Carter,SAC,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Doug McDermott,SAC,QUESTIONABLE,Injury/Illness - Left Knee; Soreness,NBA Official Report,False,ROTATION
+Domantas Sabonis,SAC,OUT,Injury/Illness - Left Knee; Partial Meniscus Tear,NBA Official Report,True,STAR
+Zach LaVine,SAC,OUT,Injury/Illness - Left Ankle; Sprain,NBA Official Report,True,STAR
+Jakob Poeltl,TOR,DOUBTFUL,Injury/Illness - Lower Back; Injury Management,NBA Official Report,False,ROTATION
+Jonathan Mogbo,TOR,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Alijah Martin,TOR,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+A.J. Lawson,TOR,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Chucky Hepburn,TOR,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+RJ Barrett,TOR,OUT,Injury/Illness - Right Knee; Sprain,NBA Official Report,False,ROTATION
+Elijah Harkless,UTA,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Oscar Tshiebwe,UTA,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+John Tonje,UTA,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Georges Niang,UTA,OUT,Injury/Illness - Left Foot; Fourth Metatarsal Stress Reaction,NBA Official Report,False,ROTATION
+Walker Kessler,UTA,OUT,Injury/Illness - Left Shoulder; Injury Recovery,NBA Official Report,False,ROTATION
+Lauri Markkanen,UTA,OUT,Injury/Illness - Right Groin; Injury Management,NBA Official Report,True,STAR
+Khris Middleton,WAS,AVAILABLE,Injury/Illness - Right Knee; Contusion,NBA Official Report,False,ROTATION
+Malaki Branham,WAS,AVAILABLE,Injury/Illness - Right Thumb; Sprain,NBA Official Report,False,ROTATION
+Corey Kispert,WAS,OUT,Injury/Illness - Right Thumb; Distal Phalanx Fracture,NBA Official Report,False,ROTATION
+AJ Johnson,WAS,OUT,G League - On Assignment,NBA Official Report,False,ROTATION
+Bilal Coulibaly,WAS,OUT,Injury/Illness - Left Ankle; Sprain,NBA Official Report,False,ROTATION
+Sharife Cooper,WAS,OUT,G League - Two-Way,NBA Official Report,False,ROTATION
+Cam Whitmore,WAS,QUESTIONABLE,Injury/Illness - Right Shoulder; Soreness,NBA Official Report,False,ROTATION
+Jamir Watkins,WAS,QUESTIONABLE,Injury/Illness - N/a; Illness,NBA Official Report,False,ROTATION

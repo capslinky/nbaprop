@@ -1,0 +1,114 @@
+{
+  "date_range": {
+    "end": "2025-12-22",
+    "start": "2025-10-24"
+  },
+  "source_files": [
+    ".cache/legacy_picks/legacy_picks_combined.csv"
+  ],
+  "summary": {
+    "by_confidence_bin": {
+      "0.40-0.60": {
+        "losses": 321,
+        "total": 755,
+        "win_rate": 0.5748,
+        "wins": 434
+      },
+      "0.60-0.80": {
+        "losses": 647,
+        "total": 1451,
+        "win_rate": 0.5541,
+        "wins": 804
+      },
+      "0.80-1.00": {
+        "losses": 12,
+        "total": 43,
+        "win_rate": 0.7209,
+        "wins": 31
+      }
+    },
+    "by_edge_bin": {
+      "-0.05--0.02": {
+        "losses": 13,
+        "total": 19,
+        "win_rate": 0.3158,
+        "wins": 6
+      },
+      "-0.20--0.05": {
+        "losses": 40,
+        "total": 78,
+        "win_rate": 0.4872,
+        "wins": 38
+      },
+      "0.00-0.02": {
+        "losses": 660,
+        "total": 1537,
+        "win_rate": 0.5706,
+        "wins": 877
+      },
+      "0.02-0.05": {
+        "losses": 14,
+        "total": 30,
+        "win_rate": 0.5333,
+        "wins": 16
+      },
+      "0.05-0.10": {
+        "losses": 39,
+        "total": 70,
+        "win_rate": 0.4429,
+        "wins": 31
+      },
+      "0.10+": {
+        "losses": 214,
+        "total": 515,
+        "win_rate": 0.5845,
+        "wins": 301
+      }
+    },
+    "by_prop_type": {
+      "assists": {
+        "losses": 103,
+        "pushes": 0,
+        "total": 273,
+        "win_rate": 0.6227,
+        "wins": 170
+      },
+      "points": {
+        "losses": 420,
+        "pushes": 0,
+        "total": 895,
+        "win_rate": 0.5307,
+        "wins": 475
+      },
+      "pra": {
+        "losses": 181,
+        "pushes": 0,
+        "total": 392,
+        "win_rate": 0.5383,
+        "wins": 211
+      },
+      "rebounds": {
+        "losses": 160,
+        "pushes": 0,
+        "total": 416,
+        "win_rate": 0.6154,
+        "wins": 256
+      },
+      "threes": {
+        "losses": 116,
+        "pushes": 0,
+        "total": 273,
+        "win_rate": 0.5751,
+        "wins": 157
+      }
+    },
+    "graded_picks": 2249,
+    "losses": 980,
+    "missing_actuals": 1402,
+    "pass_count": 0,
+    "pushes": 0,
+    "total_picks": 3651,
+    "win_rate": 0.5643,
+    "wins": 1269
+  }
+}

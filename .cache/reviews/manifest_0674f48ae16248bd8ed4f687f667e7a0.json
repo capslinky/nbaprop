@@ -1,0 +1,15 @@
+{
+  "config_hash": "d6d3378a200bd3c0e6067495152ef60fbb561675f7e509247f2020b30a1cf6f3",
+  "git_sha": "94f8a7f58c1e9f8efe2d8d721ae1477f1f89115f",
+  "outputs": {
+    "manifest": ".cache/reviews/manifest_0674f48ae16248bd8ed4f687f667e7a0.json",
+    "model_calibration": ".cache/reviews/model_calibration_0674f48ae16248bd8ed4f687f667e7a0.json",
+    "model_calibration_params": "/Users/anthonyparadise/Documents/GitHub/nbaprop/.cache/calibration/calibration_params.json",
+    "review_csv": ".cache/reviews/review_0674f48ae16248bd8ed4f687f667e7a0.csv",
+    "review_summary": ".cache/reviews/review_summary_0674f48ae16248bd8ed4f687f667e7a0.json",
+    "source_picks": ".cache/runs/picks_filtered_adf371d4b3934982b304dce0cd14a36b.csv"
+  },
+  "run_id": "0674f48ae16248bd8ed4f687f667e7a0",
+  "source_versions": {},
+  "started_at": "2025-12-27T23:45:27.525789"
+}

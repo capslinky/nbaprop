@@ -1,0 +1,99 @@
+{
+  "date_range": {
+    "end": "2025-12-22",
+    "start": "2025-10-24"
+  },
+  "source_files": [
+    ".cache/runs/picks_filtered_13a747b75f1a497dbd6f0fdeed496c30.csv",
+    ".cache/runs/picks_filtered_1b20980015424906ad7d536fa7c204a3.csv",
+    ".cache/runs/picks_filtered_3207b689491c462eb48670e49996c9a6.csv",
+    ".cache/runs/picks_filtered_90e2398c067a4d49839ee996074a39dd.csv",
+    ".cache/runs/picks_filtered_a3eacd04d7b945b49f9bacfe86cc5bd5.csv",
+    ".cache/runs/picks_filtered_b5be6800a5354e25bd5ccfaeb3fa7e0d.csv",
+    ".cache/runs/picks_filtered_be5463df0c6e46cc83dd56830eae1619.csv",
+    ".cache/runs/picks_filtered_ec0b57f671744a99abc53a6113151d92.csv",
+    ".cache/runs/picks_filtered_ef059813fdd24864a6eb8cff4bf45d5d.csv",
+    ".cache/runs/picks_filtered_f1536ba80caf4780a4962ed772e52244.csv"
+  ],
+  "summary": {
+    "by_confidence_bin": {
+      "0.40-0.60": {
+        "losses": 52,
+        "total": 137,
+        "win_rate": 0.6204,
+        "wins": 85
+      },
+      "0.60-0.80": {
+        "losses": 3,
+        "total": 27,
+        "win_rate": 0.8889,
+        "wins": 24
+      }
+    },
+    "by_edge_bin": {
+      "0.02-0.05": {
+        "losses": 2,
+        "total": 4,
+        "win_rate": 0.5,
+        "wins": 2
+      },
+      "0.05-0.10": {
+        "losses": 5,
+        "total": 10,
+        "win_rate": 0.5,
+        "wins": 5
+      },
+      "0.10+": {
+        "losses": 48,
+        "total": 150,
+        "win_rate": 0.68,
+        "wins": 102
+      }
+    },
+    "by_prop_type": {
+      "assists": {
+        "losses": 3,
+        "pushes": 0,
+        "total": 16,
+        "win_rate": 0.8125,
+        "wins": 13
+      },
+      "points": {
+        "losses": 24,
+        "pushes": 0,
+        "total": 59,
+        "win_rate": 0.5932,
+        "wins": 35
+      },
+      "pra": {
+        "losses": 20,
+        "pushes": 0,
+        "total": 59,
+        "win_rate": 0.661,
+        "wins": 39
+      },
+      "rebounds": {
+        "losses": 5,
+        "pushes": 0,
+        "total": 22,
+        "win_rate": 0.7727,
+        "wins": 17
+      },
+      "threes": {
+        "losses": 3,
+        "pushes": 0,
+        "total": 8,
+        "win_rate": 0.625,
+        "wins": 5
+      }
+    },
+    "graded_picks": 164,
+    "losses": 55,
+    "missing_actuals": 10,
+    "pass_count": 0,
+    "pushes": 0,
+    "total_picks": 174,
+    "win_rate": 0.6646,
+    "wins": 109
+  }
+}

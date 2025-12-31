@@ -236,3 +236,46 @@ def get_season_from_date(date: datetime) -> str:
         return f"{year}-{str(year + 1)[-2:]}"
     else:  # Jan-Sep: continuation of previous season
         return f"{year - 1}-{str(year)[-2:]}"
+
+
+# =============================================================================
+# STAT KEY NORMALIZATION
+# =============================================================================
+
+# Mapping from prop types to game log column names
+STAT_KEY_MAP: Dict[str, str] = {
+    'points': 'points',
+    'pts': 'points',
+    'rebounds': 'rebounds',
+    'reb': 'rebounds',
+    'assists': 'assists',
+    'ast': 'assists',
+    'pra': 'pra',
+    'pts_reb_ast': 'pra',
+    'threes': 'threes',
+    '3pt': 'threes',
+    'fg3m': 'threes',
+    'steals': 'steals',
+    'stl': 'steals',
+    'blocks': 'blocks',
+    'blk': 'blocks',
+    'turnovers': 'turnovers',
+    'tov': 'turnovers',
+    # Additional mappings
+    'pts_reb': 'pts_reb',
+    'pts_ast': 'pts_ast',
+    'reb_ast': 'reb_ast',
+}
+
+
+def normalize_stat_key(prop_type: str) -> str:
+    """
+    Normalize a prop type to the standard game log column name.
+
+    Args:
+        prop_type: Prop type string (e.g., 'points', 'pts', 'rebounds')
+
+    Returns:
+        Normalized column name for game logs
+    """
+    return STAT_KEY_MAP.get(prop_type.lower(), prop_type.lower())

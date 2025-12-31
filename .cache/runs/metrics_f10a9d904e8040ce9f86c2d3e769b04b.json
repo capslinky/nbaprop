@@ -1,0 +1,8 @@
+{
+  "counters": {
+    "cache.file.expired": 85,
+    "cache.file.hit": 18,
+    "cache.file.miss": 16
+  },
+  "timings": {}
+}

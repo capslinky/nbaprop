@@ -7,6 +7,7 @@ Functions for generating sample player data and prop lines for testing and demon
 import pandas as pd
 import numpy as np
 
+from core.config import CONFIG
 from core.constants import get_current_nba_season
 
 
@@ -38,7 +39,7 @@ def generate_player_season_data(player_name: str, team: str, position: str,
 
         # Adjust for situational factors
         home_boost = 1.03 if is_home else 0.97
-        b2b_penalty = 0.92 if is_back_to_back else 1.0
+        b2b_penalty = CONFIG.B2B_PENALTY if is_back_to_back else 1.0
         matchup_factor = 1 + (opp_def_rating - 112) / 200  # Easier vs worse defenses
 
         pts = max(0, round((base_stats['pts'] + pts_var) * home_boost * b2b_penalty * matchup_factor))

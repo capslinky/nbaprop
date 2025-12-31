@@ -6,6 +6,9 @@ INSTALLATION
 ------------
 pip install nba_api pandas numpy scipy openpyxl requests streamlit
 
+NOTE: This quickstart script is legacy. The source-of-truth pipeline is the v2
+CLI: `python -m nbaprop.cli run-daily`.
+
 QUICK START
 -----------
 # 1. Use UnifiedPropModel for context-aware prop analysis
@@ -526,7 +529,28 @@ if __name__ == "__main__":
         }])
     elif args.backtest:
         print("Running backtest...")
-        from nba_prop_model import main as run_backtest
+        from models import Backtester, EnsembleModel, generate_sample_dataset, generate_prop_lines
+
+        # Run backtest directly instead of deprecated main()
+        def run_backtest():
+            print("NBA Prop Analysis & Backtesting System")
+            print("="*50)
+
+            print("\n[1/5] Generating player game logs...")
+            game_logs = generate_sample_dataset()
+            print(f"  Generated {len(game_logs):,} game logs")
+
+            print("\n[2/5] Generating historical prop lines...")
+            props = generate_prop_lines(game_logs)
+            print(f"  Generated {len(props):,} prop opportunities")
+
+            print("\n[3/5] Running backtest...")
+            backtester = Backtester(initial_bankroll=1000, unit_size=10)
+            model = EnsembleModel()
+            results = backtester.run_backtest(props, game_logs, model, min_edge=0.03, min_confidence=0.35)
+
+            print("\n[4/5] Results:")
+            backtester.print_report()
         run_backtest()
     else:
         # Default: run daily analysis

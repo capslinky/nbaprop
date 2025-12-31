@@ -192,7 +192,7 @@ class MockOddsAPIClient:
         """Return mock events."""
         return self._events
 
-    def get_player_props(self, event_id: str, markets: list = None) -> dict:
+    def get_player_props(self, event_id: str, markets: list = None, bookmakers: list = None) -> dict:
         """Return mock player props."""
         return self._props.get(event_id, {})
 

@@ -1,0 +1,21 @@
+{
+  "config_hash": "a5aaa5a45743cde042a4ee4490e41807371822b19188cfa6f6b3dd1860e3fe94",
+  "git_sha": "b8a1ae8ccac20a6b8288d603549e35de959f48a9",
+  "outputs": {
+    "manifest": ".cache/runs/manifest_e9234f229d774e4fbd24ba219b45b9d7.json",
+    "normalized_games_path": ".cache/storage/normalized_games.json",
+    "normalized_picks_path": ".cache/storage/normalized_picks.json",
+    "normalized_players_path": ".cache/storage/normalized_players.json",
+    "normalized_prop_features_path": ".cache/storage/normalized_prop_features.json",
+    "normalized_props_path": ".cache/storage/normalized_props.json",
+    "normalized_teams_path": ".cache/storage/normalized_teams.json",
+    "odds_snapshot": "odds_api:1766390239.499181",
+    "picks_csv": ".cache/runs/picks_e9234f229d774e4fbd24ba219b45b9d7.csv",
+    "raw_injury_report_path": ".cache/storage/raw_injury_report.json",
+    "raw_odds_path": ".cache/storage/raw_odds_snapshot.json",
+    "raw_player_logs_path": ".cache/storage/raw_player_logs.json"
+  },
+  "run_id": "e9234f229d774e4fbd24ba219b45b9d7",
+  "source_versions": {},
+  "started_at": "2025-12-22T07:57:19.489481"
+}

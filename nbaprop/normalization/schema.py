@@ -10,6 +10,7 @@ REQUIRED_FIELDS: Dict[str, List[str]] = {
     "teams": ["team_id", "team_abbrev"],
     "games": ["game_id", "home_team", "away_team", "game_time"],
     "props": ["prop_id", "player_id", "prop_type", "line"],
+    "injuries": ["player_id", "player_name", "status"],
     "prop_features": ["prop_id", "features"],
     "picks": ["prop_id", "edge", "confidence", "pick"],
 }

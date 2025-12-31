@@ -1,0 +1,28 @@
+{
+  "config_hash": "e569a2efb5af22008f4caf81f8f9c65b3864eef4fae95f4e09949d024d153071",
+  "git_sha": "bcdc0ffd3ef6329d7ab3bcac619f1d749e6114f6",
+  "outputs": {
+    "calibration_params": "/Users/anthonyparadise/Documents/GitHub/nbaprop/.cache/calibration/calibration_params.json",
+    "manifest": ".cache/runs/manifest_8fc3259747b44151a50ed5828f711344.json",
+    "metrics": ".cache/runs/metrics_8fc3259747b44151a50ed5828f711344.json",
+    "normalized_games_path": ".cache/storage/normalized_games.json",
+    "normalized_injuries_path": ".cache/storage/normalized_injuries.json",
+    "normalized_picks_path": ".cache/storage/normalized_picks.json",
+    "normalized_players_path": ".cache/storage/normalized_players.json",
+    "normalized_prop_features_path": ".cache/storage/normalized_prop_features.json",
+    "normalized_props_path": ".cache/storage/normalized_props.json",
+    "normalized_team_stats_path": ".cache/storage/normalized_team_stats.json",
+    "normalized_teams_path": ".cache/storage/normalized_teams.json",
+    "odds_snapshot": "odds_api:1767140362.363274",
+    "picks_csv": ".cache/runs/picks_8fc3259747b44151a50ed5828f711344.csv",
+    "picks_filtered_csv": ".cache/runs/picks_filtered_8fc3259747b44151a50ed5828f711344.csv",
+    "picks_pdf": ".cache/runs/picks_8fc3259747b44151a50ed5828f711344.pdf",
+    "raw_injury_report_path": ".cache/storage/raw_injury_report.json",
+    "raw_odds_path": ".cache/storage/raw_odds_snapshot.json",
+    "raw_player_logs_path": ".cache/storage/raw_player_logs.json",
+    "raw_team_stats_path": ".cache/storage/raw_team_stats.json"
+  },
+  "run_id": "8fc3259747b44151a50ed5828f711344",
+  "source_versions": {},
+  "started_at": "2025-12-31T00:19:22.350296"
+}

@@ -1,0 +1,40 @@
+{
+  "model_probability": {
+    "bin_metrics": {
+      "ece": 0.0,
+      "mce": 0.0,
+      "samples": 0
+    },
+    "bins_csv": ".cache/backtests/historical/calibration_eb53a14789084903a72627b5929d245e/calibration_bins_model_probability.csv",
+    "chart": ".cache/backtests/historical/calibration_eb53a14789084903a72627b5929d245e/calibration_curve_model_probability.png",
+    "metrics": {
+      "accuracy": null,
+      "bins": 10,
+      "brier": null,
+      "ece": null,
+      "log_loss": null,
+      "mce": null,
+      "prob_key": "model_probability",
+      "samples": 0
+    }
+  },
+  "probability": {
+    "bin_metrics": {
+      "ece": 0.0,
+      "mce": 0.0,
+      "samples": 0
+    },
+    "bins_csv": ".cache/backtests/historical/calibration_eb53a14789084903a72627b5929d245e/calibration_bins_probability.csv",
+    "chart": ".cache/backtests/historical/calibration_eb53a14789084903a72627b5929d245e/calibration_curve_probability.png",
+    "metrics": {
+      "accuracy": null,
+      "bins": 10,
+      "brier": null,
+      "ece": null,
+      "log_loss": null,
+      "mce": null,
+      "prob_key": "probability",
+      "samples": 0
+    }
+  }
+}

@@ -18,7 +18,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-from nba_prop_model import UnifiedPropModel, PropAnalysis
+from models import UnifiedPropModel, PropAnalysis
 from core.exceptions import InvalidPropTypeError
 from tests.mocks import MockNBADataFetcher, MockInjuryTracker, MockOddsAPIClient
 

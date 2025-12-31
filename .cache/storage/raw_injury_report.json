@@ -1,0 +1,991 @@
+[
+  {
+    "entries": [
+      {
+        "injury": "G League - Two-Way",
+        "player": "MarJon Beauchamp",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "PHI"
+      },
+      {
+        "injury": "Injury/Illness - Right Shoulder; Sprain",
+        "player": "Landry Shamet",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "NYK"
+      },
+      {
+        "injury": "Injury/Illness - Left Ankle; Left Ankle Injury Management",
+        "player": "Mitchell Robinson",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "NYK"
+      },
+      {
+        "injury": "Injury/Illness - Right Ankle; Soreness",
+        "player": "Tyler Kolek",
+        "source": "NBA Official Report",
+        "status": "PROBABLE",
+        "team": "NYK"
+      },
+      {
+        "injury": "Injury/Illness - Lip; Laceration",
+        "player": "Ariel Hukporti",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "NYK"
+      },
+      {
+        "injury": "Injury/Illness - Right Ankle; Sprain",
+        "player": "Josh Hart",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "NYK"
+      },
+      {
+        "injury": "Injury/Illness - Right Calf; Tightness",
+        "player": "Coby White",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHI"
+      },
+      {
+        "injury": "Injury/Illness - Left Ankle; Sprain",
+        "player": "Lachlan Olbrich",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHI"
+      },
+      {
+        "injury": "Injury/Illness - Right Hamstring; Strain",
+        "player": "Emanuel Miller",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHI"
+      },
+      {
+        "injury": "Injury/Illness - Left Hamstring; Tightness",
+        "player": "Josh Giddey",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHI"
+      },
+      {
+        "injury": "Injury/Illness - Right Knee; Hyperextension",
+        "player": "Trentyn Flowers",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHI"
+      },
+      {
+        "injury": "Injury/Illness - Left Shoulder; Surgery",
+        "player": "Noa Essengue",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHI"
+      },
+      {
+        "injury": "Injury/Illness - Right 1st Toe; Sprain",
+        "player": "Zach Collins",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHI"
+      },
+      {
+        "injury": "Injury/Illness - Right Achilles; Rupture",
+        "player": "Dejounte Murray",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "NOP"
+      },
+      {
+        "injury": "Injury/Illness - Right Ankle; Sprain",
+        "player": "Herbert Jones",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "NOP"
+      },
+      {
+        "injury": "Injury/Illness - Left Thumb; Sprain",
+        "player": "Stephon Castle",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "SAS"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Hunter Dickinson",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "NOP"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Luke Travers",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CLE"
+      },
+      {
+        "injury": "Injury/Illness - Left Foot; Surgery - Jones Fracture",
+        "player": "Max Strus",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CLE"
+      },
+      {
+        "injury": "Injury/Illness - Right Calf; Strain",
+        "player": "Larry Nance Jr.",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CLE"
+      },
+      {
+        "injury": "Injury/Illness - Left Hip; Soreness",
+        "player": "Sam Merrill",
+        "source": "NBA Official Report",
+        "status": "PROBABLE",
+        "team": "CLE"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Chris Livingston",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CLE"
+      },
+      {
+        "injury": "Injury/Illness - Right Hamstring; Strain",
+        "player": "Jalen Green",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "PHX"
+      },
+      {
+        "injury": "Injury/Illness - Jaw; Sprain (Mask)",
+        "player": "Jordan Goodwin",
+        "source": "NBA Official Report",
+        "status": "AVAILABLE",
+        "team": "PHX"
+      },
+      {
+        "injury": "Injury/Illness - Right Knee; Contusion",
+        "player": "Ryan Dunn",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "PHX"
+      },
+      {
+        "injury": "Injury/Illness - Right Knee; Injury management",
+        "player": "Grayson Allen",
+        "source": "NBA Official Report",
+        "status": "DOUBTFUL",
+        "team": "PHX"
+      },
+      {
+        "injury": "Injury/Illness - Right Foot; Stress Fracture",
+        "player": "Obi Toppin",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "IND"
+      },
+      {
+        "injury": "Injury/Illness - Left Calf; Strain",
+        "player": "Ben Sheppard",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "IND"
+      },
+      {
+        "injury": "Injury/Illness - Right Hamstring; Soreness",
+        "player": "T.J. McConnell",
+        "source": "NBA Official Report",
+        "status": "PROBABLE",
+        "team": "IND"
+      },
+      {
+        "injury": "Injury/Illness - N/a; Concussion",
+        "player": "Isaiah Jackson",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "IND"
+      },
+      {
+        "injury": "Injury/Illness - Right Achilles Tendon; Tear",
+        "player": "Tyrese Haliburton",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "IND"
+      },
+      {
+        "injury": "League Suspension",
+        "player": "Jose Alvarado",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "NOP"
+      },
+      {
+        "injury": "G League - Two-Way Jones",
+        "player": "Harrison Ingram",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "SAS"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "David Garcia",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "SAS"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Stanley Umude",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "SAS"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Pete Nance",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MIL"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Alex Antetokounmpo",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MIL"
+      },
+      {
+        "injury": "Injury/Illness - Right Shoulder; Deep Vein Thrombosis",
+        "player": "Cam Whitmore",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "WAS"
+      },
+      {
+        "injury": "Injury/Illness - Left Hamstring; Strain",
+        "player": "Corey Kispert",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "WAS"
+      },
+      {
+        "injury": "Injury/Illness - Left Hip Flexor; Strain",
+        "player": "Kyshawn George",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "WAS"
+      },
+      {
+        "injury": "Injury/Illness - Right Calf; Soreness",
+        "player": "Malaki Branham",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "WAS"
+      },
+      {
+        "injury": "Injury/Illness - Right Heel; Bursitis",
+        "player": "Jaylin Williams",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "OKC"
+      },
+      {
+        "injury": "Injury/Illness - N/a; Surgical Recovery",
+        "player": "Nikola Topic",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "OKC"
+      },
+      {
+        "injury": "Injury/Illness - Right ACL; Surgical Recovery",
+        "player": "Thomas Sorber",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "OKC"
+      },
+      {
+        "injury": "Injury/Illness - Right Soleus; Strain",
+        "player": "Isaiah Hartenstein",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "OKC"
+      },
+      {
+        "injury": "Injury/Illness - Right Calf; Strain",
+        "player": "Ousmane Dieng",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "OKC"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Brooks Barnhizer",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "OKC"
+      },
+      {
+        "injury": "Injury/Illness - Right Foot; Fracture",
+        "player": "Blake Wesley",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "POR"
+      },
+      {
+        "injury": "Injury/Illness - Left Thumb; Ligament Tear",
+        "player": "Matisse Thybulle",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "POR"
+      },
+      {
+        "injury": "Injury/Illness - Right Quad; Contusion",
+        "player": "Kris Murray",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "POR"
+      },
+      {
+        "injury": "Injury/Illness - Left Achilles Tendon; Injury Management",
+        "player": "Damian Lillard",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "POR"
+      },
+      {
+        "injury": "Injury/Illness - Right Calf; Strain",
+        "player": "Jrue Holiday",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "POR"
+      },
+      {
+        "injury": "Injury/Illness - Left Adductor; Strain",
+        "player": "Devin Vassell",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "SAS"
+      },
+      {
+        "injury": "Injury/Illness - Left Foot; Surgery",
+        "player": "Tamar Bates",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DEN"
+      },
+      {
+        "injury": "Injury/Illness - Left Ankle; Sprain",
+        "player": "Christian Braun",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DEN"
+      },
+      {
+        "injury": "Injury/Illness - Right Hamstring; Strain",
+        "player": "Aaron Gordon",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DEN"
+      },
+      {
+        "injury": "Injury/Illness - Right Knee; Injury Management",
+        "player": "Cameron Johnson",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DEN"
+      },
+      {
+        "injury": "Injury/Illness - Left Knee; Injury Management",
+        "player": "Nikola Jokic",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DEN"
+      },
+      {
+        "injury": "Injury/Illness - Left Knee; Injury recovery",
+        "player": "Moritz Wagner",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "ORL"
+      },
+      {
+        "injury": "Injury/Illness - Illness; Illness",
+        "player": "Julian Strawther",
+        "source": "NBA Official Report",
+        "status": "PROBABLE",
+        "team": "DEN"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "A.J. Lawson",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "TOR"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Alijah Martin",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "TOR"
+      },
+      {
+        "injury": "G League - On Assignment",
+        "player": "Jonathan Mogbo",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "TOR"
+      },
+      {
+        "injury": "Injury/Illness - Back; Lower - strain",
+        "player": "Jakob Poeltl",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "TOR"
+      },
+      {
+        "injury": "Injury/Illness - Left Achilles; Tendonitis",
+        "player": "Jerami Grant",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "POR"
+      },
+      {
+        "injury": "Injury/Illness - Left Hamstring; Tear",
+        "player": "Scoot Henderson",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "POR"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Chucky Hepburn",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "TOR"
+      },
+      {
+        "injury": "Injury/Illness - Neck; Surgery",
+        "player": "Taurean Prince",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MIL"
+      },
+      {
+        "injury": "Injury/Illness - Left High Ankle; Sprain",
+        "player": "Franz Wagner",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "ORL"
+      },
+      {
+        "injury": "Injury/Illness - Left Knee; Sore",
+        "player": "Jonathan Isaac",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "ORL"
+      },
+      {
+        "injury": "Injury/Illness - Left Knee; Soreness",
+        "player": "Caris LeVert",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DET"
+      },
+      {
+        "injury": "G League - On Assignment",
+        "player": "Bobi Klintman",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DET"
+      },
+      {
+        "injury": "G League - On Assignment",
+        "player": "Isaac Jones",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DET"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "John Tonje",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "UTA"
+      },
+      {
+        "injury": "Injury/Illness - Left Foot; Fourth metatarsal stress reaction",
+        "player": "Georges Niang",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "UTA"
+      },
+      {
+        "injury": "Rest",
+        "player": "Kevin Love",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "UTA"
+      },
+      {
+        "injury": "Injury/Illness - Left Shoulder; Injury Recovery",
+        "player": "Walker Kessler",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "UTA"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Elijah Harkless",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "UTA"
+      },
+      {
+        "injury": "Injury/Illness - N/A; Illness",
+        "player": "Keyonte George",
+        "source": "NBA Official Report",
+        "status": "AVAILABLE",
+        "team": "UTA"
+      },
+      {
+        "injury": "Injury/Illness - Left Hip Flexor; Strain",
+        "player": "Ace Bailey",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "UTA"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Amari Williams",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "BOS"
+      },
+      {
+        "injury": "Injury/Illness - Right Achilles; Repair",
+        "player": "Jayson Tatum",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "BOS"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Max Shulga",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "BOS"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Ron Harper Jr.",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "BOS"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Wendell Moore Jr.",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DET"
+      },
+      {
+        "injury": "Personal Reasons",
+        "player": "Chris Boucher",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "BOS"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Javon Small",
+        "source": "NBA Official Report",
+        "status": "AVAILABLE",
+        "team": "MEM"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Olivier-Maxence Prosper",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MEM"
+      },
+      {
+        "injury": "Injury/Illness - Left Great Toe; Surgery Recovery",
+        "player": "Scotty Pippen Jr.",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MEM"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Jahmai Mashack",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MEM"
+      },
+      {
+        "injury": "Injury/Illness - Right Calf; Strain",
+        "player": "Jock Landale",
+        "source": "NBA Official Report",
+        "status": "AVAILABLE",
+        "team": "MEM"
+      },
+      {
+        "injury": "Injury/Illness - Left Thumb; UCL Surgery Recovery",
+        "player": "John Konchar",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MEM"
+      },
+      {
+        "injury": "Injury/Illness - Right Calf; Strain",
+        "player": "Ty Jerome",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MEM"
+      },
+      {
+        "injury": "Injury/Illness - Left Ankle; Stress Reaction",
+        "player": "Zach Edey",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MEM"
+      },
+      {
+        "injury": "Injury/Illness - Right Calf; Strain",
+        "player": "Brandon Clarke",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MEM"
+      },
+      {
+        "injury": "Injury/Illness - Right Hamstring; Soreness",
+        "player": "Kentavious Caldwell-Pope",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MEM"
+      },
+      {
+        "injury": "Injury/Illness - Left Adductor; Strain",
+        "player": "Trendon Watford",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "PHI"
+      },
+      {
+        "injury": "Injury/Illness - Left Knee; Sprain",
+        "player": "Kelly Oubre Jr.",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "PHI"
+      },
+      {
+        "injury": "Injury/Illness - Right Ankle; Sprain; Illness",
+        "player": "Joel Embiid",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "PHI"
+      },
+      {
+        "injury": "G League - On Assignment",
+        "player": "Johni Broome",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "PHI"
+      },
+      {
+        "injury": "Injury/Illness - Left Patellar; Tendinitis",
+        "player": "Vince Williams Jr.",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MEM"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Tolu Smith",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "DET"
+      },
+      {
+        "injury": "Injury/Illness - Right Calf; Soreness",
+        "player": "Rui Hachimura",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "LAL"
+      },
+      {
+        "injury": "Injury/Illness - Left Calf; Strain",
+        "player": "Austin Reaves",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "LAL"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Colin Castleton",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "ORL"
+      },
+      {
+        "injury": "Injury/Illness - Back; Spasms",
+        "player": "Desmond Bane",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "ORL"
+      },
+      {
+        "injury": "Injury/Illness - Right Quad; Contusion",
+        "player": "Trae Young",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "ATL"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Malik Williams",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "ATL"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Eli John Ndiaye",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "ATL"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Caleb Houstan",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "ATL"
+      },
+      {
+        "injury": "G League - On Assignment",
+        "player": "Nikola Djurisic",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "ATL"
+      },
+      {
+        "injury": "Injury/Illness - Right Knee; Torn ACL",
+        "player": "N'Faly Dante",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "ATL"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Rocco Zikarsky",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MIN"
+      },
+      {
+        "injury": "Injury/Illness - Left Foot; Abductor Hallucis Strain",
+        "player": "Terrence Shannon Jr.",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MIN"
+      },
+      {
+        "injury": "Injury/Illness - Right Knee; Surgery",
+        "player": "Grant Williams",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHA"
+      },
+      {
+        "injury": "Injury/Illness - Right Groin; Strain",
+        "player": "Mason Plumlee",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHA"
+      },
+      {
+        "injury": "Injury/Illness - Right Ankle; Sprain",
+        "player": "Kon Knueppel",
+        "source": "NBA Official Report",
+        "status": "PROBABLE",
+        "team": "CHA"
+      },
+      {
+        "injury": "Injury/Illness - Left Elbow; Sprain",
+        "player": "Ryan Kalkbrenner",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "CHA"
+      },
+      {
+        "injury": "Injury/Illness - Left Ankle; Soreness",
+        "player": "Pat Connaughton",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "CHA"
+      },
+      {
+        "injury": "Injury/Illness - Right Ankle; Sprain",
+        "player": "Miles Bridges",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "CHA"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Malevy Leons",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "GSW"
+      },
+      {
+        "injury": "Injury/Illness - Lumbar Back; Strain",
+        "player": "Gabe Vincent",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "LAL"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Dylan Cardwell",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "SAC"
+      },
+      {
+        "injury": "Injury/Illness - Left Ankle; Sprain",
+        "player": "Zach LaVine",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "SAC"
+      },
+      {
+        "injury": "-",
+        "player": "Keegan Murray",
+        "source": "NBA Official Report",
+        "status": "AVAILABLE",
+        "team": "SAC"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Daeqwon Plowden",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "SAC"
+      },
+      {
+        "injury": "Injury/Illness - Left Knee; Partial Meniscus Tear",
+        "player": "Domantas Sabonis",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "SAC"
+      },
+      {
+        "injury": "Injury/Illness - Left Hip; Contusion",
+        "player": "Jalen Suggs",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "ORL"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Isaiah Stevens",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "SAC"
+      },
+      {
+        "injury": "Injury/Illness - Left Hamstring; Injury Management",
+        "player": "Bogdan Bogdanovic",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "LAC"
+      },
+      {
+        "injury": "Injury/Illness - N/a; Illness",
+        "player": "John Collins",
+        "source": "NBA Official Report",
+        "status": "QUESTIONABLE",
+        "team": "LAC"
+      },
+      {
+        "injury": "Not With Team",
+        "player": "Chris Paul",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "LAC"
+      },
+      {
+        "injury": "Injury/Illness - Left Ankle; Sprain",
+        "player": "Ivica Zubac",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "LAC"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "LJ Cryer",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "GSW"
+      },
+      {
+        "injury": "Injury/Illness - Left Sciatic Nerve; Irritation",
+        "player": "Seth Curry",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "GSW"
+      },
+      {
+        "injury": "Injury/Illness - Left Hip; Fracture",
+        "player": "Bradley Beal",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "LAC"
+      },
+      {
+        "injury": "G League - Two-Way",
+        "player": "Mark Sears",
+        "source": "NBA Official Report",
+        "status": "OUT",
+        "team": "MIL"
+      }
+    ],
+    "fetched_at": 1767140491.678236,
+    "injury_debug": {
+      "official_page_matches": [
+        {
+          "count": 78,
+          "url": "https://official.nba.com/nba-injury-report/"
+        },
+        {
+          "count": 78,
+          "url": "https://official.nba.com/nba-injury-report-2025-26/"
+        }
+      ],
+      "official_page_status": [
+        "https://official.nba.com/nba-injury-report/:200",
+        "https://official.nba.com/nba-injury-report-2025-26/:200"
+      ],
+      "official_report_url": "https://ak-static.cms.nba.com/referee/injury/Injury-Report_2025-12-30_07_15PM.pdf"
+    },
+    "perplexity_enabled": false,
+    "source": "injury_report",
+    "source_counts": {
+      "NBA Official Report": 137
+    },
+    "sources": [
+      "NBA Official Report"
+    ]
+  }
+]

@@ -1,0 +1,371 @@
+[
+  {
+    "defense_ratings": [
+      {
+        "def_rating": 115.2,
+        "team_abbrev": "ATL",
+        "team_name": "Atlanta Hawks"
+      },
+      {
+        "def_rating": 111.6,
+        "team_abbrev": "BOS",
+        "team_name": "Boston Celtics"
+      },
+      {
+        "def_rating": 114.5,
+        "team_abbrev": "BKN",
+        "team_name": "Brooklyn Nets"
+      },
+      {
+        "def_rating": 114.7,
+        "team_abbrev": "CHA",
+        "team_name": "Charlotte Hornets"
+      },
+      {
+        "def_rating": 116.9,
+        "team_abbrev": "CHI",
+        "team_name": "Chicago Bulls"
+      },
+      {
+        "def_rating": 113.1,
+        "team_abbrev": "CLE",
+        "team_name": "Cleveland Cavaliers"
+      },
+      {
+        "def_rating": 111.5,
+        "team_abbrev": "DAL",
+        "team_name": "Dallas Mavericks"
+      },
+      {
+        "def_rating": 115.2,
+        "team_abbrev": "DEN",
+        "team_name": "Denver Nuggets"
+      },
+      {
+        "def_rating": 109.9,
+        "team_abbrev": "DET",
+        "team_name": "Detroit Pistons"
+      },
+      {
+        "def_rating": 109.7,
+        "team_abbrev": "GSW",
+        "team_name": "Golden State Warriors"
+      },
+      {
+        "def_rating": 112.5,
+        "team_abbrev": "HOU",
+        "team_name": "Houston Rockets"
+      },
+      {
+        "def_rating": 117.1,
+        "team_abbrev": "IND",
+        "team_name": "Indiana Pacers"
+      },
+      {
+        "def_rating": 114.8,
+        "team_abbrev": "LAC",
+        "team_name": "LA Clippers"
+      },
+      {
+        "def_rating": 114.8,
+        "team_abbrev": "LAL",
+        "team_name": "Los Angeles Lakers"
+      },
+      {
+        "def_rating": 111.9,
+        "team_abbrev": "MEM",
+        "team_name": "Memphis Grizzlies"
+      },
+      {
+        "def_rating": 111.0,
+        "team_abbrev": "MIA",
+        "team_name": "Miami Heat"
+      },
+      {
+        "def_rating": 115.3,
+        "team_abbrev": "MIL",
+        "team_name": "Milwaukee Bucks"
+      },
+      {
+        "def_rating": 110.4,
+        "team_abbrev": "MIN",
+        "team_name": "Minnesota Timberwolves"
+      },
+      {
+        "def_rating": 117.6,
+        "team_abbrev": "NOP",
+        "team_name": "New Orleans Pelicans"
+      },
+      {
+        "def_rating": 113.9,
+        "team_abbrev": "NYK",
+        "team_name": "New York Knicks"
+      },
+      {
+        "def_rating": 103.8,
+        "team_abbrev": "OKC",
+        "team_name": "Oklahoma City Thunder"
+      },
+      {
+        "def_rating": 112.3,
+        "team_abbrev": "ORL",
+        "team_name": "Orlando Magic"
+      },
+      {
+        "def_rating": 111.7,
+        "team_abbrev": "PHI",
+        "team_name": "Philadelphia 76ers"
+      },
+      {
+        "def_rating": 111.7,
+        "team_abbrev": "PHX",
+        "team_name": "Phoenix Suns"
+      },
+      {
+        "def_rating": 114.3,
+        "team_abbrev": "POR",
+        "team_name": "Portland Trail Blazers"
+      },
+      {
+        "def_rating": 116.4,
+        "team_abbrev": "SAC",
+        "team_name": "Sacramento Kings"
+      },
+      {
+        "def_rating": 110.0,
+        "team_abbrev": "SAS",
+        "team_name": "San Antonio Spurs"
+      },
+      {
+        "def_rating": 110.0,
+        "team_abbrev": "TOR",
+        "team_name": "Toronto Raptors"
+      },
+      {
+        "def_rating": 118.3,
+        "team_abbrev": "UTA",
+        "team_name": "Utah Jazz"
+      },
+      {
+        "def_rating": 119.3,
+        "team_abbrev": "WAS",
+        "team_name": "Washington Wizards"
+      }
+    ],
+    "fetched_at": 1767140466.323541,
+    "pace": [
+      {
+        "pace": 103.39,
+        "pace_factor": 1.0198934631066683,
+        "pace_rank": 4,
+        "team_abbrev": "ATL",
+        "team_name": "Atlanta Hawks"
+      },
+      {
+        "pace": 97.78,
+        "pace_factor": 0.9645534657372089,
+        "pace_rank": 30,
+        "team_abbrev": "BOS",
+        "team_name": "Boston Celtics"
+      },
+      {
+        "pace": 99.09,
+        "pace_factor": 0.977475996317243,
+        "pace_rank": 27,
+        "team_abbrev": "BKN",
+        "team_name": "Brooklyn Nets"
+      },
+      {
+        "pace": 100.34,
+        "pace_factor": 0.9898066552676574,
+        "pace_rank": 23,
+        "team_abbrev": "CHA",
+        "team_name": "Charlotte Hornets"
+      },
+      {
+        "pace": 104.48,
+        "pace_factor": 1.0306457977114296,
+        "pace_rank": 2,
+        "team_abbrev": "CHI",
+        "team_name": "Chicago Bulls"
+      },
+      {
+        "pace": 102.14,
+        "pace_factor": 1.0075628041562539,
+        "pace_rank": 9,
+        "team_abbrev": "CLE",
+        "team_name": "Cleveland Cavaliers"
+      },
+      {
+        "pace": 102.04,
+        "pace_factor": 1.0065763514402208,
+        "pace_rank": 10,
+        "team_abbrev": "DAL",
+        "team_name": "Dallas Mavericks"
+      },
+      {
+        "pace": 100.77,
+        "pace_factor": 0.9940484019465998,
+        "pace_rank": 19,
+        "team_abbrev": "DEN",
+        "team_name": "Denver Nuggets"
+      },
+      {
+        "pace": 101.39,
+        "pace_factor": 1.0001644087860053,
+        "pace_rank": 15,
+        "team_abbrev": "DET",
+        "team_name": "Detroit Pistons"
+      },
+      {
+        "pace": 101.23,
+        "pace_factor": 0.9985860844403524,
+        "pace_rank": 17,
+        "team_abbrev": "GSW",
+        "team_name": "Golden State Warriors"
+      },
+      {
+        "pace": 98.64,
+        "pace_factor": 0.9730369590950939,
+        "pace_rank": 28,
+        "team_abbrev": "HOU",
+        "team_name": "Houston Rockets"
+      },
+      {
+        "pace": 101.99,
+        "pace_factor": 1.0060831250822042,
+        "pace_rank": 12,
+        "team_abbrev": "IND",
+        "team_name": "Indiana Pacers"
+      },
+      {
+        "pace": 98.05,
+        "pace_factor": 0.9672168880704983,
+        "pace_rank": 29,
+        "team_abbrev": "LAC",
+        "team_name": "LA Clippers"
+      },
+      {
+        "pace": 99.7,
+        "pace_factor": 0.9834933578850452,
+        "pace_rank": 26,
+        "team_abbrev": "LAL",
+        "team_name": "Los Angeles Lakers"
+      },
+      {
+        "pace": 102.44,
+        "pace_factor": 1.0105221623043534,
+        "pace_rank": 8,
+        "team_abbrev": "MEM",
+        "team_name": "Memphis Grizzlies"
+      },
+      {
+        "pace": 104.88,
+        "pace_factor": 1.034591608575562,
+        "pace_rank": 1,
+        "team_abbrev": "MIA",
+        "team_name": "Miami Heat"
+      },
+      {
+        "pace": 100.04,
+        "pace_factor": 0.986847297119558,
+        "pace_rank": 25,
+        "team_abbrev": "MIL",
+        "team_name": "Milwaukee Bucks"
+      },
+      {
+        "pace": 101.74,
+        "pace_factor": 1.0036169932921213,
+        "pace_rank": 13,
+        "team_abbrev": "MIN",
+        "team_name": "Minnesota Timberwolves"
+      },
+      {
+        "pace": 102.8,
+        "pace_factor": 1.0140733920820726,
+        "pace_rank": 6,
+        "team_abbrev": "NOP",
+        "team_name": "New Orleans Pelicans"
+      },
+      {
+        "pace": 100.15,
+        "pace_factor": 0.9879323951071944,
+        "pace_rank": 24,
+        "team_abbrev": "NYK",
+        "team_name": "New York Knicks"
+      },
+      {
+        "pace": 102.04,
+        "pace_factor": 1.0065763514402208,
+        "pace_rank": 10,
+        "team_abbrev": "OKC",
+        "team_name": "Oklahoma City Thunder"
+      },
+      {
+        "pace": 101.32,
+        "pace_factor": 0.9994738918847821,
+        "pace_rank": 16,
+        "team_abbrev": "ORL",
+        "team_name": "Orlando Magic"
+      },
+      {
+        "pace": 100.69,
+        "pace_factor": 0.9932592397737733,
+        "pace_rank": 22,
+        "team_abbrev": "PHI",
+        "team_name": "Philadelphia 76ers"
+      },
+      {
+        "pace": 100.74,
+        "pace_factor": 0.9937524661317899,
+        "pace_rank": 21,
+        "team_abbrev": "PHX",
+        "team_name": "Phoenix Suns"
+      },
+      {
+        "pace": 103.26,
+        "pace_factor": 1.0186110745758252,
+        "pace_rank": 5,
+        "team_abbrev": "POR",
+        "team_name": "Portland Trail Blazers"
+      },
+      {
+        "pace": 101.55,
+        "pace_factor": 1.0017427331316584,
+        "pace_rank": 14,
+        "team_abbrev": "SAC",
+        "team_name": "Sacramento Kings"
+      },
+      {
+        "pace": 101.14,
+        "pace_factor": 0.9976982769959225,
+        "pace_rank": 18,
+        "team_abbrev": "SAS",
+        "team_name": "San Antonio Spurs"
+      },
+      {
+        "pace": 100.77,
+        "pace_factor": 0.9940484019465998,
+        "pace_rank": 19,
+        "team_abbrev": "TOR",
+        "team_name": "Toronto Raptors"
+      },
+      {
+        "pace": 104.15,
+        "pace_factor": 1.0273905037485203,
+        "pace_rank": 3,
+        "team_abbrev": "UTA",
+        "team_name": "Utah Jazz"
+      },
+      {
+        "pace": 102.46,
+        "pace_factor": 1.01071945284756,
+        "pace_rank": 7,
+        "team_abbrev": "WAS",
+        "team_name": "Washington Wizards"
+      }
+    ],
+    "season": null,
+    "source": "nba_stats"
+  }
+]

@@ -78,6 +78,9 @@ Data contracts:
 - Each record must include a timestamp, source, and version tag.
 - Errors and missing fields must be recorded, not silently dropped.
 
+## Existing Data Assets (Starting Points)
+- See docs/EXISTING_DATA_ASSETS.md for cached datasets, output samples, and fixtures that can seed development and testing.
+
 ## Architecture and Components
 - Ingestion layer: rate-limited fetchers with shared sessions and retries.
 - Normalization layer: canonical player, team, and game identifiers.

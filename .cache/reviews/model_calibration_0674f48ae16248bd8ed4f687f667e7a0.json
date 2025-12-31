@@ -1,0 +1,13 @@
+{
+  "by_prop_type": {},
+  "generated_at": "2025-12-27T23:46:24.485880",
+  "global": {
+    "intercept": 0.225751,
+    "mean_outcome": 0.48,
+    "mean_prob": 0.847498,
+    "samples": 50,
+    "slope": 0.3
+  },
+  "min_samples": 30,
+  "prob_key": "raw_model_probability"
+}

@@ -5,6 +5,7 @@ import pandas as pd
 from nbaprop.storage import MemoryCache
 from nbaprop.ingestion import odds as odds_ingestion
 from nbaprop.ingestion import nba_stats as nba_ingestion
+from nbaprop.ingestion import injuries as injury_ingestion
 
 
 class StubLimiter:
@@ -39,6 +40,12 @@ def test_fetch_odds_snapshot_with_client_and_cache(monkeypatch):
                 {"id": "event-1", "home_team": "AAA", "away_team": "BBB"},
                 {"id": "event-2", "home_team": "CCC", "away_team": "DDD"},
             ]
+
+        def get_player_props(self, event_id, markets=None, bookmakers=None):
+            return []
+
+        def parse_player_props(self, props_data):
+            return pd.DataFrame()
 
     import data.fetchers.odds_fetcher as odds_fetcher
     monkeypatch.setattr(odds_fetcher, "OddsAPIClient", StubClient)
@@ -139,3 +146,31 @@ def test_fetch_team_stats_with_fetcher(monkeypatch):
 
     assert rows[0]["defense_ratings"][0]["team_abbrev"] == "AAA"
     assert rows[0]["pace"][0]["team_abbrev"] == "AAA"
+
+
+def test_fetch_injury_report_with_tracker(monkeypatch):
+    cache = MemoryCache()
+    monkeypatch.setattr(injury_ingestion, "get_rate_limiter", lambda: StubLimiter())
+
+    class StubTracker:
+        def __init__(self, perplexity_fn=None):
+            self.perplexity_fn = perplexity_fn
+
+        def get_all_injuries(self):
+            return pd.DataFrame([{
+                "player": "Test Player",
+                "team": "AAA",
+                "status": "OUT",
+                "injury": "Ankle",
+                "source": "NBA Official Report",
+            }])
+
+    import data.fetchers.injury_tracker as injury_tracker
+    monkeypatch.setattr(injury_tracker, "InjuryTracker", StubTracker)
+
+    report = injury_ingestion.fetch_injury_report(cache, ttl_seconds=60, perplexity_api_key="")
+    assert report["entries"][0]["player"] == "Test Player"
+    assert report["source_counts"]["NBA Official Report"] == 1
+
+    report_cached = injury_ingestion.fetch_injury_report(cache, ttl_seconds=60, perplexity_api_key="")
+    assert report_cached == report

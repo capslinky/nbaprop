@@ -1,0 +1,110 @@
+{
+  "calibration": {
+    "best_blend": 0.0,
+    "scores": {
+      "0.0": 0.2482658106,
+      "0.1": 0.25066535181399996,
+      "0.2": 0.25463722761600005,
+      "0.3": 0.260181438006,
+      "0.4": 0.26729798298400004,
+      "0.5": 0.27598686255,
+      "0.6": 0.2862480767039999,
+      "0.7": 0.298081625446,
+      "0.8": 0.31148750877600007,
+      "0.9": 0.3264657266939999,
+      "1.0": 0.3430162792
+    }
+  },
+  "model_calibration_path": ".cache/reviews/model_calibration_0674f48ae16248bd8ed4f687f667e7a0.json",
+  "reviewed_at": "2025-12-27T23:46:24.490018",
+  "source_picks": ".cache/runs/picks_filtered_adf371d4b3934982b304dce0cd14a36b.csv",
+  "summary": {
+    "by_confidence_tier": {
+      "LOW": {
+        "losses": 23,
+        "total": 43,
+        "win_rate": 0.4651,
+        "wins": 20
+      },
+      "MEDIUM": {
+        "losses": 3,
+        "total": 7,
+        "win_rate": 0.5714,
+        "wins": 4
+      }
+    },
+    "by_pick": {
+      "OVER": {
+        "losses": 23,
+        "total": 46,
+        "win_rate": 0.5,
+        "wins": 23
+      },
+      "UNDER": {
+        "losses": 3,
+        "total": 4,
+        "win_rate": 0.25,
+        "wins": 1
+      }
+    },
+    "by_prop_type": {
+      "assists": {
+        "losses": 5,
+        "pushes": 0,
+        "total": 12,
+        "win_rate": 0.5833,
+        "wins": 7
+      },
+      "points": {
+        "losses": 5,
+        "pushes": 0,
+        "total": 7,
+        "win_rate": 0.2857,
+        "wins": 2
+      },
+      "pra": {
+        "losses": 6,
+        "pushes": 0,
+        "total": 13,
+        "win_rate": 0.5385,
+        "wins": 7
+      },
+      "rebounds": {
+        "losses": 10,
+        "pushes": 0,
+        "total": 18,
+        "win_rate": 0.4444,
+        "wins": 8
+      }
+    },
+    "by_trend": {
+      "DOWN": {
+        "losses": 4,
+        "total": 9,
+        "win_rate": 0.5556,
+        "wins": 5
+      },
+      "FLAT": {
+        "losses": 4,
+        "total": 8,
+        "win_rate": 0.5,
+        "wins": 4
+      },
+      "UP": {
+        "losses": 18,
+        "total": 33,
+        "win_rate": 0.4545,
+        "wins": 15
+      }
+    },
+    "graded_picks": 50,
+    "losses": 26,
+    "missing_actuals": 0,
+    "pass_count": 0,
+    "pushes": 0,
+    "total_picks": 50,
+    "win_rate": 0.48,
+    "wins": 24
+  },
+  "target_date": "2025-12-26"
+}

@@ -45,7 +45,7 @@ class TestDailyRunnerPreGame:
 
     def test_analysis_batch_workflow(self):
         """Test batch analysis of multiple props."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -75,7 +75,7 @@ class TestDailyRunnerPreGame:
 
     def test_edge_filtering_workflow(self):
         """Test filtering picks by minimum edge threshold."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
         from core.config import CONFIG
 
         model = UnifiedPropModel(
@@ -99,7 +99,7 @@ class TestDailyRunnerPreGame:
 
     def test_confidence_filtering_workflow(self):
         """Test filtering picks by minimum confidence threshold."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
         from core.config import CONFIG
 
         model = UnifiedPropModel(
@@ -213,7 +213,7 @@ class TestRateLimitHandling:
 
     def test_graceful_degradation_on_api_failure(self):
         """Test system continues with partial data on API failures."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         # Mock fetcher that fails on defense data
         mock_fetcher = MockNBADataFetcher()
@@ -240,7 +240,7 @@ class TestDataIntegrity:
 
     def test_projection_bounds_sanity(self):
         """Test projections stay within reasonable bounds."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -267,7 +267,7 @@ class TestDataIntegrity:
 
     def test_edge_calculation_sanity(self):
         """Test edge calculations produce reasonable values."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -285,7 +285,7 @@ class TestDataIntegrity:
 
     def test_confidence_bounds(self):
         """Test confidence is always between 0 and 1."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -309,7 +309,7 @@ class TestContextApplication:
 
     def test_home_away_adjustment_direction(self):
         """Test home games have higher projections than away."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         model = UnifiedPropModel(
             data_fetcher=MockNBADataFetcher(),
@@ -337,7 +337,7 @@ class TestContextApplication:
 
     def test_b2b_adjustment_reduces_projection(self):
         """Test back-to-back games reduce projection."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         # Create mock with B2B detection
         mock_fetcher = MockNBADataFetcher()
@@ -361,7 +361,7 @@ class TestContextApplication:
 
     def test_injury_boost_increases_projection(self):
         """Test teammate injury boost increases projection."""
-        from nba_prop_model import UnifiedPropModel
+        from models import UnifiedPropModel
 
         # Create mock with teammate boost
         mock_injuries = MockInjuryTracker()

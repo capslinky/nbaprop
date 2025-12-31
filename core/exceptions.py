@@ -52,6 +52,21 @@ class DataFetchError(NBAPropError):
         super().__init__(msg)
 
 
+class NetworkError(DataFetchError):
+    """
+    Network-level error (connection failure, timeout, DNS resolution).
+
+    Raised when:
+    - Connection refused or reset
+    - Request timeout exceeded
+    - DNS lookup failed
+    - SSL/TLS handshake failed
+    """
+
+    def __init__(self, source: str, message: str = None, original_error: Exception = None):
+        super().__init__(source, message or "Network error", original_error)
+
+
 class PlayerNotFoundError(NBAPropError):
     """
     Player not found in the database or API.
@@ -130,6 +145,22 @@ class RateLimitError(OddsAPIError):
         if retry_after:
             msg += f" (retry after {retry_after} seconds)"
         super().__init__(msg)
+
+
+class AuthenticationError(OddsAPIError):
+    """
+    Authentication or authorization failure.
+
+    Raised when:
+    - API key is missing or invalid
+    - API key has expired
+    - Insufficient permissions (403)
+    """
+
+    def __init__(self, api_name: str, message: str = None, status_code: int = None):
+        self.api_name = api_name
+        msg = message or f"Authentication failed for {api_name}"
+        super().__init__(msg, status_code=status_code)
 
 
 # =============================================================================

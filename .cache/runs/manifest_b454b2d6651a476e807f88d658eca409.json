@@ -1,0 +1,33 @@
+{
+  "config_hash": "45e3e3c1218b9986e5c530aaf602f5b1989f1ba4b459db846ebbe531de03c2af",
+  "git_sha": "94f8a7f58c1e9f8efe2d8d721ae1477f1f89115f",
+  "outputs": {
+    "calibration_params": "/Users/anthonyparadise/Documents/GitHub/nbaprop/.cache/calibration/calibration_params.json",
+    "manifest": ".cache/runs/manifest_b454b2d6651a476e807f88d658eca409.json",
+    "metrics": ".cache/runs/metrics_b454b2d6651a476e807f88d658eca409.json",
+    "model_calibration": ".cache/reviews/model_calibration_b454b2d6651a476e807f88d658eca409.json",
+    "model_calibration_params": "/Users/anthonyparadise/Documents/GitHub/nbaprop/.cache/calibration/calibration_params.json",
+    "normalized_games_path": ".cache/storage/normalized_games.json",
+    "normalized_injuries_path": ".cache/storage/normalized_injuries.json",
+    "normalized_picks_path": ".cache/storage/normalized_picks.json",
+    "normalized_players_path": ".cache/storage/normalized_players.json",
+    "normalized_prop_features_path": ".cache/storage/normalized_prop_features.json",
+    "normalized_props_path": ".cache/storage/normalized_props.json",
+    "normalized_team_stats_path": ".cache/storage/normalized_team_stats.json",
+    "normalized_teams_path": ".cache/storage/normalized_teams.json",
+    "odds_snapshot": "odds_api:1766525293.7435021",
+    "picks_csv": ".cache/runs/picks_b454b2d6651a476e807f88d658eca409.csv",
+    "picks_filtered_csv": ".cache/runs/picks_filtered_b454b2d6651a476e807f88d658eca409.csv",
+    "picks_pdf": ".cache/runs/picks_b454b2d6651a476e807f88d658eca409.pdf",
+    "raw_injury_report_path": ".cache/storage/raw_injury_report.json",
+    "raw_odds_path": ".cache/storage/raw_odds_snapshot.json",
+    "raw_player_logs_path": ".cache/storage/raw_player_logs.json",
+    "raw_team_stats_path": ".cache/storage/raw_team_stats.json",
+    "review_csv": ".cache/reviews/review_b454b2d6651a476e807f88d658eca409.csv",
+    "review_summary": ".cache/reviews/review_summary_b454b2d6651a476e807f88d658eca409.json",
+    "updated_env": "/Users/anthonyparadise/Documents/GitHub/nbaprop/.env"
+  },
+  "run_id": "b454b2d6651a476e807f88d658eca409",
+  "source_versions": {},
+  "started_at": "2025-12-23T21:28:13.717495"
+}

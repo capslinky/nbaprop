@@ -1,0 +1,717 @@
+prop_id,player_name,prop_type,line,odds,pick,edge,confidence,projection,probability,injury_status,injury_source,trend,avg_5,avg_10,avg_15,streak,hit_rate_10,samples_10,hit_rate_15,samples_15
+8a59c926ad0214ec:assists:7.5:over,Darius Garland,assists,7.5,105,PASS,0.1121,0.2,8.33,0.5999,,,FLAT,6.6,7.0,6.538461538461538,0,,0,,0
+8a59c926ad0214ec:assists:7.5:under,Darius Garland,assists,7.5,-139,PASS,-0.1815,0.2,8.33,0.4001,,,FLAT,6.6,7.0,6.538461538461538,0,,0,,0
+facb6803046eab5c:assists:3.5:over,Brandon Miller,assists,3.5,-121,PASS,0.1168,0.3286,4.95,0.6643,,,UP,4.6,3.5,3.5833333333333335,0,,0,,0
+facb6803046eab5c:assists:3.5:under,Brandon Miller,assists,3.5,-110,PASS,-0.1881,0.3286,4.95,0.3357,,,UP,4.6,3.5,3.5833333333333335,0,,0,,0
+440168766d15343b:assists:3.5:over,Kon Knueppel,assists,3.5,-110,PASS,-0.0271,0.16,3.5,0.4967,,,UNKNOWN,,,,0,,0,,0
+440168766d15343b:assists:3.5:under,Kon Knueppel,assists,3.5,-121,PASS,-0.0442,0.16,3.5,0.5033,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:assists:3.5:over,Miles Bridges,assists,3.5,134,PASS,0.0432,0.16,3.5,0.4705,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:assists:3.5:under,Miles Bridges,assists,3.5,-175,PASS,-0.1069,0.16,3.5,0.5295,,,UNKNOWN,,,,0,,0,,0
+335aba9590921564:assists:3.5:over,Lonzo Ball,assists,3.5,-159,PASS,-0.0919,0.16,3.5,0.522,,,UNKNOWN,,,,0,,0,,0
+335aba9590921564:assists:3.5:under,Lonzo Ball,assists,3.5,119,PASS,0.0213,0.16,3.5,0.478,,,UNKNOWN,,,,0,,0,,0
+220e544c0e1716ed:assists:5.5:over,Donovan Mitchell,assists,5.5,-130,PASS,-0.0147,0.15,5.81,0.5506,PROBABLE,NBA Official Report,FLAT,5.4,5.7,5.466666666666667,0,,0,,0
+220e544c0e1716ed:assists:5.5:under,Donovan Mitchell,assists,5.5,-103,PASS,-0.0579,0.15,5.81,0.4494,PROBABLE,NBA Official Report,FLAT,5.4,5.7,5.466666666666667,0,,0,,0
+a7dee1eef19c56f4:assists:7.5:over,LaMelo Ball,assists,7.5,-114,PASS,-0.0336,0.11,7.5,0.4991,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a7dee1eef19c56f4:assists:7.5:under,LaMelo Ball,assists,7.5,-117,PASS,-0.0383,0.11,7.5,0.5009,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+b08b695cba57a107:points:7.5:over,Ryan Kalkbrenner,points,7.5,-106,PASS,-0.0203,0.06,7.5,0.4943,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+b08b695cba57a107:points:7.5:under,Ryan Kalkbrenner,points,7.5,-125,PASS,-0.0498,0.06,7.5,0.5057,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+220e544c0e1716ed:points:30.5:over,Donovan Mitchell,points,30.5,100,PASS,0.051,0.15,32.93,0.551,PROBABLE,NBA Official Report,FLAT,30.8,30.7,30.933333333333334,0,,0,,0
+220e544c0e1716ed:points:30.5:under,Donovan Mitchell,points,30.5,-130,PASS,-0.1162,0.15,32.93,0.449,PROBABLE,NBA Official Report,FLAT,30.8,30.7,30.933333333333334,0,,0,,0
+1632dad36b5e936c:points:6.5:over,Dean Wade,points,6.5,-117,PASS,-0.1396,0.2009,4.73,0.3995,,,FLAT,4.6,5.2,4.933333333333334,0,,0,,0
+1632dad36b5e936c:points:6.5:under,Dean Wade,points,6.5,-114,PASS,0.0677,0.2009,4.73,0.6005,,,FLAT,4.6,5.2,4.933333333333334,0,,0,,0
+e300be223d9124fe:points:5.5:over,Sion James,points,5.5,-104,PASS,-0.0173,0.16,5.5,0.4925,,,UNKNOWN,,,,0,,0,,0
+e300be223d9124fe:points:5.5:under,Sion James,points,5.5,-129,PASS,-0.0558,0.16,5.5,0.5075,,,UNKNOWN,,,,0,,0,,0
+facb6803046eab5c:points:19.5:over,Brandon Miller,points,19.5,-114,PASS,0.0953,0.256,22.59,0.628,,,UP,20.0,18.5,17.833333333333332,0,,0,,0
+facb6803046eab5c:points:19.5:under,Brandon Miller,points,19.5,-117,PASS,-0.1672,0.256,22.59,0.372,,,UP,20.0,18.5,17.833333333333332,0,,0,,0
+0fcc97fb82556cb2:points:13.5:over,Jaylon Tyson,points,13.5,-124,PASS,-0.0377,0.16,13.63,0.5159,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:points:13.5:under,Jaylon Tyson,points,13.5,-108,PASS,-0.0351,0.16,13.63,0.4841,,,UNKNOWN,,,,0,,0,,0
+9ea8ae204f976e4e:points:7.5:over,Sam Merrill,points,7.5,-108,PASS,-0.024,0.11,7.5,0.4952,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+9ea8ae204f976e4e:points:7.5:under,Sam Merrill,points,7.5,-124,PASS,-0.0488,0.11,7.5,0.5048,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+440168766d15343b:points:18.5:over,Kon Knueppel,points,18.5,-120,PASS,-0.0431,0.16,18.5,0.5024,,,UNKNOWN,,,,0,,0,,0
+440168766d15343b:points:18.5:under,Kon Knueppel,points,18.5,-112,PASS,-0.0307,0.16,18.5,0.4976,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:points:18.5:over,Miles Bridges,points,18.5,-114,PASS,-0.0336,0.16,18.5,0.4991,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:points:18.5:under,Miles Bridges,points,18.5,-117,PASS,-0.0383,0.16,18.5,0.5009,,,UNKNOWN,,,,0,,0,,0
+0aa082da5aeeb340:points:6.5:over,Moussa Diabate,points,6.5,-130,PASS,-0.0571,0.16,6.5,0.5081,,,UNKNOWN,,,,0,,0,,0
+0aa082da5aeeb340:points:6.5:under,Moussa Diabate,points,6.5,-103,PASS,-0.0155,0.16,6.5,0.4919,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:points:15.5:over,Jarrett Allen,points,15.5,-108,PASS,-0.0124,0.16,15.65,0.5068,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:points:15.5:under,Jarrett Allen,points,15.5,-122,PASS,-0.0564,0.16,15.65,0.4932,,,UNKNOWN,,,,0,,0,,0
+d6fa084d1a037f96:points:13.5:over,De'Andre Hunter,points,13.5,-103,PASS,-0.1466,0.2784,11.66,0.3608,,,DOWN,9.6,10.6,12.533333333333333,0,,0,,0
+d6fa084d1a037f96:points:13.5:under,De'Andre Hunter,points,13.5,-130,PASS,0.074,0.2784,11.66,0.6392,,,DOWN,9.6,10.6,12.533333333333333,0,,0,,0
+335aba9590921564:points:6.5:over,Lonzo Ball,points,6.5,-111,PASS,-0.0291,0.16,6.5,0.497,,,UNKNOWN,,,,0,,0,,0
+335aba9590921564:points:6.5:under,Lonzo Ball,points,6.5,-121,PASS,-0.0445,0.16,6.5,0.503,,,UNKNOWN,,,,0,,0,,0
+8a59c926ad0214ec:points:20.5:over,Darius Garland,points,20.5,-124,PASS,0.1077,0.3226,25.46,0.6613,,,UP,22.2,18.1,16.923076923076923,0,,0,,0
+8a59c926ad0214ec:points:20.5:under,Darius Garland,points,20.5,-108,PASS,-0.1805,0.3226,25.46,0.3387,,,UP,22.2,18.1,16.923076923076923,0,,0,,0
+a7dee1eef19c56f4:points:19.5:over,LaMelo Ball,points,19.5,-120,PASS,-0.0431,0.11,19.5,0.5024,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a7dee1eef19c56f4:points:19.5:under,LaMelo Ball,points,19.5,-112,PASS,-0.0307,0.11,19.5,0.4976,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+facb6803046eab5c:pra:27.5:over,Brandon Miller,pra,27.5,-119,PASS,0.1452,0.3771,34.47,0.6886,,,UP,31.6,27.0,25.583333333333332,0,,0,,0
+facb6803046eab5c:pra:27.5:under,Brandon Miller,pra,27.5,-109,PASS,-0.2101,0.3771,34.47,0.3114,,,UP,31.6,27.0,25.583333333333332,0,,0,,0
+0fcc97fb82556cb2:pra:22.5:over,Jaylon Tyson,pra,22.5,-108,PASS,-0.0119,0.16,22.73,0.5074,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:pra:22.5:under,Jaylon Tyson,pra,22.5,-120,PASS,-0.0528,0.16,22.73,0.4926,,,UNKNOWN,,,,0,,0,,0
+220e544c0e1716ed:pra:40.5:over,Donovan Mitchell,pra,40.5,-110,PASS,0.0199,0.15,42.35,0.5438,PROBABLE,NBA Official Report,DOWN,38.8,40.2,40.93333333333333,0,,0,,0
+220e544c0e1716ed:pra:40.5:under,Donovan Mitchell,pra,40.5,-118,PASS,-0.085,0.15,42.35,0.4562,PROBABLE,NBA Official Report,DOWN,38.8,40.2,40.93333333333333,0,,0,,0
+2a4f649870db0148:pra:26.5:over,Miles Bridges,pra,26.5,-122,PASS,-0.0453,0.16,26.5,0.5043,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:pra:26.5:under,Miles Bridges,pra,26.5,-108,PASS,-0.0235,0.16,26.5,0.4957,,,UNKNOWN,,,,0,,0,,0
+e300be223d9124fe:pra:9.5:over,Sion James,pra,9.5,-132,PASS,-0.0585,0.16,9.5,0.5104,,,UNKNOWN,,,,0,,0,,0
+e300be223d9124fe:pra:9.5:under,Sion James,pra,9.5,102,PASS,-0.0055,0.16,9.5,0.4896,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:pra:27.5:over,Jarrett Allen,pra,27.5,-106,PASS,-0.0093,0.16,27.77,0.5053,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:pra:27.5:under,Jarrett Allen,pra,27.5,-125,PASS,-0.0609,0.16,27.77,0.4947,,,UNKNOWN,,,,0,,0,,0
+d6fa084d1a037f96:pra:18.5:over,De'Andre Hunter,pra,18.5,-120,PASS,-0.1377,0.2,17.05,0.4077,,,DOWN,14.4,15.3,17.933333333333334,0,,0,,0
+d6fa084d1a037f96:pra:18.5:under,De'Andre Hunter,pra,18.5,-108,PASS,0.0731,0.2,17.05,0.5923,,,DOWN,14.4,15.3,17.933333333333334,0,,0,,0
+335aba9590921564:pra:14.5:over,Lonzo Ball,pra,14.5,-119,PASS,-0.0403,0.16,14.5,0.5031,,,UNKNOWN,,,,0,,0,,0
+335aba9590921564:pra:14.5:under,Lonzo Ball,pra,14.5,-109,PASS,-0.0246,0.16,14.5,0.4969,,,UNKNOWN,,,,0,,0,,0
+8a59c926ad0214ec:pra:31.5:over,Darius Garland,pra,31.5,-108,PASS,0.1553,0.349,37.9,0.6745,,,UP,32.2,28.1,26.46153846153846,0,,0,,0
+8a59c926ad0214ec:pra:31.5:under,Darius Garland,pra,31.5,-120,PASS,-0.2199,0.349,37.9,0.3255,,,UP,32.2,28.1,26.46153846153846,0,,0,,0
+440168766d15343b:pra:27.5:over,Kon Knueppel,pra,27.5,-111,PASS,-0.0276,0.16,27.5,0.4985,,,UNKNOWN,,,,0,,0,,0
+440168766d15343b:pra:27.5:under,Kon Knueppel,pra,27.5,-116,PASS,-0.0355,0.16,27.5,0.5015,,,UNKNOWN,,,,0,,0,,0
+a7dee1eef19c56f4:pra:32.5:over,LaMelo Ball,pra,32.5,-108,PASS,-0.0229,0.11,32.5,0.4963,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a7dee1eef19c56f4:pra:32.5:under,LaMelo Ball,pra,32.5,-120,PASS,-0.0418,0.11,32.5,0.5037,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+b08b695cba57a107:rebounds:6.5:over,Ryan Kalkbrenner,rebounds,6.5,-104,PASS,-0.0173,0.06,6.5,0.4925,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+b08b695cba57a107:rebounds:6.5:under,Ryan Kalkbrenner,rebounds,6.5,-129,PASS,-0.0558,0.06,6.5,0.5075,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+220e544c0e1716ed:rebounds:4.5:over,Donovan Mitchell,rebounds,4.5,113,PASS,-0.0811,0.1733,3.61,0.3884,PROBABLE,NBA Official Report,DOWN,2.6,3.8,4.533333333333333,0,,0,,0
+220e544c0e1716ed:rebounds:4.5:under,Donovan Mitchell,rebounds,4.5,-152,PASS,0.0085,0.1733,3.61,0.6116,PROBABLE,NBA Official Report,DOWN,2.6,3.8,4.533333333333333,0,,0,,0
+e300be223d9124fe:rebounds:2.5:over,Sion James,rebounds,2.5,-132,PASS,-0.0593,0.16,2.5,0.5097,,,UNKNOWN,,,,0,,0,,0
+e300be223d9124fe:rebounds:2.5:under,Sion James,rebounds,2.5,100,PASS,-0.0097,0.16,2.5,0.4903,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:rebounds:5.5:over,Miles Bridges,rebounds,5.5,102,PASS,-0.0064,0.16,5.5,0.4886,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:rebounds:5.5:under,Miles Bridges,rebounds,5.5,-136,PASS,-0.0649,0.16,5.5,0.5114,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:rebounds:5.5:over,Jaylon Tyson,rebounds,5.5,-141,PASS,-0.06,0.16,5.55,0.525,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:rebounds:5.5:under,Jaylon Tyson,rebounds,5.5,106,PASS,-0.0105,0.16,5.55,0.475,,,UNKNOWN,,,,0,,0,,0
+0aa082da5aeeb340:rebounds:7.5:over,Moussa Diabate,rebounds,7.5,-110,PASS,-0.0271,0.16,7.5,0.4967,,,UNKNOWN,,,,0,,0,,0
+0aa082da5aeeb340:rebounds:7.5:under,Moussa Diabate,rebounds,7.5,-121,PASS,-0.0442,0.16,7.5,0.5033,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:rebounds:8.5:over,Jarrett Allen,rebounds,8.5,-146,PASS,-0.0656,0.16,8.59,0.5279,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:rebounds:8.5:under,Jarrett Allen,rebounds,8.5,111,PASS,-0.0018,0.16,8.59,0.4721,,,UNKNOWN,,,,0,,0,,0
+facb6803046eab5c:rebounds:4.5:over,Brandon Miller,rebounds,4.5,-105,PASS,0.169,0.3624,6.93,0.6812,,,UP,7.0,5.0,4.166666666666667,0,,0,,0
+facb6803046eab5c:rebounds:4.5:under,Brandon Miller,rebounds,4.5,-129,PASS,-0.2445,0.3624,6.93,0.3188,,,UP,7.0,5.0,4.166666666666667,0,,0,,0
+440168766d15343b:rebounds:4.5:over,Kon Knueppel,rebounds,4.5,-152,PASS,-0.0841,0.16,4.5,0.519,,,UNKNOWN,,,,0,,0,,0
+440168766d15343b:rebounds:4.5:under,Kon Knueppel,rebounds,4.5,114,PASS,0.0137,0.16,4.5,0.481,,,UNKNOWN,,,,0,,0,,0
+8a59c926ad0214ec:rebounds:2.5:over,Darius Garland,rebounds,2.5,-182,OVER,0.1373,0.5653,4.11,0.7827,,,FLAT,3.4,3.0,3.0,-1,0.5,10,0.4615,13
+8a59c926ad0214ec:rebounds:2.5:under,Darius Garland,rebounds,2.5,136,PASS,-0.2064,0.5653,4.11,0.2173,,,FLAT,3.4,3.0,3.0,0,,0,,0
+a7dee1eef19c56f4:rebounds:4.5:over,LaMelo Ball,rebounds,4.5,-115,PASS,-0.0349,0.11,4.5,0.5,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a7dee1eef19c56f4:rebounds:4.5:under,LaMelo Ball,rebounds,4.5,-115,PASS,-0.0349,0.11,4.5,0.5,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+d6fa084d1a037f96:rebounds:3.5:over,De'Andre Hunter,rebounds,3.5,-148,PASS,0.0409,0.2754,3.95,0.6377,,,FLAT,3.8,3.5,3.8666666666666667,0,,0,,0
+d6fa084d1a037f96:rebounds:3.5:under,De'Andre Hunter,rebounds,3.5,111,PASS,-0.1116,0.2754,3.95,0.3623,,,FLAT,3.8,3.5,3.8666666666666667,0,,0,,0
+335aba9590921564:rebounds:3.5:over,Lonzo Ball,rebounds,3.5,-164,PASS,-0.097,0.16,3.5,0.5242,,,UNKNOWN,,,,0,,0,,0
+335aba9590921564:rebounds:3.5:under,Lonzo Ball,rebounds,3.5,123,PASS,0.0273,0.16,3.5,0.4758,,,UNKNOWN,,,,0,,0,,0
+1632dad36b5e936c:rebounds:4.5:over,Dean Wade,rebounds,4.5,-130,PASS,-0.0752,0.2,4.34,0.49,,,FLAT,4.8,4.0,4.466666666666667,0,,0,,0
+1632dad36b5e936c:rebounds:4.5:under,Dean Wade,rebounds,4.5,-103,PASS,0.0026,0.2,4.34,0.51,,,FLAT,4.8,4.0,4.466666666666667,0,,0,,0
+a7dee1eef19c56f4:threes:2.5:over,LaMelo Ball,threes,2.5,-121,PASS,-0.0442,0.11,2.5,0.5033,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a7dee1eef19c56f4:threes:2.5:under,LaMelo Ball,threes,2.5,-110,PASS,-0.0271,0.11,2.5,0.4967,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+facb6803046eab5c:threes:2.5:over,Brandon Miller,threes,2.5,-157,PASS,0.0497,0.3212,3.45,0.6606,,,UP,3.2,2.8,2.5,0,,0,,0
+facb6803046eab5c:threes:2.5:under,Brandon Miller,threes,2.5,117,PASS,-0.1214,0.3212,3.45,0.3394,,,UP,3.2,2.8,2.5,0,,0,,0
+9ea8ae204f976e4e:threes:1.5:over,Sam Merrill,threes,1.5,-173,PASS,-0.1061,0.11,1.5,0.5276,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+9ea8ae204f976e4e:threes:1.5:under,Sam Merrill,threes,1.5,129,PASS,0.0357,0.11,1.5,0.4724,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:threes:1.5:over,Miles Bridges,threes,1.5,-190,PASS,-0.1221,0.16,1.5,0.5331,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:threes:1.5:under,Miles Bridges,threes,1.5,139,PASS,0.0485,0.16,1.5,0.4669,,,UNKNOWN,,,,0,,0,,0
+e300be223d9124fe:threes:1.5:over,Sion James,threes,1.5,155,PASS,0.0675,0.16,1.5,0.4597,,,UNKNOWN,,,,0,,0,,0
+e300be223d9124fe:threes:1.5:under,Sion James,threes,1.5,-213,PASS,-0.1402,0.16,1.5,0.5403,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:threes:1.5:over,Jaylon Tyson,threes,1.5,-130,PASS,-0.0529,0.16,1.52,0.5123,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:threes:1.5:under,Jaylon Tyson,threes,1.5,-103,PASS,-0.0197,0.16,1.52,0.4877,,,UNKNOWN,,,,0,,0,,0
+d6fa084d1a037f96:threes:1.5:over,De'Andre Hunter,threes,1.5,-182,PASS,-0.1262,0.2,1.45,0.5192,,,DOWN,1.2,1.3,1.8,0,,0,,0
+d6fa084d1a037f96:threes:1.5:under,De'Andre Hunter,threes,1.5,136,PASS,0.057,0.2,1.45,0.4808,,,DOWN,1.2,1.3,1.8,0,,0,,0
+440168766d15343b:threes:3.5:over,Kon Knueppel,threes,3.5,130,PASS,0.0373,0.16,3.5,0.4721,,,UNKNOWN,,,,0,,0,,0
+440168766d15343b:threes:3.5:under,Kon Knueppel,threes,3.5,-173,PASS,-0.1058,0.16,3.5,0.5279,,,UNKNOWN,,,,0,,0,,0
+8a59c926ad0214ec:threes:2.5:over,Darius Garland,threes,2.5,-124,PASS,0.0377,0.2,3.11,0.5912,,,FLAT,2.6,2.2,2.230769230769231,0,,0,,0
+8a59c926ad0214ec:threes:2.5:under,Darius Garland,threes,2.5,-108,PASS,-0.1105,0.2,3.11,0.4088,,,FLAT,2.6,2.2,2.230769230769231,0,,0,,0
+1632dad36b5e936c:threes:1.5:over,Dean Wade,threes,1.5,140,PASS,-0.1184,0.4035,0.85,0.2982,,,FLAT,0.8,0.9,0.8,0,,0,,0
+1632dad36b5e936c:threes:1.5:under,Dean Wade,threes,1.5,-190,UNDER,0.0466,0.4035,0.85,0.7018,,,FLAT,0.8,0.9,0.8,2,0.8,10,0.8667,15
+335aba9590921564:threes:1.5:over,Lonzo Ball,threes,1.5,160,PASS,0.0732,0.16,1.5,0.4578,,,UNKNOWN,,,,0,,0,,0
+335aba9590921564:threes:1.5:under,Lonzo Ball,threes,1.5,-218,PASS,-0.1434,0.16,1.5,0.5422,,,UNKNOWN,,,,0,,0,,0
+220e544c0e1716ed:threes:3.5:over,Donovan Mitchell,threes,3.5,-137,PASS,0.0366,0.1793,4.43,0.6146,PROBABLE,NBA Official Report,FLAT,4.2,4.1,4.066666666666666,0,,0,,0
+220e544c0e1716ed:threes:3.5:under,Donovan Mitchell,threes,3.5,104,PASS,-0.1048,0.1793,4.43,0.3854,PROBABLE,NBA Official Report,FLAT,4.2,4.1,4.066666666666666,0,,0,,0
+2a4f649870db0148:assists:2.5:over,Miles Bridges,assists,2.5,-170,PASS,-0.1038,0.16,2.5,0.5259,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:assists:2.5:under,Miles Bridges,assists,2.5,125,PASS,0.0297,0.16,2.5,0.4741,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:assists:2.5:over,Jaylon Tyson,assists,2.5,127,PASS,0.0399,0.16,2.52,0.4805,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:assists:2.5:under,Jaylon Tyson,assists,2.5,-170,PASS,-0.1101,0.16,2.52,0.5195,,,UNKNOWN,,,,0,,0,,0
+220e544c0e1716ed:points:29.5:over,Donovan Mitchell,points,29.5,-127,PASS,0.031,0.15,32.93,0.5905,PROBABLE,NBA Official Report,FLAT,30.8,30.7,30.933333333333334,0,,0,,0
+220e544c0e1716ed:points:29.5:under,Donovan Mitchell,points,29.5,-106,PASS,-0.105,0.15,32.93,0.4095,PROBABLE,NBA Official Report,FLAT,30.8,30.7,30.933333333333334,0,,0,,0
+a7dee1eef19c56f4:pra:31.5:over,LaMelo Ball,pra,31.5,-116,PASS,-0.0364,0.11,31.5,0.5006,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a7dee1eef19c56f4:pra:31.5:under,LaMelo Ball,pra,31.5,-114,PASS,-0.0333,0.11,31.5,0.4994,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:pra:27.5:over,Miles Bridges,pra,27.5,-112,PASS,-0.0292,0.16,27.5,0.4991,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:pra:27.5:under,Miles Bridges,pra,27.5,-115,PASS,-0.034,0.16,27.5,0.5009,,,UNKNOWN,,,,0,,0,,0
+8a59c926ad0214ec:rebounds:3.5:over,Darius Garland,rebounds,3.5,133,PASS,0.1516,0.2,4.11,0.5808,,,FLAT,3.4,3.0,3.0,0,,0,,0
+8a59c926ad0214ec:rebounds:3.5:under,Darius Garland,rebounds,3.5,-179,PASS,-0.2223,0.2,4.11,0.4192,,,FLAT,3.4,3.0,3.0,0,,0,,0
+335aba9590921564:assists:4.5:over,Lonzo Ball,assists,4.5,130,PASS,0.0379,0.16,4.5,0.4727,,,UNKNOWN,,,,0,,0,,0
+335aba9590921564:assists:4.5:under,Lonzo Ball,assists,4.5,-169,PASS,-0.101,0.16,4.5,0.5273,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:points:14.5:over,Jaylon Tyson,points,14.5,103,PASS,0.0074,0.16,14.64,0.5,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:points:14.5:under,Jaylon Tyson,points,14.5,-133,PASS,-0.0708,0.16,14.64,0.5,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:pra:26.5:over,Jarrett Allen,pra,26.5,-123,PASS,-0.035,0.16,26.77,0.5166,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:pra:26.5:under,Jarrett Allen,pra,26.5,-105,PASS,-0.0288,0.16,26.77,0.4834,,,UNKNOWN,,,,0,,0,,0
+335aba9590921564:rebounds:4.5:over,Lonzo Ball,rebounds,4.5,122,PASS,0.0265,0.16,4.5,0.477,,,UNKNOWN,,,,0,,0,,0
+335aba9590921564:rebounds:4.5:under,Lonzo Ball,rebounds,4.5,-159,PASS,-0.0909,0.16,4.5,0.523,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:rebounds:9.5:over,Jarrett Allen,rebounds,9.5,102,PASS,0.0046,0.16,9.6,0.4997,,,UNKNOWN,,,,0,,0,,0
+ada18546837dac41:rebounds:9.5:under,Jarrett Allen,rebounds,9.5,-136,PASS,-0.076,0.16,9.6,0.5003,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:rebounds:6.5:over,Jaylon Tyson,rebounds,6.5,120,PASS,0.0347,0.16,6.57,0.4892,,,UNKNOWN,,,,0,,0,,0
+0fcc97fb82556cb2:rebounds:6.5:under,Jaylon Tyson,rebounds,6.5,-156,PASS,-0.0986,0.16,6.57,0.5108,,,UNKNOWN,,,,0,,0,,0
+d6fa084d1a037f96:rebounds:4.5:over,De'Andre Hunter,rebounds,4.5,130,PASS,-0.1093,0.349,3.95,0.3255,,,FLAT,3.8,3.5,3.8666666666666667,0,,0,,0
+d6fa084d1a037f96:rebounds:4.5:under,De'Andre Hunter,rebounds,4.5,-169,PASS,0.0462,0.349,3.95,0.6745,,,FLAT,3.8,3.5,3.8666666666666667,0,,0,,0
+9ea8ae204f976e4e:threes:2.5:over,Sam Merrill,threes,2.5,158,PASS,0.0718,0.11,2.5,0.4594,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+9ea8ae204f976e4e:threes:2.5:under,Sam Merrill,threes,2.5,-208,PASS,-0.1347,0.11,2.5,0.5406,PROBABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:threes:2.5:over,Miles Bridges,threes,2.5,152,PASS,0.0651,0.16,2.5,0.4619,,,UNKNOWN,,,,0,,0,,0
+2a4f649870db0148:threes:2.5:under,Miles Bridges,threes,2.5,-200,PASS,-0.1286,0.16,2.5,0.5381,,,UNKNOWN,,,,0,,0,,0
+54ada52701661023:assists:6.5:over,Andrew Nembhard,assists,6.5,104,PASS,0.0704,0.2,7.1,0.5606,,,UP,6.8,6.4,6.266666666666667,0,,0,,0
+54ada52701661023:assists:6.5:under,Andrew Nembhard,assists,6.5,-137,PASS,-0.1387,0.2,7.1,0.4394,,,UP,6.8,6.4,6.266666666666667,0,,0,,0
+0149249a4eb6cf3f:assists:3.5:over,Pascal Siakam,assists,3.5,115,PASS,0.0155,0.16,3.5,0.4806,,,UNKNOWN,,,,0,,0,,0
+0149249a4eb6cf3f:assists:3.5:under,Pascal Siakam,assists,3.5,-152,PASS,-0.0838,0.16,3.5,0.5194,,,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:assists:5.5:over,Jaylen Brown,assists,5.5,-103,PASS,0.0059,0.06,5.61,0.5133,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:assists:5.5:under,Jaylen Brown,assists,5.5,-130,PASS,-0.0785,0.06,5.61,0.4867,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+8266cd61c58c9517:assists:5.5:over,Payton Pritchard,assists,5.5,-120,PASS,-0.0217,0.16,5.61,0.5237,,,UNKNOWN,,,,0,,0,,0
+8266cd61c58c9517:assists:5.5:under,Payton Pritchard,assists,5.5,-112,PASS,-0.052,0.16,5.61,0.4763,,,UNKNOWN,,,,0,,0,,0
+56366070652c315d:assists:5.5:over,Derrick White,assists,5.5,114,PASS,0.0254,0.2,5.59,0.4927,,,DOWN,4.4,5.0,5.066666666666666,0,,0,,0
+56366070652c315d:assists:5.5:under,Derrick White,assists,5.5,-152,PASS,-0.0959,0.2,5.59,0.5073,,,DOWN,4.4,5.0,5.066666666666666,0,,0,,0
+d37bbae8653cdb2b:assists:4.5:over,T.J. McConnell,assists,4.5,-122,PASS,-0.0456,0.06,4.5,0.5039,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:assists:4.5:under,T.J. McConnell,assists,4.5,-109,PASS,-0.0255,0.06,4.5,0.4961,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:points:8.5:over,T.J. McConnell,points,8.5,-130,PASS,-0.0571,0.06,8.5,0.5081,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:points:8.5:under,T.J. McConnell,points,8.5,-103,PASS,-0.0155,0.06,8.5,0.4919,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a168fb201860affc:points:17.5:over,Bennedict Mathurin,points,17.5,-115,PASS,-0.1715,0.2732,13.69,0.3634,,,DOWN,13.4,16.0,17.266666666666666,0,,0,,0
+a168fb201860affc:points:17.5:under,Bennedict Mathurin,points,17.5,-115,PASS,0.1017,0.2732,13.69,0.6366,,,DOWN,13.4,16.0,17.266666666666666,0,,0,,0
+c29cbd55ca2a2752:points:10.5:over,Neemias Queta,points,10.5,-130,PASS,-0.0361,0.16,10.7,0.5291,,,UNKNOWN,,,,0,,0,,0
+c29cbd55ca2a2752:points:10.5:under,Neemias Queta,points,10.5,-104,PASS,-0.0389,0.16,10.7,0.4709,,,UNKNOWN,,,,0,,0,,0
+0149249a4eb6cf3f:points:22.5:over,Pascal Siakam,points,22.5,-127,PASS,-0.0529,0.16,22.5,0.5066,,,UNKNOWN,,,,0,,0,,0
+0149249a4eb6cf3f:points:22.5:under,Pascal Siakam,points,22.5,-105,PASS,-0.0188,0.16,22.5,0.4934,,,UNKNOWN,,,,0,,0,,0
+54ada52701661023:points:15.5:over,Andrew Nembhard,points,15.5,-120,PASS,0.0765,0.2439,19.14,0.622,,,UP,18.2,16.6,17.533333333333335,0,,0,,0
+54ada52701661023:points:15.5:under,Andrew Nembhard,points,15.5,-112,PASS,-0.1503,0.2439,19.14,0.378,,,UP,18.2,16.6,17.533333333333335,0,,0,,0
+2c32eb67b1d23b03:points:6.5:over,Jordan Walsh,points,6.5,-125,PASS,-0.0502,0.06,6.5,0.5054,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+2c32eb67b1d23b03:points:6.5:under,Jordan Walsh,points,6.5,-107,PASS,-0.0223,0.06,6.5,0.4946,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+56366070652c315d:points:18.5:over,Derrick White,points,18.5,-115,OVER,0.1877,0.4453,25.39,0.7226,,,UP,23.4,23.1,20.666666666666668,-1,0.7,10,0.6,15
+56366070652c315d:points:18.5:under,Derrick White,points,18.5,-115,PASS,-0.2575,0.4453,25.39,0.2774,,,UP,23.4,23.1,20.666666666666668,0,,0,,0
+e3ae9d94a2714cb0:points:13.5:over,Anfernee Simons,points,13.5,-118,PASS,0.0053,0.2,14.19,0.5466,,,FLAT,11.4,11.6,11.866666666666667,0,,0,,0
+e3ae9d94a2714cb0:points:13.5:under,Anfernee Simons,points,13.5,-113,PASS,-0.0771,0.2,14.19,0.4534,,,FLAT,11.4,11.6,11.866666666666667,0,,0,,0
+a951bcf5a0035036:points:8.5:over,Jay Huff,points,8.5,-130,PASS,-0.0571,0.16,8.5,0.5081,,,UNKNOWN,,,,0,,0,,0
+a951bcf5a0035036:points:8.5:under,Jay Huff,points,8.5,-103,PASS,-0.0155,0.16,8.5,0.4919,,,UNKNOWN,,,,0,,0,,0
+18b51ba0144cbe14:points:5.5:over,Isaiah Jackson,points,5.5,-120,PASS,0.0455,0.2,6.79,0.5909,,,DOWN,5.2,6.9,7.133333333333334,0,,0,,0
+18b51ba0144cbe14:points:5.5:under,Isaiah Jackson,points,5.5,-112,PASS,-0.1192,0.2,6.79,0.4091,,,DOWN,5.2,6.9,7.133333333333334,0,,0,,0
+8266cd61c58c9517:points:18.5:over,Payton Pritchard,points,18.5,-114,PASS,-0.0123,0.16,18.86,0.5204,,,UNKNOWN,,,,0,,0,,0
+8266cd61c58c9517:points:18.5:under,Payton Pritchard,points,18.5,-117,PASS,-0.0596,0.16,18.86,0.4796,,,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:points:29.5:over,Jaylen Brown,points,29.5,-122,PASS,-0.0243,0.06,30.08,0.5253,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:points:29.5:under,Jaylen Brown,points,29.5,-109,PASS,-0.0468,0.06,30.08,0.4747,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a168fb201860affc:pra:25.5:over,Bennedict Mathurin,pra,25.5,-106,PASS,-0.184,0.3388,20.31,0.3306,,,DOWN,20.8,23.4,24.8,0,,0,,0
+a168fb201860affc:pra:25.5:under,Bennedict Mathurin,pra,25.5,-122,PASS,0.1199,0.3388,20.31,0.6694,,,DOWN,20.8,23.4,24.8,0,,0,,0
+2c32eb67b1d23b03:pra:14.5:over,Jordan Walsh,pra,14.5,-122,PASS,-0.0446,0.06,14.5,0.5049,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+2c32eb67b1d23b03:pra:14.5:under,Jordan Walsh,pra,14.5,-106,PASS,-0.0195,0.06,14.5,0.4951,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+56366070652c315d:pra:28.5:over,Derrick White,pra,28.5,-116,OVER,0.1667,0.4076,36.11,0.7038,,,UP,32.2,32.5,30.333333333333332,-1,0.7,10,0.6,15
+56366070652c315d:pra:28.5:under,Derrick White,pra,28.5,-111,PASS,-0.2299,0.4076,36.11,0.2962,,,UP,32.2,32.5,30.333333333333332,0,,0,,0
+e3ae9d94a2714cb0:pra:18.5:over,Anfernee Simons,pra,18.5,-108,PASS,-0.0114,0.2,18.72,0.5078,,,DOWN,14.8,15.3,16.333333333333332,0,,0,,0
+e3ae9d94a2714cb0:pra:18.5:under,Anfernee Simons,pra,18.5,-122,PASS,-0.0574,0.2,18.72,0.4922,,,DOWN,14.8,15.3,16.333333333333332,0,,0,,0
+c29cbd55ca2a2752:pra:22.5:over,Neemias Queta,pra,22.5,-109,PASS,-0.0033,0.16,22.94,0.5183,,,UNKNOWN,,,,0,,0,,0
+c29cbd55ca2a2752:pra:22.5:under,Neemias Queta,pra,22.5,-119,PASS,-0.0616,0.16,22.94,0.4817,,,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:pra:16.5:over,T.J. McConnell,pra,16.5,-112,PASS,-0.0292,0.06,16.5,0.4991,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:pra:16.5:under,T.J. McConnell,pra,16.5,-115,PASS,-0.034,0.06,16.5,0.5009,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+0149249a4eb6cf3f:pra:32.5:over,Pascal Siakam,pra,32.5,-115,PASS,-0.034,0.16,32.5,0.5009,,,UNKNOWN,,,,0,,0,,0
+0149249a4eb6cf3f:pra:32.5:under,Pascal Siakam,pra,32.5,-112,PASS,-0.0292,0.16,32.5,0.4991,,,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:pra:42.5:over,Jaylen Brown,pra,42.5,-116,PASS,-0.0142,0.06,43.33,0.5229,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:pra:42.5:under,Jaylen Brown,pra,42.5,-111,PASS,-0.049,0.06,43.33,0.4771,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+54ada52701661023:pra:24.5:over,Andrew Nembhard,pra,24.5,-119,PASS,0.0902,0.2672,29.13,0.6336,,,UP,28.0,25.9,26.333333333333332,0,,0,,0
+54ada52701661023:pra:24.5:under,Andrew Nembhard,pra,24.5,-109,PASS,-0.1551,0.2672,29.13,0.3664,,,UP,28.0,25.9,26.333333333333332,0,,0,,0
+8266cd61c58c9517:pra:28.5:over,Payton Pritchard,pra,28.5,-114,PASS,-0.0114,0.16,29.06,0.5213,,,UNKNOWN,,,,0,,0,,0
+8266cd61c58c9517:pra:28.5:under,Payton Pritchard,pra,28.5,-114,PASS,-0.054,0.16,29.06,0.4787,,,UNKNOWN,,,,0,,0,,0
+a168fb201860affc:rebounds:5.5:over,Bennedict Mathurin,rebounds,5.5,-112,PASS,-0.1429,0.2291,4.79,0.3854,,,FLAT,5.4,5.1,5.333333333333333,0,,0,,0
+a168fb201860affc:rebounds:5.5:under,Bennedict Mathurin,rebounds,5.5,-120,PASS,0.0691,0.2291,4.79,0.6146,,,FLAT,5.4,5.1,5.333333333333333,0,,0,,0
+0149249a4eb6cf3f:rebounds:6.5:over,Pascal Siakam,rebounds,6.5,100,PASS,-0.0097,0.16,6.5,0.4903,,,UNKNOWN,,,,0,,0,,0
+0149249a4eb6cf3f:rebounds:6.5:under,Pascal Siakam,rebounds,6.5,-132,PASS,-0.0593,0.16,6.5,0.5097,,,UNKNOWN,,,,0,,0,,0
+18b51ba0144cbe14:rebounds:6.5:over,Isaiah Jackson,rebounds,6.5,118,PASS,0.1607,0.2387,8.39,0.6194,,,UP,8.6,6.8,6.133333333333334,0,,0,,0
+18b51ba0144cbe14:rebounds:6.5:under,Isaiah Jackson,rebounds,6.5,-157,PASS,-0.2303,0.2387,8.39,0.3806,,,UP,8.6,6.8,6.133333333333334,0,,0,,0
+d37bbae8653cdb2b:rebounds:2.5:over,T.J. McConnell,rebounds,2.5,-124,PASS,-0.0488,0.06,2.5,0.5048,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:rebounds:2.5:under,T.J. McConnell,rebounds,2.5,-108,PASS,-0.024,0.06,2.5,0.4952,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+54ada52701661023:rebounds:2.5:over,Andrew Nembhard,rebounds,2.5,-118,PASS,0.0381,0.2,2.89,0.5794,,,FLAT,3.0,2.9,2.533333333333333,0,,0,,0
+54ada52701661023:rebounds:2.5:under,Andrew Nembhard,rebounds,2.5,-113,PASS,-0.1099,0.2,2.89,0.4206,,,FLAT,3.0,2.9,2.533333333333333,0,,0,,0
+a951bcf5a0035036:rebounds:5.5:over,Jay Huff,rebounds,5.5,108,PASS,0.0041,0.16,5.5,0.4849,,,UNKNOWN,,,,0,,0,,0
+a951bcf5a0035036:rebounds:5.5:under,Jay Huff,rebounds,5.5,-143,PASS,-0.0734,0.16,5.5,0.5151,,,UNKNOWN,,,,0,,0,,0
+56366070652c315d:rebounds:4.5:over,Derrick White,rebounds,4.5,-121,PASS,0.0362,0.2,5.12,0.5837,,,FLAT,4.4,4.4,4.6,0,,0,,0
+56366070652c315d:rebounds:4.5:under,Derrick White,rebounds,4.5,-110,PASS,-0.1075,0.2,5.12,0.4163,,,FLAT,4.4,4.4,4.6,0,,0,,0
+2c32eb67b1d23b03:rebounds:6.5:over,Jordan Walsh,rebounds,6.5,118,PASS,0.0205,0.06,6.5,0.4792,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+2c32eb67b1d23b03:rebounds:6.5:under,Jordan Walsh,rebounds,6.5,-154,PASS,-0.0855,0.06,6.5,0.5208,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+c29cbd55ca2a2752:rebounds:9.5:over,Neemias Queta,rebounds,9.5,100,PASS,0.0117,0.16,9.69,0.5117,,,UNKNOWN,,,,0,,0,,0
+c29cbd55ca2a2752:rebounds:9.5:under,Neemias Queta,rebounds,9.5,-132,PASS,-0.0806,0.16,9.69,0.4883,,,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:rebounds:6.5:over,Jaylen Brown,rebounds,6.5,-141,PASS,-0.0498,0.06,6.63,0.5353,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:rebounds:6.5:under,Jaylen Brown,rebounds,6.5,106,PASS,-0.0207,0.06,6.63,0.4647,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+8266cd61c58c9517:rebounds:4.5:over,Payton Pritchard,rebounds,4.5,114,PASS,0.035,0.16,4.59,0.5023,,,UNKNOWN,,,,0,,0,,0
+8266cd61c58c9517:rebounds:4.5:under,Payton Pritchard,rebounds,4.5,-152,PASS,-0.1055,0.16,4.59,0.4977,,,UNKNOWN,,,,0,,0,,0
+a168fb201860affc:threes:2.5:over,Bennedict Mathurin,threes,2.5,138,PASS,-0.0803,0.3203,1.69,0.3398,,,DOWN,1.6,2.4,2.4,0,,0,,0
+a168fb201860affc:threes:2.5:under,Bennedict Mathurin,threes,2.5,-190,PASS,0.005,0.3203,1.69,0.6602,,,DOWN,1.6,2.4,2.4,0,,0,,0
+54ada52701661023:threes:1.5:over,Andrew Nembhard,threes,1.5,-110,PASS,0.088,0.2237,1.92,0.6118,,,FLAT,1.8,1.7,1.8666666666666667,0,,0,,0
+54ada52701661023:threes:1.5:under,Andrew Nembhard,threes,1.5,-121,PASS,-0.1593,0.2237,1.92,0.3882,,,FLAT,1.8,1.7,1.8666666666666667,0,,0,,0
+a951bcf5a0035036:threes:1.5:over,Jay Huff,threes,1.5,-141,PASS,-0.0711,0.16,1.5,0.514,,,UNKNOWN,,,,0,,0,,0
+a951bcf5a0035036:threes:1.5:under,Jay Huff,threes,1.5,106,PASS,0.0006,0.16,1.5,0.486,,,UNKNOWN,,,,0,,0,,0
+0149249a4eb6cf3f:threes:1.5:over,Pascal Siakam,threes,1.5,-125,PASS,-0.0498,0.16,1.5,0.5057,,,UNKNOWN,,,,0,,0,,0
+0149249a4eb6cf3f:threes:1.5:under,Pascal Siakam,threes,1.5,-106,PASS,-0.0203,0.16,1.5,0.4943,,,UNKNOWN,,,,0,,0,,0
+e3ae9d94a2714cb0:threes:2.5:over,Anfernee Simons,threes,2.5,135,PASS,-0.1034,0.3558,1.9,0.3221,,,FLAT,1.2,1.6,1.6666666666666667,0,,0,,0
+e3ae9d94a2714cb0:threes:2.5:under,Anfernee Simons,threes,2.5,-182,PASS,0.0325,0.3558,1.9,0.6779,,,FLAT,1.2,1.6,1.6666666666666667,0,,0,,0
+8266cd61c58c9517:threes:3.5:over,Payton Pritchard,threes,3.5,126,PASS,0.0504,0.16,3.57,0.4929,,,UNKNOWN,,,,0,,0,,0
+8266cd61c58c9517:threes:3.5:under,Payton Pritchard,threes,3.5,-170,PASS,-0.1225,0.16,3.57,0.5071,,,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:threes:1.5:over,Jaylen Brown,threes,1.5,-170,PASS,-0.0953,0.06,1.53,0.5343,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:threes:1.5:under,Jaylen Brown,threes,1.5,126,PASS,0.0232,0.06,1.53,0.4657,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+56366070652c315d:threes:3.5:over,Derrick White,threes,3.5,-113,OVER,0.1873,0.4357,5.32,0.7178,,,UP,5.2,4.8,4.066666666666666,3,0.8,10,0.6,15
+56366070652c315d:threes:3.5:under,Derrick White,threes,3.5,-118,PASS,-0.2591,0.4357,5.32,0.2822,,,UP,5.2,4.8,4.066666666666666,0,,0,,0
+e3ae9d94a2714cb0:assists:2.5:over,Anfernee Simons,assists,2.5,-136,PASS,-0.1751,0.2,2.1,0.4012,,,DOWN,1.4,1.8,2.3333333333333335,0,,0,,0
+e3ae9d94a2714cb0:assists:2.5:under,Anfernee Simons,assists,2.5,101,PASS,0.1013,0.2,2.1,0.5988,,,DOWN,1.4,1.8,2.3333333333333335,0,,0,,0
+195708c325c4c735:points:30.5:over,Jaylen Brown,points,30.5,-102,PASS,0.0087,0.06,31.09,0.5137,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:points:30.5:under,Jaylen Brown,points,30.5,-127,PASS,-0.0731,0.06,31.09,0.4863,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a951bcf5a0035036:points:9.5:over,Jay Huff,points,9.5,-105,PASS,-0.0177,0.16,9.5,0.4944,,,UNKNOWN,,,,0,,0,,0
+a951bcf5a0035036:points:9.5:under,Jay Huff,points,9.5,-123,PASS,-0.046,0.16,9.5,0.5056,,,UNKNOWN,,,,0,,0,,0
+a168fb201860affc:pra:24.5:over,Bennedict Mathurin,pra,24.5,-127,PASS,-0.1882,0.2575,20.31,0.3713,,,DOWN,20.8,23.4,24.8,0,,0,,0
+a168fb201860affc:pra:24.5:under,Bennedict Mathurin,pra,24.5,-104,PASS,0.1189,0.2575,20.31,0.6287,,,DOWN,20.8,23.4,24.8,0,,0,,0
+e3ae9d94a2714cb0:pra:19.5:over,Anfernee Simons,pra,19.5,-111,PASS,-0.0701,0.2,18.72,0.456,,,DOWN,14.8,15.3,16.333333333333332,0,,0,,0
+e3ae9d94a2714cb0:pra:19.5:under,Anfernee Simons,pra,19.5,-116,PASS,0.007,0.2,18.72,0.544,,,DOWN,14.8,15.3,16.333333333333332,0,,0,,0
+18b51ba0144cbe14:rebounds:5.5:over,Isaiah Jackson,rebounds,5.5,-148,OVER,0.1238,0.4411,8.39,0.7205,,,UP,8.6,6.8,6.133333333333334,-1,0.6,10,0.4667,15
+18b51ba0144cbe14:rebounds:5.5:under,Isaiah Jackson,rebounds,5.5,112,PASS,-0.1922,0.4411,8.39,0.2795,,,UP,8.6,6.8,6.133333333333334,0,,0,,0
+2c32eb67b1d23b03:rebounds:5.5:over,Jordan Walsh,rebounds,5.5,-145,PASS,-0.0759,0.06,5.5,0.5159,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+2c32eb67b1d23b03:rebounds:5.5:under,Jordan Walsh,rebounds,5.5,109,PASS,0.0056,0.06,5.5,0.4841,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+e3ae9d94a2714cb0:rebounds:2.5:over,Anfernee Simons,rebounds,2.5,-134,PASS,-0.0739,0.2,2.44,0.4987,,,FLAT,2.0,1.9,2.1333333333333333,0,,0,,0
+e3ae9d94a2714cb0:rebounds:2.5:under,Anfernee Simons,rebounds,2.5,101,PASS,0.0038,0.2,2.44,0.5013,,,FLAT,2.0,1.9,2.1333333333333333,0,,0,,0
+8266cd61c58c9517:threes:2.5:over,Payton Pritchard,threes,2.5,-171,PASS,-0.0901,0.16,2.55,0.5409,,,UNKNOWN,,,,0,,0,,0
+8266cd61c58c9517:threes:2.5:under,Payton Pritchard,threes,2.5,129,PASS,0.0224,0.16,2.55,0.4591,,,UNKNOWN,,,,0,,0,,0
+a168fb201860affc:assists:2.5:over,Bennedict Mathurin,assists,2.5,152,PASS,-0.107,0.4204,1.84,0.2898,,,FLAT,2.0,2.3,2.2,0,,0,,0
+a168fb201860affc:assists:2.5:under,Bennedict Mathurin,assists,2.5,-200,UNDER,0.0435,0.4204,1.84,0.7102,,,FLAT,2.0,2.3,2.2,5,0.7,10,0.7333,15
+56366070652c315d:points:19.5:over,Derrick White,points,19.5,106,PASS,0.1983,0.3675,25.39,0.6838,,,UP,23.4,23.1,20.666666666666668,0,,0,,0
+56366070652c315d:points:19.5:under,Derrick White,points,19.5,-137,PASS,-0.2618,0.3675,25.39,0.3162,,,UP,23.4,23.1,20.666666666666668,0,,0,,0
+8266cd61c58c9517:points:19.5:over,Payton Pritchard,points,19.5,109,PASS,0.0278,0.16,19.88,0.5063,,,UNKNOWN,,,,0,,0,,0
+8266cd61c58c9517:points:19.5:under,Payton Pritchard,points,19.5,-141,PASS,-0.0914,0.16,19.88,0.4937,,,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:points:9.5:over,T.J. McConnell,points,9.5,109,PASS,0.0065,0.06,9.5,0.485,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:points:9.5:under,T.J. McConnell,points,9.5,-141,PASS,-0.07,0.06,9.5,0.515,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+e3ae9d94a2714cb0:points:14.5:over,Anfernee Simons,points,14.5,103,PASS,-0.024,0.2,14.19,0.4686,,,FLAT,11.4,11.6,11.866666666666667,0,,0,,0
+e3ae9d94a2714cb0:points:14.5:under,Anfernee Simons,points,14.5,-133,PASS,-0.0394,0.2,14.19,0.5314,,,FLAT,11.4,11.6,11.866666666666667,0,,0,,0
+a951bcf5a0035036:pra:16.5:over,Jay Huff,pra,16.5,-106,PASS,-0.0195,0.16,16.5,0.4951,,,UNKNOWN,,,,0,,0,,0
+a951bcf5a0035036:pra:16.5:under,Jay Huff,pra,16.5,-122,PASS,-0.0446,0.16,16.5,0.5049,,,UNKNOWN,,,,0,,0,,0
+2c32eb67b1d23b03:threes:0.5:over,Jordan Walsh,threes,0.5,-135,PASS,-0.0626,0.06,0.5,0.5119,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+2c32eb67b1d23b03:threes:0.5:under,Jordan Walsh,threes,0.5,104,PASS,-0.0021,0.06,0.5,0.4881,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:threes:2.5:over,Jaylen Brown,threes,2.5,158,PASS,0.0854,0.06,2.55,0.473,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+195708c325c4c735:threes:2.5:under,Jaylen Brown,threes,2.5,-208,PASS,-0.1483,0.06,2.55,0.527,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:threes:0.5:over,T.J. McConnell,threes,0.5,164,PASS,0.0781,0.06,0.5,0.4569,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+d37bbae8653cdb2b:threes:0.5:under,T.J. McConnell,threes,0.5,-217,PASS,-0.1414,0.06,0.5,0.5431,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+a168fb201860affc:assists:1.5:over,Bennedict Mathurin,assists,1.5,-176,PASS,-0.0166,0.2422,1.84,0.6211,,,FLAT,2.0,2.3,2.2,0,,0,,0
+a168fb201860affc:assists:1.5:under,Bennedict Mathurin,assists,1.5,130,PASS,-0.0559,0.2422,1.84,0.3789,,,FLAT,2.0,2.3,2.2,0,,0,,0
+75bb0beb4aef286b:assists:2.5:over,Naji Marshall,assists,2.5,-142,PASS,-0.051,0.16,2.58,0.5358,,,UNKNOWN,,,,0,,0,,0
+75bb0beb4aef286b:assists:2.5:under,Naji Marshall,assists,2.5,108,PASS,-0.0166,0.16,2.58,0.4642,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:assists:2.5:over,Jeremiah Fears,assists,2.5,-103,PASS,-0.0147,0.16,2.5,0.4927,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:assists:2.5:under,Jeremiah Fears,assists,2.5,-127,PASS,-0.0521,0.16,2.5,0.5073,,,UNKNOWN,,,,0,,0,,0
+be195dd4a64cb831:assists:3.5:over,Zion Williamson,assists,3.5,-127,PASS,-0.072,0.16,3.43,0.4875,,,UNKNOWN,,,,0,,0,,0
+be195dd4a64cb831:assists:3.5:under,Zion Williamson,assists,3.5,-103,PASS,0.0051,0.16,3.43,0.5125,,,UNKNOWN,,,,0,,0,,0
+d1991c3f6dd1389a:assists:3.5:over,Anthony Davis,assists,3.5,128,PASS,-0.0266,0.2,3.12,0.412,,,FLAT,3.0,3.1,3.0,0,,0,,0
+d1991c3f6dd1389a:assists:3.5:under,Anthony Davis,assists,3.5,-169,PASS,-0.0403,0.2,3.12,0.588,,,FLAT,3.0,3.1,3.0,0,,0,,0
+08937c7231a9a619:assists:3.5:over,Cooper Flagg,assists,3.5,-118,PASS,0.0943,0.1712,5.04,0.6356,QUESTIONABLE,NBA Official Report,UP,4.8,4.3,3.933333333333333,0,,0,,0
+08937c7231a9a619:assists:3.5:under,Cooper Flagg,assists,3.5,-112,PASS,-0.1639,0.1712,5.04,0.3644,QUESTIONABLE,NBA Official Report,UP,4.8,4.3,3.933333333333333,0,,0,,0
+f7e5f5c37ffec5f7:assists:2.5:over,Trey Murphy III,assists,2.5,-139,PASS,-0.0822,0.16,2.45,0.4994,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:assists:2.5:under,Trey Murphy III,assists,2.5,106,PASS,0.0152,0.16,2.45,0.5006,,,UNKNOWN,,,,0,,0,,0
+edd43e3a6b6d2de3:assists:3.5:over,Derik Queen,assists,3.5,-150,PASS,0.0922,0.3844,5.27,0.6922,,,UP,5.8,4.8,5.266666666666667,0,,0,,0
+edd43e3a6b6d2de3:assists:3.5:under,Derik Queen,assists,3.5,115,PASS,-0.1573,0.3844,5.27,0.3078,,,UP,5.8,4.8,5.266666666666667,0,,0,,0
+ed12b766ab682805:assists:3.5:over,Jordan Poole,assists,3.5,114,PASS,-0.006,0.16,3.43,0.4613,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:assists:3.5:under,Jordan Poole,assists,3.5,-151,PASS,-0.0629,0.16,3.43,0.5387,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:assists:2.5:over,P.J. Washington,assists,2.5,141,PASS,0.0726,0.16,2.58,0.4875,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:assists:2.5:under,P.J. Washington,assists,2.5,-188,PASS,-0.1403,0.16,2.58,0.5125,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:points:15.5:over,Jordan Poole,points,15.5,-104,PASS,-0.0386,0.16,15.19,0.4713,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:points:15.5:under,Jordan Poole,points,15.5,-122,PASS,-0.0208,0.16,15.19,0.5287,,,UNKNOWN,,,,0,,0,,0
+be195dd4a64cb831:points:19.5:over,Zion Williamson,points,19.5,-117,PASS,-0.0598,0.16,19.1,0.4794,,,UNKNOWN,,,,0,,0,,0
+be195dd4a64cb831:points:19.5:under,Zion Williamson,points,19.5,-109,PASS,-0.0009,0.16,19.1,0.5206,,,UNKNOWN,,,,0,,0,,0
+edd43e3a6b6d2de3:points:12.5:over,Derik Queen,points,12.5,-119,PASS,0.0714,0.2295,16.22,0.6148,,,UP,17.4,14.3,15.4,0,,0,,0
+edd43e3a6b6d2de3:points:12.5:under,Derik Queen,points,12.5,-107,PASS,-0.1317,0.2295,16.22,0.3852,,,UP,17.4,14.3,15.4,0,,0,,0
+56921d9666b86a8e:points:12.5:over,Jeremiah Fears,points,12.5,-115,PASS,-0.0349,0.16,12.5,0.5,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:points:12.5:under,Jeremiah Fears,points,12.5,-115,PASS,-0.0349,0.16,12.5,0.5,,,UNKNOWN,,,,0,,0,,0
+d1991c3f6dd1389a:points:24.5:over,Anthony Davis,points,24.5,-104,PASS,-0.134,0.2484,20.0,0.3758,,,DOWN,18.8,18.5,19.923076923076923,0,,0,,0
+d1991c3f6dd1389a:points:24.5:under,Anthony Davis,points,24.5,-122,PASS,0.0746,0.2484,20.0,0.6242,,,DOWN,18.8,18.5,19.923076923076923,0,,0,,0
+75bb0beb4aef286b:points:13.5:over,Naji Marshall,points,13.5,-105,PASS,0.0153,0.16,13.91,0.5275,,,UNKNOWN,,,,0,,0,,0
+75bb0beb4aef286b:points:13.5:under,Naji Marshall,points,13.5,-121,PASS,-0.075,0.16,13.91,0.4725,,,UNKNOWN,,,,0,,0,,0
+08937c7231a9a619:points:20.5:over,Cooper Flagg,points,20.5,-130,PASS,0.1396,0.3096,27.15,0.7048,QUESTIONABLE,NBA Official Report,UP,26.0,24.0,21.933333333333334,0,,0,,0
+08937c7231a9a619:points:20.5:under,Cooper Flagg,points,20.5,-102,PASS,-0.2097,0.3096,27.15,0.2952,QUESTIONABLE,NBA Official Report,UP,26.0,24.0,21.933333333333334,0,,0,,0
+7c0a71dba5efab2c:points:16.5:over,P.J. Washington,points,16.5,-108,PASS,0.0101,0.16,17.0,0.5293,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:points:16.5:under,P.J. Washington,points,16.5,-118,PASS,-0.0706,0.16,17.0,0.4707,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:points:18.5:over,Trey Murphy III,points,18.5,-108,PASS,-0.0458,0.16,18.12,0.4735,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:points:18.5:under,Trey Murphy III,points,18.5,-119,PASS,-0.0169,0.16,18.12,0.5265,,,UNKNOWN,,,,0,,0,,0
+231fe865ee873acd:points:9.5:over,Herb Jones,points,9.5,103,PASS,-0.3546,0.5792,2.0,0.138,,,FLAT,2.0,2.0,2.0,0,,0,,0
+231fe865ee873acd:points:9.5:under,Herb Jones,points,9.5,-137,UNDER,0.2839,0.5792,2.0,0.862,,,FLAT,2.0,2.0,2.0,1,1.0,1,1.0,1
+4ca49f035ca2788b:points:10.5:over,Klay Thompson,points,10.5,-120,PASS,-0.009,0.06,10.81,0.5365,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+4ca49f035ca2788b:points:10.5:under,Klay Thompson,points,10.5,-107,PASS,-0.0534,0.06,10.81,0.4635,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:points:12.5:over,Saddiq Bey,points,12.5,-109,PASS,-0.024,0.16,12.5,0.4975,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:points:12.5:under,Saddiq Bey,points,12.5,-117,PASS,-0.0367,0.16,12.5,0.5025,,,UNKNOWN,,,,0,,0,,0
+08937c7231a9a619:pra:30.5:over,Cooper Flagg,pra,30.5,-122,PASS,0.1817,0.3625,39.55,0.7312,QUESTIONABLE,NBA Official Report,UP,37.0,34.5,32.0,0,,0,,0
+08937c7231a9a619:pra:30.5:under,Cooper Flagg,pra,30.5,-108,PASS,-0.2505,0.3625,39.55,0.2688,QUESTIONABLE,NBA Official Report,UP,37.0,34.5,32.0,0,,0,,0
+f7e5f5c37ffec5f7:pra:28.5:over,Trey Murphy III,pra,28.5,-106,PASS,-0.0426,0.16,27.92,0.4719,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:pra:28.5:under,Trey Murphy III,pra,28.5,-122,PASS,-0.0215,0.16,27.92,0.5281,,,UNKNOWN,,,,0,,0,,0
+75bb0beb4aef286b:pra:21.5:over,Naji Marshall,pra,21.5,-106,PASS,0.013,0.16,22.14,0.5275,,,UNKNOWN,,,,0,,0,,0
+75bb0beb4aef286b:pra:21.5:under,Naji Marshall,pra,21.5,-122,PASS,-0.0771,0.16,22.14,0.4725,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:pra:26.5:over,P.J. Washington,pra,26.5,-103,PASS,0.0183,0.16,27.3,0.5257,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:pra:26.5:under,P.J. Washington,pra,26.5,-125,PASS,-0.0812,0.16,27.3,0.4743,,,UNKNOWN,,,,0,,0,,0
+edd43e3a6b6d2de3:pra:24.5:over,Derik Queen,pra,24.5,-118,PASS,0.0756,0.2337,29.88,0.6169,,,UP,32.2,26.7,27.866666666666667,0,,0,,0
+edd43e3a6b6d2de3:pra:24.5:under,Derik Queen,pra,24.5,-112,PASS,-0.1452,0.2337,29.88,0.3831,,,UP,32.2,26.7,27.866666666666667,0,,0,,0
+be195dd4a64cb831:pra:29.5:over,Zion Williamson,pra,29.5,-115,PASS,-0.0577,0.16,28.9,0.4772,,,UNKNOWN,,,,0,,0,,0
+be195dd4a64cb831:pra:29.5:under,Zion Williamson,pra,29.5,-114,PASS,-0.0099,0.16,28.9,0.5228,,,UNKNOWN,,,,0,,0,,0
+d1991c3f6dd1389a:pra:40.5:over,Anthony Davis,pra,40.5,-110,PASS,-0.1384,0.2293,35.11,0.3854,,,FLAT,33.6,32.5,34.07692307692308,0,,0,,0
+d1991c3f6dd1389a:pra:40.5:under,Anthony Davis,pra,40.5,-118,PASS,0.0734,0.2293,35.11,0.6146,,,FLAT,33.6,32.5,34.07692307692308,0,,0,,0
+56921d9666b86a8e:pra:18.5:over,Jeremiah Fears,pra,18.5,-122,PASS,-0.0446,0.16,18.5,0.5049,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:pra:18.5:under,Jeremiah Fears,pra,18.5,-106,PASS,-0.0195,0.16,18.5,0.4951,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:rebounds:5.5:over,Trey Murphy III,rebounds,5.5,-143,PASS,-0.0965,0.16,5.39,0.492,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:rebounds:5.5:under,Trey Murphy III,rebounds,5.5,108,PASS,0.0272,0.16,5.39,0.508,,,UNKNOWN,,,,0,,0,,0
+75bb0beb4aef286b:rebounds:4.5:over,Naji Marshall,rebounds,4.5,-105,PASS,0.0139,0.16,4.63,0.5261,,,UNKNOWN,,,,0,,0,,0
+75bb0beb4aef286b:rebounds:4.5:under,Naji Marshall,rebounds,4.5,-126,PASS,-0.0836,0.16,4.63,0.4739,,,UNKNOWN,,,,0,,0,,0
+08937c7231a9a619:rebounds:5.5:over,Cooper Flagg,rebounds,5.5,-135,PASS,0.1401,0.3292,7.36,0.7146,QUESTIONABLE,NBA Official Report,FLAT,6.2,6.2,6.133333333333334,0,,0,,0
+08937c7231a9a619:rebounds:5.5:under,Cooper Flagg,rebounds,5.5,103,PASS,-0.2072,0.3292,7.36,0.2854,QUESTIONABLE,NBA Official Report,FLAT,6.2,6.2,6.133333333333334,0,,0,,0
+d1991c3f6dd1389a:rebounds:11.5:over,Anthony Davis,rebounds,11.5,-134,PASS,-0.0311,0.2,11.99,0.5415,,,UP,11.8,10.9,11.153846153846153,0,,0,,0
+d1991c3f6dd1389a:rebounds:11.5:under,Anthony Davis,rebounds,11.5,101,PASS,-0.039,0.2,11.99,0.4585,,,UP,11.8,10.9,11.153846153846153,0,,0,,0
+231fe865ee873acd:rebounds:3.5:over,Herb Jones,rebounds,3.5,103,PASS,0.1292,0.1949,4.0,0.6218,,,FLAT,4.0,4.0,4.0,0,,0,,0
+231fe865ee873acd:rebounds:3.5:under,Herb Jones,rebounds,3.5,-135,PASS,-0.1963,0.1949,4.0,0.3782,,,FLAT,4.0,4.0,4.0,0,,0,,0
+be195dd4a64cb831:rebounds:5.5:over,Zion Williamson,rebounds,5.5,-122,PASS,-0.0681,0.16,5.39,0.4815,,,UNKNOWN,,,,0,,0,,0
+be195dd4a64cb831:rebounds:5.5:under,Zion Williamson,rebounds,5.5,-107,PASS,0.0016,0.16,5.39,0.5185,,,UNKNOWN,,,,0,,0,,0
+edd43e3a6b6d2de3:rebounds:7.5:over,Derik Queen,rebounds,7.5,-115,PASS,0.0507,0.2,8.39,0.5855,,,UP,9.0,7.6,7.2,0,,0,,0
+edd43e3a6b6d2de3:rebounds:7.5:under,Derik Queen,rebounds,7.5,-115,PASS,-0.1204,0.2,8.39,0.4145,,,UP,9.0,7.6,7.2,0,,0,,0
+7c0a71dba5efab2c:rebounds:7.5:over,P.J. Washington,rebounds,7.5,112,PASS,0.0434,0.16,7.73,0.5151,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:rebounds:7.5:under,P.J. Washington,rebounds,7.5,-147,PASS,-0.1102,0.16,7.73,0.4849,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:rebounds:5.5:over,Saddiq Bey,rebounds,5.5,-109,PASS,-0.0252,0.16,5.5,0.4964,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:rebounds:5.5:under,Saddiq Bey,rebounds,5.5,-121,PASS,-0.0439,0.16,5.5,0.5036,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:rebounds:3.5:over,Jeremiah Fears,rebounds,3.5,130,PASS,0.0368,0.16,3.5,0.4716,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:rebounds:3.5:under,Jeremiah Fears,rebounds,3.5,-176,PASS,-0.1093,0.16,3.5,0.5284,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:threes:2.5:over,Trey Murphy III,threes,2.5,130,PASS,0.0233,0.16,2.45,0.4581,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:threes:2.5:under,Trey Murphy III,threes,2.5,-172,PASS,-0.0904,0.16,2.45,0.5419,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:threes:1.5:over,Saddiq Bey,threes,1.5,151,PASS,0.0637,0.16,1.5,0.4621,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:threes:1.5:under,Saddiq Bey,threes,1.5,-201,PASS,-0.1299,0.16,1.5,0.5379,,,UNKNOWN,,,,0,,0,,0
+231fe865ee873acd:threes:1.5:over,Herb Jones,threes,1.5,168,PASS,0.0816,0.16,1.5,0.4548,,,FLAT,0.0,0.0,0.0,0,,0,,0
+231fe865ee873acd:threes:1.5:under,Herb Jones,threes,1.5,-225,PASS,-0.1471,0.16,1.5,0.5452,,,FLAT,0.0,0.0,0.0,0,,0,,0
+4ca49f035ca2788b:threes:2.5:over,Klay Thompson,threes,2.5,-102,PASS,0.0075,0.06,2.58,0.5125,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+4ca49f035ca2788b:threes:2.5:under,Klay Thompson,threes,2.5,-130,PASS,-0.0777,0.06,2.58,0.4875,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:threes:2.5:over,Jordan Poole,threes,2.5,152,PASS,0.0509,0.16,2.45,0.4478,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:threes:2.5:under,Jordan Poole,threes,2.5,-200,PASS,-0.1144,0.16,2.45,0.5522,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:threes:1.5:over,P.J. Washington,threes,1.5,-144,PASS,-0.0619,0.16,1.54,0.5282,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:threes:1.5:under,P.J. Washington,threes,1.5,109,PASS,-0.0067,0.16,1.54,0.4718,,,UNKNOWN,,,,0,,0,,0
+231fe865ee873acd:assists:2.5:over,Herb Jones,assists,2.5,164,PASS,-0.0563,0.284,2.0,0.3225,,,FLAT,2.0,2.0,2.0,0,,0,,0
+231fe865ee873acd:assists:2.5:under,Herb Jones,assists,2.5,-217,PASS,-0.007,0.284,2.0,0.6775,,,FLAT,2.0,2.0,2.0,0,,0,,0
+edd43e3a6b6d2de3:assists:4.5:over,Derik Queen,assists,4.5,136,PASS,0.1255,0.2,5.27,0.5493,,,UP,5.8,4.8,5.266666666666667,0,,0,,0
+edd43e3a6b6d2de3:assists:4.5:under,Derik Queen,assists,4.5,-179,PASS,-0.1908,0.2,5.27,0.4507,,,UP,5.8,4.8,5.266666666666667,0,,0,,0
+f7e5f5c37ffec5f7:points:19.5:over,Trey Murphy III,points,19.5,100,PASS,-0.0333,0.16,19.1,0.4667,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:points:19.5:under,Trey Murphy III,points,19.5,-134,PASS,-0.0394,0.16,19.1,0.5333,,,UNKNOWN,,,,0,,0,,0
+08937c7231a9a619:points:21.5:over,Cooper Flagg,points,21.5,-113,PASS,0.1407,0.2424,27.15,0.6712,QUESTIONABLE,NBA Official Report,UP,26.0,24.0,21.933333333333334,0,,0,,0
+08937c7231a9a619:points:21.5:under,Cooper Flagg,points,21.5,-113,PASS,-0.2017,0.2424,27.15,0.3288,QUESTIONABLE,NBA Official Report,UP,26.0,24.0,21.933333333333334,0,,0,,0
+231fe865ee873acd:pra:14.5:over,Herb Jones,pra,14.5,-106,PASS,-0.3699,0.5686,7.99,0.1447,,,FLAT,8.0,8.0,8.0,0,,0,,0
+231fe865ee873acd:pra:14.5:under,Herb Jones,pra,14.5,-125,UNDER,0.2998,0.5686,7.99,0.8553,,,FLAT,8.0,8.0,8.0,1,1.0,1,1.0,1
+08937c7231a9a619:pra:31.5:over,Cooper Flagg,pra,31.5,-116,PASS,0.1713,0.3167,39.55,0.7084,QUESTIONABLE,NBA Official Report,UP,37.0,34.5,32.0,0,,0,,0
+08937c7231a9a619:pra:31.5:under,Cooper Flagg,pra,31.5,-113,PASS,-0.2389,0.3167,39.55,0.2916,QUESTIONABLE,NBA Official Report,UP,37.0,34.5,32.0,0,,0,,0
+7e17dfaa4418e311:pra:20.5:over,Saddiq Bey,pra,20.5,-114,PASS,-0.0327,0.16,20.5,0.5,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:pra:20.5:under,Saddiq Bey,pra,20.5,-114,PASS,-0.0327,0.16,20.5,0.5,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:pra:20.5:over,Jordan Poole,pra,20.5,-126,PASS,-0.0739,0.16,20.08,0.4836,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:pra:20.5:under,Jordan Poole,pra,20.5,-104,PASS,0.0066,0.16,20.08,0.5164,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:rebounds:6.5:over,Trey Murphy III,rebounds,6.5,118,PASS,-0.0026,0.16,6.37,0.4561,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:rebounds:6.5:under,Trey Murphy III,rebounds,6.5,-154,PASS,-0.0624,0.16,6.37,0.5439,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:rebounds:2.5:over,Jordan Poole,rebounds,2.5,105,PASS,-0.0149,0.16,2.45,0.4729,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:rebounds:2.5:under,Jordan Poole,rebounds,2.5,-138,PASS,-0.0527,0.16,2.45,0.5271,,,UNKNOWN,,,,0,,0,,0
+d1991c3f6dd1389a:rebounds:12.5:over,Anthony Davis,rebounds,12.5,109,PASS,-0.0254,0.2,11.99,0.4531,,,UP,11.8,10.9,11.153846153846153,0,,0,,0
+d1991c3f6dd1389a:rebounds:12.5:under,Anthony Davis,rebounds,12.5,-141,PASS,-0.0382,0.2,11.99,0.5469,,,UP,11.8,10.9,11.153846153846153,0,,0,,0
+08937c7231a9a619:rebounds:6.5:over,Cooper Flagg,rebounds,6.5,122,PASS,0.1281,0.1,7.36,0.5785,QUESTIONABLE,NBA Official Report,FLAT,6.2,6.2,6.133333333333334,0,,0,,0
+08937c7231a9a619:rebounds:6.5:under,Cooper Flagg,rebounds,6.5,-159,PASS,-0.1924,0.1,7.36,0.4215,QUESTIONABLE,NBA Official Report,FLAT,6.2,6.2,6.133333333333334,0,,0,,0
+75bb0beb4aef286b:threes:0.5:over,Naji Marshall,threes,0.5,-218,PASS,-0.1384,0.16,0.52,0.5472,,,UNKNOWN,,,,0,,0,,0
+75bb0beb4aef286b:threes:0.5:under,Naji Marshall,threes,0.5,163,PASS,0.0726,0.16,0.52,0.4528,,,UNKNOWN,,,,0,,0,,0
+d1991c3f6dd1389a:threes:0.5:over,Anthony Davis,threes,0.5,-145,PASS,-0.1085,0.2,0.38,0.4833,,,FLAT,0.2,0.6,0.6153846153846154,0,,0,,0
+d1991c3f6dd1389a:threes:0.5:under,Anthony Davis,threes,0.5,111,PASS,0.0428,0.2,0.38,0.5167,,,FLAT,0.2,0.6,0.6153846153846154,0,,0,,0
+08937c7231a9a619:threes:0.5:over,Cooper Flagg,threes,0.5,-195,PASS,-0.083,0.1,0.65,0.5781,QUESTIONABLE,NBA Official Report,FLAT,0.4,0.4,0.5333333333333333,0,,0,,0
+08937c7231a9a619:threes:0.5:under,Cooper Flagg,threes,0.5,147,PASS,0.0171,0.1,0.65,0.4219,QUESTIONABLE,NBA Official Report,FLAT,0.4,0.4,0.5333333333333333,0,,0,,0
+56921d9666b86a8e:threes:0.5:over,Jeremiah Fears,threes,0.5,-192,PASS,-0.1221,0.16,0.5,0.5354,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:threes:0.5:under,Jeremiah Fears,threes,0.5,146,PASS,0.0581,0.16,0.5,0.4646,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:threes:1.5:over,Jordan Poole,threes,1.5,-175,PASS,-0.1182,0.16,1.47,0.5181,,,UNKNOWN,,,,0,,0,,0
+ed12b766ab682805:threes:1.5:under,Jordan Poole,threes,1.5,125,PASS,0.0374,0.16,1.47,0.4819,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:assists:1.5:over,Saddiq Bey,assists,1.5,-138,PASS,-0.0669,0.16,1.5,0.5129,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:assists:1.5:under,Saddiq Bey,assists,1.5,105,PASS,-0.0007,0.16,1.5,0.4871,,,UNKNOWN,,,,0,,0,,0
+231fe865ee873acd:points:8.5:over,Herb Jones,points,8.5,-114,PASS,-0.3821,0.559,2.0,0.1506,,,FLAT,2.0,2.0,2.0,0,,0,,0
+231fe865ee873acd:points:8.5:under,Herb Jones,points,8.5,-112,UNDER,0.3211,0.559,2.0,0.8494,,,FLAT,2.0,2.0,2.0,1,1.0,1,1.0,1
+d1991c3f6dd1389a:pra:39.5:over,Anthony Davis,pra,39.5,-113,PASS,-0.1239,0.2,35.11,0.4066,,,FLAT,33.6,32.5,34.07692307692308,0,,0,,0
+d1991c3f6dd1389a:pra:39.5:under,Anthony Davis,pra,39.5,-117,PASS,0.0543,0.2,35.11,0.5934,,,FLAT,33.6,32.5,34.07692307692308,0,,0,,0
+f7e5f5c37ffec5f7:pra:27.5:over,Trey Murphy III,pra,27.5,-116,PASS,-0.0595,0.16,26.94,0.4775,,,UNKNOWN,,,,0,,0,,0
+f7e5f5c37ffec5f7:pra:27.5:under,Trey Murphy III,pra,27.5,-114,PASS,-0.0102,0.16,26.94,0.5225,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:pra:25.5:over,P.J. Washington,pra,25.5,-124,PASS,-0.0156,0.16,26.27,0.5379,,,UNKNOWN,,,,0,,0,,0
+7c0a71dba5efab2c:pra:25.5:under,P.J. Washington,pra,25.5,-106,PASS,-0.0525,0.16,26.27,0.4621,,,UNKNOWN,,,,0,,0,,0
+75bb0beb4aef286b:pra:20.5:over,Naji Marshall,pra,20.5,-119,PASS,-0.0085,0.16,21.12,0.5349,,,UNKNOWN,,,,0,,0,,0
+75bb0beb4aef286b:pra:20.5:under,Naji Marshall,pra,20.5,-111,PASS,-0.061,0.16,21.12,0.4651,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:pra:19.5:over,Saddiq Bey,pra,19.5,-126,PASS,-0.0508,0.16,19.5,0.5067,,,UNKNOWN,,,,0,,0,,0
+7e17dfaa4418e311:pra:19.5:under,Saddiq Bey,pra,19.5,-104,PASS,-0.0165,0.16,19.5,0.4933,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:pra:17.5:over,Jeremiah Fears,pra,17.5,-128,PASS,-0.0535,0.16,17.5,0.5079,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:pra:17.5:under,Jeremiah Fears,pra,17.5,-102,PASS,-0.0129,0.16,17.5,0.4921,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:rebounds:2.5:over,Jeremiah Fears,rebounds,2.5,-174,PASS,-0.1063,0.16,2.5,0.5287,,,UNKNOWN,,,,0,,0,,0
+56921d9666b86a8e:rebounds:2.5:under,Jeremiah Fears,rebounds,2.5,132,PASS,0.0403,0.16,2.5,0.4713,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:assists:3.5:over,Jusuf Nurkic,assists,3.5,-111,PASS,-0.0276,0.16,3.5,0.4985,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:assists:3.5:under,Jusuf Nurkic,assists,3.5,-116,PASS,-0.0355,0.16,3.5,0.5015,,,UNKNOWN,,,,0,,0,,0
+230a681311fee4a4:assists:6.5:over,Isaiah Collier,assists,6.5,-116,PASS,0.1017,0.2775,8.28,0.6387,,,UP,7.8,6.4,5.8,0,,0,,0
+230a681311fee4a4:assists:6.5:under,Isaiah Collier,assists,6.5,-111,PASS,-0.1648,0.2775,8.28,0.3613,,,UP,7.8,6.4,5.8,0,,0,,0
+6a94a28b80e340be:assists:10.5:over,Nikola Jokic,assists,10.5,-106,PASS,0.0236,0.16,10.92,0.5382,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:assists:10.5:under,Nikola Jokic,assists,10.5,-122,PASS,-0.0877,0.16,10.92,0.4618,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:assists:6.5:over,Keyonte George,assists,6.5,-120,PASS,-0.0199,0.16,6.63,0.5256,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:assists:6.5:under,Keyonte George,assists,6.5,-108,PASS,-0.0448,0.16,6.63,0.4744,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:assists:6.5:over,Jamal Murray,assists,6.5,-125,PASS,-0.0064,0.16,6.76,0.5492,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:assists:6.5:under,Jamal Murray,assists,6.5,-105,PASS,-0.0614,0.16,6.76,0.4508,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:points:10.5:over,Kyle Filipowski,points,10.5,-114,PASS,-0.0327,0.16,10.5,0.5,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:points:10.5:under,Kyle Filipowski,points,10.5,-114,PASS,-0.0327,0.16,10.5,0.5,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:points:25.5:over,Keyonte George,points,25.5,-106,PASS,0.0024,0.16,26.01,0.5169,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:points:25.5:under,Keyonte George,points,25.5,-122,PASS,-0.0665,0.16,26.01,0.4831,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:points:25.5:over,Jamal Murray,points,25.5,-105,PASS,0.0254,0.16,26.53,0.5375,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:points:25.5:under,Jamal Murray,points,25.5,-123,PASS,-0.0891,0.16,26.53,0.4625,,,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:points:12.5:over,Tim Hardaway Jr,points,12.5,-105,PASS,-0.0183,0.16,12.5,0.4939,,,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:points:12.5:under,Tim Hardaway Jr,points,12.5,-125,PASS,-0.0495,0.16,12.5,0.5061,,,UNKNOWN,,,,0,,0,,0
+75f316b5b6d83f3f:points:9.5:over,Bruce Brown,points,9.5,-115,PASS,-0.2053,0.3408,6.21,0.3296,,,DOWN,6.6,7.4,7.133333333333334,0,,0,,0
+75f316b5b6d83f3f:points:9.5:under,Bruce Brown,points,9.5,-112,PASS,0.1421,0.3408,6.21,0.6704,,,DOWN,6.6,7.4,7.133333333333334,0,,0,,0
+179b8654e93bf924:points:15.5:over,Cameron Johnson,points,15.5,-102,PASS,-0.1743,0.3388,11.54,0.3306,,,DOWN,12.4,14.0,14.666666666666666,0,,0,,0
+179b8654e93bf924:points:15.5:under,Cameron Johnson,points,15.5,-127,PASS,0.1099,0.3388,11.54,0.6694,,,DOWN,12.4,14.0,14.666666666666666,0,,0,,0
+fcc0ec5b74fbc46f:points:11.5:over,Peyton Watson,points,11.5,-102,PASS,0.0305,0.06,11.96,0.5354,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+fcc0ec5b74fbc46f:points:11.5:under,Peyton Watson,points,11.5,-127,PASS,-0.0949,0.06,11.96,0.4646,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:points:30.5:over,Nikola Jokic,points,30.5,-106,PASS,0.0236,0.16,31.73,0.5382,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:points:30.5:under,Nikola Jokic,points,30.5,-122,PASS,-0.0877,0.16,31.73,0.4618,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:points:9.5:over,Jusuf Nurkic,points,9.5,-149,PASS,-0.0796,0.16,9.5,0.5188,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:points:9.5:under,Jusuf Nurkic,points,9.5,115,PASS,0.0161,0.16,9.5,0.4812,,,UNKNOWN,,,,0,,0,,0
+920b4c0f03d8363f:points:7.5:over,Svi Mykhailiuk,points,7.5,-110,PASS,-0.0263,0.16,7.5,0.4975,,,UNKNOWN,,,,0,,0,,0
+920b4c0f03d8363f:points:7.5:under,Svi Mykhailiuk,points,7.5,-118,PASS,-0.0388,0.16,7.5,0.5025,,,UNKNOWN,,,,0,,0,,0
+6528127ba219e939:points:25.5:over,Lauri Markkanen,points,25.5,-114,PASS,-0.0108,0.06,26.01,0.5219,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+6528127ba219e939:points:25.5:under,Lauri Markkanen,points,25.5,-114,PASS,-0.0546,0.06,26.01,0.4781,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+b1bff13b9c210da8:points:13.5:over,Ace Bailey,points,13.5,-121,PASS,-0.0272,0.2,13.82,0.5203,,,FLAT,12.2,11.6,12.0,0,,0,,0
+b1bff13b9c210da8:points:13.5:under,Ace Bailey,points,13.5,-110,PASS,-0.0441,0.2,13.82,0.4797,,,FLAT,12.2,11.6,12.0,0,,0,,0
+230a681311fee4a4:points:9.5:over,Isaiah Collier,points,9.5,-114,PASS,0.0351,0.2,11.11,0.5678,,,UP,10.2,8.1,8.2,0,,0,,0
+230a681311fee4a4:points:9.5:under,Isaiah Collier,points,9.5,-114,PASS,-0.1005,0.2,11.11,0.4322,,,UP,10.2,8.1,8.2,0,,0,,0
+83eecd7c0f1f6407:pra:16.5:over,Tim Hardaway Jr,pra,16.5,-111,PASS,-0.0276,0.16,16.5,0.4985,,,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:pra:16.5:under,Tim Hardaway Jr,pra,16.5,-116,PASS,-0.0355,0.16,16.5,0.5015,,,UNKNOWN,,,,0,,0,,0
+b1bff13b9c210da8:pra:19.5:over,Ace Bailey,pra,19.5,-115,PASS,-0.0182,0.2,19.81,0.5167,,,UP,17.2,16.4,16.6,0,,0,,0
+b1bff13b9c210da8:pra:19.5:under,Ace Bailey,pra,19.5,-112,PASS,-0.045,0.2,19.81,0.4833,,,UP,17.2,16.4,16.6,0,,0,,0
+6a94a28b80e340be:pra:52.5:over,Nikola Jokic,pra,52.5,-120,PASS,0.0007,0.16,54.62,0.5461,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:pra:52.5:under,Nikola Jokic,pra,52.5,-110,PASS,-0.0699,0.16,54.62,0.4539,,,UNKNOWN,,,,0,,0,,0
+6528127ba219e939:pra:35.5:over,Lauri Markkanen,pra,35.5,-114,PASS,-0.0108,0.06,36.21,0.5219,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+6528127ba219e939:pra:35.5:under,Lauri Markkanen,pra,35.5,-114,PASS,-0.0546,0.06,36.21,0.4781,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:pra:21.5:over,Jusuf Nurkic,pra,21.5,-128,PASS,-0.0542,0.16,21.5,0.5072,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:pra:21.5:under,Jusuf Nurkic,pra,21.5,-104,PASS,-0.017,0.16,21.5,0.4928,,,UNKNOWN,,,,0,,0,,0
+75f316b5b6d83f3f:pra:16.5:over,Bruce Brown,pra,16.5,-109,PASS,-0.1578,0.2726,13.14,0.3637,,,UP,15.0,14.6,13.533333333333333,0,,0,,0
+75f316b5b6d83f3f:pra:16.5:under,Bruce Brown,pra,16.5,-119,PASS,0.0929,0.2726,13.14,0.6363,,,UP,15.0,14.6,13.533333333333333,0,,0,,0
+eebbd3f8dcedbe8e:pra:35.5:over,Keyonte George,pra,35.5,-118,PASS,-0.0176,0.16,36.21,0.5237,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:pra:35.5:under,Keyonte George,pra,35.5,-112,PASS,-0.052,0.16,36.21,0.4763,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:pra:35.5:over,Jamal Murray,pra,35.5,-111,PASS,0.0155,0.16,36.93,0.5416,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:pra:35.5:under,Jamal Murray,pra,35.5,-116,PASS,-0.0786,0.16,36.93,0.4584,,,UNKNOWN,,,,0,,0,,0
+920b4c0f03d8363f:pra:11.5:over,Svi Mykhailiuk,pra,11.5,-118,PASS,-0.0388,0.16,11.5,0.5025,,,UNKNOWN,,,,0,,0,,0
+920b4c0f03d8363f:pra:11.5:under,Svi Mykhailiuk,pra,11.5,-110,PASS,-0.0263,0.16,11.5,0.4975,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:pra:20.5:over,Kyle Filipowski,pra,20.5,-105,PASS,-0.0177,0.16,20.5,0.4944,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:pra:20.5:under,Kyle Filipowski,pra,20.5,-123,PASS,-0.046,0.16,20.5,0.5056,,,UNKNOWN,,,,0,,0,,0
+179b8654e93bf924:pra:21.5:over,Cameron Johnson,pra,21.5,-122,PASS,-0.1645,0.2298,18.08,0.3851,,,DOWN,19.8,20.9,21.733333333333334,0,,0,,0
+179b8654e93bf924:pra:21.5:under,Cameron Johnson,pra,21.5,-106,PASS,0.1004,0.2298,18.08,0.6149,,,DOWN,19.8,20.9,21.733333333333334,0,,0,,0
+6528127ba219e939:rebounds:7.5:over,Lauri Markkanen,rebounds,7.5,-103,PASS,0.0077,0.06,7.65,0.5151,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+6528127ba219e939:rebounds:7.5:under,Lauri Markkanen,rebounds,7.5,-125,PASS,-0.0706,0.06,7.65,0.4849,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+b1bff13b9c210da8:rebounds:3.5:over,Ace Bailey,rebounds,3.5,-111,PASS,0.0236,0.2,3.74,0.5497,,,FLAT,3.0,3.1,2.8666666666666667,0,,0,,0
+b1bff13b9c210da8:rebounds:3.5:under,Ace Bailey,rebounds,3.5,-116,PASS,-0.0867,0.2,3.74,0.4503,,,FLAT,3.0,3.1,2.8666666666666667,0,,0,,0
+fcc0ec5b74fbc46f:rebounds:4.5:over,Peyton Watson,rebounds,4.5,-118,PASS,0.0043,0.06,4.68,0.5456,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+fcc0ec5b74fbc46f:rebounds:4.5:under,Peyton Watson,rebounds,4.5,-110,PASS,-0.0694,0.06,4.68,0.4544,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:rebounds:3.5:over,Keyonte George,rebounds,3.5,-133,PASS,-0.0403,0.16,3.57,0.5306,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:rebounds:3.5:under,Keyonte George,rebounds,3.5,103,PASS,-0.0232,0.16,3.57,0.4694,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:rebounds:3.5:over,Jamal Murray,rebounds,3.5,100,PASS,0.0301,0.16,3.64,0.5301,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:rebounds:3.5:under,Jamal Murray,rebounds,3.5,-130,PASS,-0.0953,0.16,3.64,0.4699,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:rebounds:12.5:over,Nikola Jokic,rebounds,12.5,107,PASS,0.0461,0.16,13.0,0.5292,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:rebounds:12.5:under,Nikola Jokic,rebounds,12.5,-139,PASS,-0.1108,0.16,13.0,0.4708,,,UNKNOWN,,,,0,,0,,0
+75f316b5b6d83f3f:rebounds:4.5:over,Bruce Brown,rebounds,4.5,106,PASS,0.011,0.2,4.62,0.4964,,,UP,5.6,4.5,3.8,0,,0,,0
+75f316b5b6d83f3f:rebounds:4.5:under,Bruce Brown,rebounds,4.5,-137,PASS,-0.0745,0.2,4.62,0.5036,,,UP,5.6,4.5,3.8,0,,0,,0
+179b8654e93bf924:rebounds:4.5:over,Cameron Johnson,rebounds,4.5,128,PASS,0.013,0.2,4.29,0.4515,,,UP,5.0,4.4,4.466666666666667,0,,0,,0
+179b8654e93bf924:rebounds:4.5:under,Cameron Johnson,rebounds,4.5,-167,PASS,-0.077,0.2,4.29,0.5485,,,UP,5.0,4.4,4.466666666666667,0,,0,,0
+b0cd7d8d9d34eeb6:rebounds:7.5:over,Jusuf Nurkic,rebounds,7.5,-157,PASS,-0.0899,0.16,7.5,0.521,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:rebounds:7.5:under,Jusuf Nurkic,rebounds,7.5,117,PASS,0.0182,0.16,7.5,0.479,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:rebounds:7.5:over,Kyle Filipowski,rebounds,7.5,102,PASS,-0.0055,0.16,7.5,0.4896,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:rebounds:7.5:under,Kyle Filipowski,rebounds,7.5,-132,PASS,-0.0585,0.16,7.5,0.5104,,,UNKNOWN,,,,0,,0,,0
+920b4c0f03d8363f:threes:1.5:over,Svi Mykhailiuk,threes,1.5,117,PASS,0.0191,0.16,1.5,0.4799,,,UNKNOWN,,,,0,,0,,0
+920b4c0f03d8363f:threes:1.5:under,Svi Mykhailiuk,threes,1.5,-152,PASS,-0.0831,0.16,1.5,0.5201,,,UNKNOWN,,,,0,,0,,0
+fcc0ec5b74fbc46f:threes:1.5:over,Peyton Watson,threes,1.5,139,PASS,0.0665,0.06,1.56,0.4849,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+fcc0ec5b74fbc46f:threes:1.5:under,Peyton Watson,threes,1.5,-182,PASS,-0.1303,0.06,1.56,0.5151,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+6528127ba219e939:threes:2.5:over,Lauri Markkanen,threes,2.5,-123,PASS,-0.0321,0.06,2.55,0.5195,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+6528127ba219e939:threes:2.5:under,Lauri Markkanen,threes,2.5,-105,PASS,-0.0317,0.06,2.55,0.4805,QUESTIONABLE,NBA Official Report,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:threes:2.5:over,Tim Hardaway Jr,threes,2.5,130,PASS,0.0349,0.16,2.5,0.4697,,,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:threes:2.5:under,Tim Hardaway Jr,threes,2.5,-190,PASS,-0.1248,0.16,2.5,0.5303,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:threes:1.5:over,Nikola Jokic,threes,1.5,-176,PASS,-0.0921,0.16,1.56,0.5456,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:threes:1.5:under,Nikola Jokic,threes,1.5,131,PASS,0.0215,0.16,1.56,0.4544,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:threes:2.5:over,Keyonte George,threes,2.5,-170,PASS,-0.0895,0.16,2.55,0.5401,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:threes:2.5:under,Keyonte George,threes,2.5,126,PASS,0.0174,0.16,2.55,0.4599,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:threes:3.5:over,Jamal Murray,threes,3.5,128,PASS,0.0743,0.16,3.64,0.5129,,,UNKNOWN,,,,0,,0,,0
+bfaa0573315cc3e9:threes:3.5:under,Jamal Murray,threes,3.5,-167,PASS,-0.1384,0.16,3.64,0.4871,,,UNKNOWN,,,,0,,0,,0
+179b8654e93bf924:threes:2.5:over,Cameron Johnson,threes,2.5,113,PASS,-0.1328,0.3266,1.6,0.3367,,,DOWN,1.6,2.4,2.533333333333333,0,,0,,0
+179b8654e93bf924:threes:2.5:under,Cameron Johnson,threes,2.5,-147,PASS,0.0681,0.3266,1.6,0.6633,,,DOWN,1.6,2.4,2.533333333333333,0,,0,,0
+b1bff13b9c210da8:threes:1.5:over,Ace Bailey,threes,1.5,-161,PASS,0.0346,0.3029,2.02,0.6515,,,FLAT,1.8,1.9,1.9333333333333333,0,,0,,0
+b1bff13b9c210da8:threes:1.5:under,Ace Bailey,threes,1.5,123,PASS,-0.0999,0.3029,2.02,0.3485,,,FLAT,1.8,1.9,1.9333333333333333,0,,0,,0
+b0cd7d8d9d34eeb6:points:10.5:over,Jusuf Nurkic,points,10.5,-120,PASS,-0.0411,0.16,10.5,0.5044,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:points:10.5:under,Jusuf Nurkic,points,10.5,-106,PASS,-0.0189,0.16,10.5,0.4956,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:pra:53.5:over,Nikola Jokic,pra,53.5,-112,PASS,0.0139,0.16,55.66,0.5422,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:pra:53.5:under,Nikola Jokic,pra,53.5,-115,PASS,-0.0771,0.16,55.66,0.4578,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:pra:36.5:over,Keyonte George,pra,36.5,-108,PASS,-0.001,0.16,37.23,0.5182,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:pra:36.5:under,Keyonte George,pra,36.5,-120,PASS,-0.0636,0.16,37.23,0.4818,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:pra:22.5:over,Jusuf Nurkic,pra,22.5,-123,PASS,-0.0457,0.16,22.5,0.5059,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:pra:22.5:under,Jusuf Nurkic,pra,22.5,-104,PASS,-0.0157,0.16,22.5,0.4941,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:rebounds:11.5:over,Nikola Jokic,rebounds,11.5,-136,PASS,-0.0211,0.16,11.96,0.5552,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:rebounds:11.5:under,Nikola Jokic,rebounds,11.5,104,PASS,-0.0454,0.16,11.96,0.4448,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:rebounds:8.5:over,Jusuf Nurkic,rebounds,8.5,106,PASS,0.0015,0.16,8.5,0.4869,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:rebounds:8.5:under,Jusuf Nurkic,rebounds,8.5,-137,PASS,-0.065,0.16,8.5,0.5131,,,UNKNOWN,,,,0,,0,,0
+179b8654e93bf924:rebounds:3.5:over,Cameron Johnson,rebounds,3.5,-165,PASS,-0.0166,0.2122,4.29,0.6061,,,UP,5.0,4.4,4.466666666666667,0,,0,,0
+179b8654e93bf924:rebounds:3.5:under,Cameron Johnson,rebounds,3.5,120,PASS,-0.0606,0.2122,4.29,0.3939,,,UP,5.0,4.4,4.466666666666667,0,,0,,0
+eebbd3f8dcedbe8e:threes:3.5:over,Keyonte George,threes,3.5,130,PASS,0.0574,0.16,3.57,0.4922,,,UNKNOWN,,,,0,,0,,0
+eebbd3f8dcedbe8e:threes:3.5:under,Keyonte George,threes,3.5,-169,PASS,-0.1205,0.16,3.57,0.5078,,,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:assists:1.5:over,Tim Hardaway Jr,assists,1.5,-114,PASS,-0.0336,0.16,1.5,0.4991,,,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:assists:1.5:under,Tim Hardaway Jr,assists,1.5,-117,PASS,-0.0383,0.16,1.5,0.5009,,,UNKNOWN,,,,0,,0,,0
+179b8654e93bf924:assists:1.5:over,Cameron Johnson,assists,1.5,-275,PASS,0.0013,0.4693,2.25,0.7346,,,FLAT,2.4,2.5,2.6,0,,0,,0
+179b8654e93bf924:assists:1.5:under,Cameron Johnson,assists,1.5,195,PASS,-0.0736,0.4693,2.25,0.2654,,,FLAT,2.4,2.5,2.6,0,,0,,0
+b1bff13b9c210da8:assists:1.5:over,Ace Bailey,assists,1.5,-173,PASS,0.0292,0.3258,2.25,0.6629,,,FLAT,2.0,1.7,1.7333333333333334,0,,0,,0
+b1bff13b9c210da8:assists:1.5:under,Ace Bailey,assists,1.5,129,PASS,-0.0996,0.3258,2.25,0.3371,,,FLAT,2.0,1.7,1.7333333333333334,0,,0,,0
+920b4c0f03d8363f:assists:1.5:over,Svi Mykhailiuk,assists,1.5,-134,PASS,-0.0625,0.16,1.5,0.5102,,,UNKNOWN,,,,0,,0,,0
+920b4c0f03d8363f:assists:1.5:under,Svi Mykhailiuk,assists,1.5,100,PASS,-0.0102,0.16,1.5,0.4898,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:assists:1.5:over,Kyle Filipowski,assists,1.5,-179,PASS,-0.1118,0.16,1.5,0.5298,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:assists:1.5:under,Kyle Filipowski,assists,1.5,133,PASS,0.0411,0.16,1.5,0.4702,,,UNKNOWN,,,,0,,0,,0
+920b4c0f03d8363f:rebounds:2.5:over,Svi Mykhailiuk,rebounds,2.5,122,PASS,0.0265,0.16,2.5,0.477,,,UNKNOWN,,,,0,,0,,0
+920b4c0f03d8363f:rebounds:2.5:under,Svi Mykhailiuk,rebounds,2.5,-159,PASS,-0.0909,0.16,2.5,0.523,,,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:rebounds:3.5:over,Tim Hardaway Jr,rebounds,3.5,270,PASS,0.1555,0.16,3.5,0.4258,,,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:rebounds:3.5:under,Tim Hardaway Jr,rebounds,3.5,-400,PASS,-0.2258,0.16,3.5,0.5742,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:assists:2.5:over,Kyle Filipowski,assists,2.5,136,PASS,0.0456,0.16,2.5,0.4693,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:assists:2.5:under,Kyle Filipowski,assists,2.5,-179,PASS,-0.1109,0.16,2.5,0.5307,,,UNKNOWN,,,,0,,0,,0
+b1bff13b9c210da8:assists:2.5:over,Ace Bailey,assists,2.5,149,PASS,0.0161,0.2,2.25,0.4177,,,FLAT,2.0,1.7,1.7333333333333334,0,,0,,0
+b1bff13b9c210da8:assists:2.5:under,Ace Bailey,assists,2.5,-196,PASS,-0.0798,0.2,2.25,0.5823,,,FLAT,2.0,1.7,1.7333333333333334,0,,0,,0
+179b8654e93bf924:assists:2.5:over,Cameron Johnson,assists,2.5,104,PASS,-0.066,0.2,2.25,0.4242,,,FLAT,2.4,2.5,2.6,0,,0,,0
+179b8654e93bf924:assists:2.5:under,Cameron Johnson,assists,2.5,-135,PASS,0.0014,0.2,2.25,0.5758,,,FLAT,2.4,2.5,2.6,0,,0,,0
+75f316b5b6d83f3f:assists:2.5:over,Bruce Brown,assists,2.5,130,PASS,0.0216,0.2,2.3,0.4564,,,FLAT,2.8,2.7,2.6,0,,0,,0
+75f316b5b6d83f3f:assists:2.5:under,Bruce Brown,assists,2.5,-169,PASS,-0.0846,0.2,2.3,0.5436,,,FLAT,2.8,2.7,2.6,0,,0,,0
+b1bff13b9c210da8:points:14.5:over,Ace Bailey,points,14.5,106,PASS,-0.0352,0.2,13.82,0.4502,,,FLAT,12.2,11.6,12.0,0,,0,,0
+b1bff13b9c210da8:points:14.5:under,Ace Bailey,points,14.5,-137,PASS,-0.0283,0.2,13.82,0.5498,,,FLAT,12.2,11.6,12.0,0,,0,,0
+230a681311fee4a4:pra:19.5:over,Isaiah Collier,pra,19.5,106,PASS,0.0614,0.2,21.75,0.5468,,,UP,20.0,15.9,15.666666666666666,0,,0,,0
+230a681311fee4a4:pra:19.5:under,Isaiah Collier,pra,19.5,-137,PASS,-0.1249,0.2,21.75,0.4532,,,UP,20.0,15.9,15.666666666666666,0,,0,,0
+230a681311fee4a4:rebounds:2.5:over,Isaiah Collier,rebounds,2.5,106,PASS,-0.0228,0.2,2.36,0.4626,,,FLAT,2.0,1.4,1.6666666666666667,0,,0,,0
+230a681311fee4a4:rebounds:2.5:under,Isaiah Collier,rebounds,2.5,-137,PASS,-0.0407,0.2,2.36,0.5374,,,FLAT,2.0,1.4,1.6666666666666667,0,,0,,0
+83eecd7c0f1f6407:rebounds:2.5:over,Tim Hardaway Jr,rebounds,2.5,118,PASS,0.0205,0.16,2.5,0.4792,,,UNKNOWN,,,,0,,0,,0
+83eecd7c0f1f6407:rebounds:2.5:under,Tim Hardaway Jr,rebounds,2.5,-154,PASS,-0.0855,0.16,2.5,0.5208,,,UNKNOWN,,,,0,,0,,0
+75f316b5b6d83f3f:threes:0.5:over,Bruce Brown,threes,0.5,-128,PASS,-0.108,0.2,0.3,0.4534,,,FLAT,0.2,0.4,0.3333333333333333,0,,0,,0
+75f316b5b6d83f3f:threes:0.5:under,Bruce Brown,threes,0.5,-101,PASS,0.0441,0.2,0.3,0.5466,,,FLAT,0.2,0.4,0.3333333333333333,0,,0,,0
+1245618580f0afa4:threes:1.5:over,Kyle Filipowski,threes,1.5,161,PASS,0.0749,0.16,1.5,0.4581,,,UNKNOWN,,,,0,,0,,0
+1245618580f0afa4:threes:1.5:under,Kyle Filipowski,threes,1.5,-213,PASS,-0.1386,0.16,1.5,0.5419,,,UNKNOWN,,,,0,,0,,0
+230a681311fee4a4:threes:0.5:over,Isaiah Collier,threes,0.5,109,PASS,-0.007,0.2,0.45,0.4715,,,FLAT,0.4,0.4,0.3333333333333333,0,,0,,0
+230a681311fee4a4:threes:0.5:under,Isaiah Collier,threes,0.5,-141,PASS,-0.0565,0.2,0.45,0.5285,,,FLAT,0.4,0.4,0.3333333333333333,0,,0,,0
+b0cd7d8d9d34eeb6:threes:0.5:over,Jusuf Nurkic,threes,0.5,149,PASS,0.0617,0.16,0.5,0.4633,,,UNKNOWN,,,,0,,0,,0
+b0cd7d8d9d34eeb6:threes:0.5:under,Jusuf Nurkic,threes,0.5,-196,PASS,-0.1254,0.16,0.5,0.5367,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:threes:2.5:over,Nikola Jokic,threes,2.5,161,PASS,0.103,0.16,2.6,0.4862,,,UNKNOWN,,,,0,,0,,0
+6a94a28b80e340be:threes:2.5:under,Nikola Jokic,threes,2.5,-213,PASS,-0.1667,0.16,2.6,0.5138,,,UNKNOWN,,,,0,,0,,0
+d63216a88b094398:assists:2.5:over,Cedric Coward,assists,2.5,-176,PASS,0.009,0.2934,3.28,0.6467,,,UP,3.4,2.9,2.6,0,,0,,0
+d63216a88b094398:assists:2.5:under,Cedric Coward,assists,2.5,131,PASS,-0.0796,0.2934,3.28,0.3533,,,UP,3.4,2.9,2.6,0,,0,,0
+72618e8212979bf6:assists:2.5:over,Ajay Mitchell,assists,2.5,-182,PASS,0.0385,0.3677,3.27,0.6839,,,FLAT,3.8,3.3,3.466666666666667,0,,0,,0
+72618e8212979bf6:assists:2.5:under,Ajay Mitchell,assists,2.5,136,PASS,-0.1076,0.3677,3.27,0.3161,,,FLAT,3.8,3.3,3.466666666666667,0,,0,,0
+b8557de9d9477231:assists:5.5:over,Jalen Williams,assists,5.5,-121,PASS,-0.0766,0.2,5.28,0.4709,,,DOWN,4.8,5.333333333333333,5.333333333333333,0,,0,,0
+b8557de9d9477231:assists:5.5:under,Jalen Williams,assists,5.5,-110,PASS,0.0053,0.2,5.28,0.5291,,,DOWN,4.8,5.333333333333333,5.333333333333333,0,,0,,0
+f0f6cdc30bf237c9:assists:3.5:over,Santi Aldama,assists,3.5,123,PASS,-0.0019,0.16,3.4,0.4465,,,UNKNOWN,,,,0,,0,,0
+f0f6cdc30bf237c9:assists:3.5:under,Santi Aldama,assists,3.5,-164,PASS,-0.0677,0.16,3.4,0.5535,,,UNKNOWN,,,,0,,0,,0
+4e45d282ab40fb92:assists:6.5:over,Cam Spencer,assists,6.5,118,PASS,0.0599,0.2,6.83,0.5186,,,UP,6.8,5.8,5.2,0,,0,,0
+4e45d282ab40fb92:assists:6.5:under,Cam Spencer,assists,6.5,-157,PASS,-0.1295,0.2,6.83,0.4814,,,UP,6.8,5.8,5.2,0,,0,,0
+29e79437a2214ca3:assists:2.5:over,Jaren Jackson Jr,assists,2.5,-117,PASS,-0.0595,0.16,2.42,0.4797,,,UNKNOWN,,,,0,,0,,0
+29e79437a2214ca3:assists:2.5:under,Jaren Jackson Jr,assists,2.5,-115,PASS,-0.0146,0.16,2.42,0.5203,,,UNKNOWN,,,,0,,0,,0
+56e46e859e224d01:assists:2.5:over,Cason Wallace,assists,2.5,106,PASS,-0.1121,0.2534,1.89,0.3733,,,FLAT,2.2,2.2,2.1333333333333333,0,,0,,0
+56e46e859e224d01:assists:2.5:under,Cason Wallace,assists,2.5,-141,PASS,0.0416,0.2534,1.89,0.6267,,,FLAT,2.2,2.2,2.1333333333333333,0,,0,,0
+8df7d668b3bc738d:assists:3.5:over,Kentavious Caldwell-Pope,assists,3.5,126,PASS,0.0313,0.16,3.5,0.4738,,,UNKNOWN,,,,0,,0,,0
+8df7d668b3bc738d:assists:3.5:under,Kentavious Caldwell-Pope,assists,3.5,-170,PASS,-0.1034,0.16,3.5,0.5262,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:assists:6.5:over,Shai Gilgeous-Alexander,assists,6.5,105,PASS,0.0101,0.16,6.57,0.4979,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:assists:6.5:under,Shai Gilgeous-Alexander,assists,6.5,-139,PASS,-0.0795,0.16,6.57,0.5021,,,UNKNOWN,,,,0,,0,,0
+8df7d668b3bc738d:points:8.5:over,Kentavious Caldwell-Pope,points,8.5,-103,PASS,-0.0155,0.16,8.5,0.4919,,,UNKNOWN,,,,0,,0,,0
+8df7d668b3bc738d:points:8.5:under,Kentavious Caldwell-Pope,points,8.5,-130,PASS,-0.0571,0.16,8.5,0.5081,,,UNKNOWN,,,,0,,0,,0
+3e873fa1da1e572b:points:16.5:over,Chet Holmgren,points,16.5,-127,PASS,0.1055,0.23,19.22,0.665,QUESTIONABLE,NBA Official Report,UP,20.4,19.2,18.666666666666668,0,,0,,0
+3e873fa1da1e572b:points:16.5:under,Chet Holmgren,points,16.5,-106,PASS,-0.1796,0.23,19.22,0.335,QUESTIONABLE,NBA Official Report,UP,20.4,19.2,18.666666666666668,0,,0,,0
+f90abdac8476856e:points:10.5:over,Jock Landale,points,10.5,-117,PASS,-0.0383,0.16,10.5,0.5009,,,UNKNOWN,,,,0,,0,,0
+f90abdac8476856e:points:10.5:under,Jock Landale,points,10.5,-114,PASS,-0.0336,0.16,10.5,0.4991,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:points:32.5:over,Shai Gilgeous-Alexander,points,32.5,-114,PASS,-0.0226,0.16,32.83,0.5102,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:points:32.5:under,Shai Gilgeous-Alexander,points,32.5,-117,PASS,-0.0493,0.16,32.83,0.4898,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:points:13.5:over,Jaylen Wells,points,13.5,-103,PASS,-0.0499,0.16,13.09,0.4575,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:points:13.5:under,Jaylen Wells,points,13.5,-130,PASS,-0.0227,0.16,13.09,0.5425,,,UNKNOWN,,,,0,,0,,0
+56e46e859e224d01:points:7.5:over,Cason Wallace,points,7.5,-136,PASS,-0.2022,0.2518,5.57,0.3741,,,DOWN,5.8,7.0,7.733333333333333,0,,0,,0
+56e46e859e224d01:points:7.5:under,Cason Wallace,points,7.5,101,PASS,0.1284,0.2518,5.57,0.6259,,,DOWN,5.8,7.0,7.733333333333333,0,,0,,0
+d63216a88b094398:points:12.5:over,Cedric Coward,points,12.5,-113,PASS,0.0525,0.2,13.89,0.583,,,UP,13.4,12.8,12.666666666666666,0,,0,,0
+d63216a88b094398:points:12.5:under,Cedric Coward,points,12.5,-118,PASS,-0.1243,0.2,13.89,0.417,,,UP,13.4,12.8,12.666666666666666,0,,0,,0
+d69c641c471ac3e0:points:5.5:over,Alex Caruso,points,5.5,-137,PASS,0.0226,0.1013,6.66,0.6007,QUESTIONABLE,NBA Official Report,FLAT,5.8,5.2,5.733333333333333,0,,0,,0
+d69c641c471ac3e0:points:5.5:under,Alex Caruso,points,5.5,103,PASS,-0.0933,0.1013,6.66,0.3993,QUESTIONABLE,NBA Official Report,FLAT,5.8,5.2,5.733333333333333,0,,0,,0
+b8557de9d9477231:points:19.5:over,Jalen Williams,points,19.5,-124,PASS,-0.0631,0.2,19.29,0.4905,,,UP,18.8,17.555555555555557,17.555555555555557,0,,0,,0
+b8557de9d9477231:points:19.5:under,Jalen Williams,points,19.5,-108,PASS,-0.0097,0.2,19.29,0.5095,,,UP,18.8,17.555555555555557,17.555555555555557,0,,0,,0
+6a272d519405d94b:points:6.5:over,Luguentz Dort,points,6.5,-132,PASS,-0.049,0.16,6.57,0.52,,,UNKNOWN,,,,0,,0,,0
+6a272d519405d94b:points:6.5:under,Luguentz Dort,points,6.5,-102,PASS,-0.0249,0.16,6.57,0.48,,,UNKNOWN,,,,0,,0,,0
+4e45d282ab40fb92:points:16.5:over,Cam Spencer,points,16.5,-108,PASS,0.1216,0.2816,19.32,0.6408,,,UP,19.0,17.1,14.533333333333333,0,,0,,0
+4e45d282ab40fb92:points:16.5:under,Cam Spencer,points,16.5,-122,PASS,-0.1903,0.2816,19.32,0.3592,,,UP,19.0,17.1,14.533333333333333,0,,0,,0
+29e79437a2214ca3:points:17.5:over,Jaren Jackson Jr,points,17.5,-110,PASS,-0.0616,0.16,16.97,0.4622,,,UNKNOWN,,,,0,,0,,0
+29e79437a2214ca3:points:17.5:under,Jaren Jackson Jr,points,17.5,-121,PASS,-0.0097,0.16,16.97,0.5378,,,UNKNOWN,,,,0,,0,,0
+72618e8212979bf6:points:10.5:over,Ajay Mitchell,points,10.5,-104,PASS,-0.0053,0.2,10.71,0.5045,,,DOWN,11.0,10.4,11.6,0,,0,,0
+72618e8212979bf6:points:10.5:under,Ajay Mitchell,points,10.5,-128,PASS,-0.0659,0.2,10.71,0.4955,,,DOWN,11.0,10.4,11.6,0,,0,,0
+f0f6cdc30bf237c9:points:14.5:over,Santi Aldama,points,14.5,-120,PASS,-0.0775,0.16,14.06,0.4679,,,UNKNOWN,,,,0,,0,,0
+f0f6cdc30bf237c9:points:14.5:under,Santi Aldama,points,14.5,-112,PASS,0.0038,0.16,14.06,0.5321,,,UNKNOWN,,,,0,,0,,0
+4e45d282ab40fb92:pra:25.5:over,Cam Spencer,pra,25.5,-119,PASS,0.1244,0.3356,29.62,0.6678,,,UP,29.2,25.3,22.066666666666666,0,,0,,0
+4e45d282ab40fb92:pra:25.5:under,Cam Spencer,pra,25.5,-109,PASS,-0.1893,0.3356,29.62,0.3322,,,UP,29.2,25.3,22.066666666666666,0,,0,,0
+b8557de9d9477231:pra:31.5:over,Jalen Williams,pra,31.5,-108,PASS,-0.1547,0.271,29.63,0.3645,,,FLAT,28.2,28.0,28.0,0,,0,,0
+b8557de9d9477231:pra:31.5:under,Jalen Williams,pra,31.5,-120,PASS,0.09,0.271,29.63,0.6355,,,FLAT,28.2,28.0,28.0,0,,0,,0
+0c6544ad9eae0712:pra:43.5:over,Shai Gilgeous-Alexander,pra,43.5,-116,PASS,-0.0244,0.16,43.94,0.5126,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:pra:43.5:under,Shai Gilgeous-Alexander,pra,43.5,-111,PASS,-0.0387,0.16,43.94,0.4874,,,UNKNOWN,,,,0,,0,,0
+3e873fa1da1e572b:pra:27.5:over,Chet Holmgren,pra,27.5,-108,PASS,-0.0127,0.1,27.7,0.5065,QUESTIONABLE,NBA Official Report,UP,28.6,28.3,27.733333333333334,0,,0,,0
+3e873fa1da1e572b:pra:27.5:under,Chet Holmgren,pra,27.5,-120,PASS,-0.0519,0.1,27.7,0.4935,QUESTIONABLE,NBA Official Report,UP,28.6,28.3,27.733333333333334,0,,0,,0
+f0f6cdc30bf237c9:pra:25.5:over,Santi Aldama,pra,25.5,-106,PASS,-0.054,0.16,24.73,0.4606,,,UNKNOWN,,,,0,,0,,0
+f0f6cdc30bf237c9:pra:25.5:under,Santi Aldama,pra,25.5,-122,PASS,-0.0102,0.16,24.73,0.5394,,,UNKNOWN,,,,0,,0,,0
+56e46e859e224d01:pra:13.5:over,Cason Wallace,pra,13.5,-119,PASS,-0.2533,0.4199,9.64,0.2901,,,DOWN,10.4,12.4,12.6,0,,0,,0
+56e46e859e224d01:pra:13.5:under,Cason Wallace,pra,13.5,-109,UNDER,0.1884,0.4199,9.64,0.7099,,,DOWN,10.4,12.4,12.6,3,0.6,10,0.6,15
+8df7d668b3bc738d:pra:13.5:over,Kentavious Caldwell-Pope,pra,13.5,-130,PASS,-0.0568,0.16,13.5,0.5084,,,UNKNOWN,,,,0,,0,,0
+8df7d668b3bc738d:pra:13.5:under,Kentavious Caldwell-Pope,pra,13.5,-102,PASS,-0.0134,0.16,13.5,0.4916,,,UNKNOWN,,,,0,,0,,0
+72618e8212979bf6:pra:16.5:over,Ajay Mitchell,pra,16.5,-128,PASS,-0.0297,0.2,17.18,0.5317,,,FLAT,18.6,16.7,18.133333333333333,0,,0,,0
+72618e8212979bf6:pra:16.5:under,Ajay Mitchell,pra,16.5,-104,PASS,-0.0415,0.2,17.18,0.4683,,,FLAT,18.6,16.7,18.133333333333333,0,,0,,0
+29e79437a2214ca3:pra:25.5:over,Jaren Jackson Jr,pra,25.5,-118,PASS,-0.0733,0.16,24.73,0.468,,,UNKNOWN,,,,0,,0,,0
+29e79437a2214ca3:pra:25.5:under,Jaren Jackson Jr,pra,25.5,-110,PASS,0.0082,0.16,24.73,0.532,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:pra:18.5:over,Jaylen Wells,pra,18.5,-130,PASS,-0.0912,0.16,17.95,0.474,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:pra:18.5:under,Jaylen Wells,pra,18.5,-102,PASS,0.0211,0.16,17.95,0.526,,,UNKNOWN,,,,0,,0,,0
+f90abdac8476856e:pra:19.5:over,Jock Landale,pra,19.5,-122,PASS,-0.0446,0.16,19.5,0.5049,,,UNKNOWN,,,,0,,0,,0
+f90abdac8476856e:pra:19.5:under,Jock Landale,pra,19.5,-106,PASS,-0.0195,0.16,19.5,0.4951,,,UNKNOWN,,,,0,,0,,0
+d63216a88b094398:pra:21.5:over,Cedric Coward,pra,21.5,-115,PASS,0.0262,0.2,23.58,0.5611,,,UP,23.0,22.5,21.666666666666668,0,,0,,0
+d63216a88b094398:pra:21.5:under,Cedric Coward,pra,21.5,-112,PASS,-0.0894,0.2,23.58,0.4389,,,UP,23.0,22.5,21.666666666666668,0,,0,,0
+f90abdac8476856e:rebounds:7.5:over,Jock Landale,rebounds,7.5,115,PASS,0.0151,0.16,7.5,0.4802,,,UNKNOWN,,,,0,,0,,0
+f90abdac8476856e:rebounds:7.5:under,Jock Landale,rebounds,7.5,-154,PASS,-0.0865,0.16,7.5,0.5198,,,UNKNOWN,,,,0,,0,,0
+d63216a88b094398:rebounds:6.5:over,Cedric Coward,rebounds,6.5,115,PASS,0.0097,0.2,6.41,0.4748,,,FLAT,6.2,6.8,6.4,0,,0,,0
+d63216a88b094398:rebounds:6.5:under,Cedric Coward,rebounds,6.5,-149,PASS,-0.0732,0.2,6.41,0.5252,,,FLAT,6.2,6.8,6.4,0,,0,,0
+00417796df3a3a94:rebounds:4.5:over,Jaylen Wells,rebounds,4.5,126,PASS,-0.0031,0.16,4.37,0.4394,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:rebounds:4.5:under,Jaylen Wells,rebounds,4.5,-170,PASS,-0.069,0.16,4.37,0.5606,,,UNKNOWN,,,,0,,0,,0
+29e79437a2214ca3:rebounds:5.5:over,Jaren Jackson Jr,rebounds,5.5,-120,PASS,-0.0775,0.16,5.33,0.4679,,,UNKNOWN,,,,0,,0,,0
+29e79437a2214ca3:rebounds:5.5:under,Jaren Jackson Jr,rebounds,5.5,-112,PASS,0.0038,0.16,5.33,0.5321,,,UNKNOWN,,,,0,,0,,0
+72618e8212979bf6:rebounds:3.5:over,Ajay Mitchell,rebounds,3.5,112,PASS,-0.0247,0.2,3.2,0.447,,,UP,3.8,3.0,3.066666666666667,0,,0,,0
+72618e8212979bf6:rebounds:3.5:under,Ajay Mitchell,rebounds,3.5,-150,PASS,-0.047,0.2,3.2,0.553,,,UP,3.8,3.0,3.066666666666667,0,,0,,0
+0c6544ad9eae0712:rebounds:4.5:over,Shai Gilgeous-Alexander,rebounds,4.5,-154,PASS,-0.0751,0.16,4.54,0.5312,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:rebounds:4.5:under,Shai Gilgeous-Alexander,rebounds,4.5,116,PASS,0.0059,0.16,4.54,0.4688,,,UNKNOWN,,,,0,,0,,0
+6a272d519405d94b:rebounds:3.5:over,Luguentz Dort,rebounds,3.5,-104,PASS,-0.0075,0.16,3.54,0.5023,,,UNKNOWN,,,,0,,0,,0
+6a272d519405d94b:rebounds:3.5:under,Luguentz Dort,rebounds,3.5,-129,PASS,-0.0656,0.16,3.54,0.4977,,,UNKNOWN,,,,0,,0,,0
+56e46e859e224d01:rebounds:3.5:over,Cason Wallace,rebounds,3.5,127,PASS,-0.1957,0.5103,2.18,0.2448,,,FLAT,2.4,3.2,2.7333333333333334,0,,0,,0
+56e46e859e224d01:rebounds:3.5:under,Cason Wallace,rebounds,3.5,-170,UNDER,0.1255,0.5103,2.18,0.7552,,,FLAT,2.4,3.2,2.7333333333333334,3,0.6,10,0.7333,15
+3e873fa1da1e572b:rebounds:8.5:over,Chet Holmgren,rebounds,8.5,-105,PASS,-0.2578,0.3911,7.27,0.2544,QUESTIONABLE,NBA Official Report,FLAT,7.2,7.8,7.6,0,,0,,0
+3e873fa1da1e572b:rebounds:8.5:under,Chet Holmgren,rebounds,8.5,-127,PASS,0.1861,0.3911,7.27,0.7456,QUESTIONABLE,NBA Official Report,FLAT,7.2,7.8,7.6,0,,0,,0
+b8557de9d9477231:rebounds:5.5:over,Jalen Williams,rebounds,5.5,-109,PASS,-0.0737,0.2,5.06,0.4479,,,DOWN,4.6,5.111111111111111,5.111111111111111,0,,0,,0
+b8557de9d9477231:rebounds:5.5:under,Jalen Williams,rebounds,5.5,-122,PASS,0.0026,0.2,5.06,0.5521,,,DOWN,4.6,5.111111111111111,5.111111111111111,0,,0,,0
+4e45d282ab40fb92:rebounds:3.5:over,Cam Spencer,rebounds,3.5,116,PASS,0.0106,0.2,3.47,0.4736,,,UP,3.4,2.4,2.3333333333333335,0,,0,,0
+4e45d282ab40fb92:rebounds:3.5:under,Cam Spencer,rebounds,3.5,-154,PASS,-0.0799,0.2,3.47,0.5264,,,UP,3.4,2.4,2.3333333333333335,0,,0,,0
+d69c641c471ac3e0:rebounds:2.5:over,Alex Caruso,rebounds,2.5,-170,PASS,0.0925,0.3443,5.56,0.7222,QUESTIONABLE,NBA Official Report,UP,6.0,3.8,3.4,0,,0,,0
+d69c641c471ac3e0:rebounds:2.5:under,Alex Caruso,rebounds,2.5,126,PASS,-0.1646,0.3443,5.56,0.2778,QUESTIONABLE,NBA Official Report,UP,6.0,3.8,3.4,0,,0,,0
+f0f6cdc30bf237c9:rebounds:7.5:over,Santi Aldama,rebounds,7.5,113,PASS,-0.0222,0.16,7.27,0.4472,,,UNKNOWN,,,,0,,0,,0
+f0f6cdc30bf237c9:rebounds:7.5:under,Santi Aldama,rebounds,7.5,-150,PASS,-0.0472,0.16,7.27,0.5528,,,UNKNOWN,,,,0,,0,,0
+29e79437a2214ca3:threes:1.5:over,Jaren Jackson Jr,threes,1.5,-102,PASS,-0.0265,0.16,1.46,0.4785,,,UNKNOWN,,,,0,,0,,0
+29e79437a2214ca3:threes:1.5:under,Jaren Jackson Jr,threes,1.5,-132,PASS,-0.0475,0.16,1.46,0.5215,,,UNKNOWN,,,,0,,0,,0
+f0f6cdc30bf237c9:threes:1.5:over,Santi Aldama,threes,1.5,-129,PASS,-0.0684,0.16,1.46,0.4949,,,UNKNOWN,,,,0,,0,,0
+f0f6cdc30bf237c9:threes:1.5:under,Santi Aldama,threes,1.5,-104,PASS,-0.0047,0.16,1.46,0.5051,,,UNKNOWN,,,,0,,0,,0
+3e873fa1da1e572b:threes:1.5:over,Chet Holmgren,threes,1.5,108,PASS,0.0347,0.1,1.64,0.5155,QUESTIONABLE,NBA Official Report,FLAT,1.8,1.6,1.4666666666666666,0,,0,,0
+3e873fa1da1e572b:threes:1.5:under,Chet Holmgren,threes,1.5,-143,PASS,-0.104,0.1,1.64,0.4845,QUESTIONABLE,NBA Official Report,FLAT,1.8,1.6,1.4666666666666666,0,,0,,0
+6a272d519405d94b:threes:1.5:over,Luguentz Dort,threes,1.5,-115,PASS,-0.0307,0.16,1.52,0.5042,,,UNKNOWN,,,,0,,0,,0
+6a272d519405d94b:threes:1.5:under,Luguentz Dort,threes,1.5,-115,PASS,-0.0391,0.16,1.52,0.4958,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:threes:1.5:over,Shai Gilgeous-Alexander,threes,1.5,-190,PASS,-0.1176,0.16,1.52,0.5376,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:threes:1.5:under,Shai Gilgeous-Alexander,threes,1.5,140,PASS,0.0458,0.16,1.52,0.4624,,,UNKNOWN,,,,0,,0,,0
+4e45d282ab40fb92:threes:2.5:over,Cam Spencer,threes,2.5,-159,OVER,0.1408,0.5094,4.21,0.7547,,,UP,4.2,3.6,2.933333333333333,3,0.8,10,0.6667,15
+4e45d282ab40fb92:threes:2.5:under,Cam Spencer,threes,2.5,119,PASS,-0.2113,0.5094,4.21,0.2453,,,UP,4.2,3.6,2.933333333333333,0,,0,,0
+00417796df3a3a94:threes:1.5:over,Jaylen Wells,threes,1.5,-152,PASS,-0.0967,0.16,1.46,0.5065,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:threes:1.5:under,Jaylen Wells,threes,1.5,114,PASS,0.0262,0.16,1.46,0.4935,,,UNKNOWN,,,,0,,0,,0
+56e46e859e224d01:threes:1.5:over,Cason Wallace,threes,1.5,144,PASS,-0.0842,0.3488,0.98,0.3256,,,FLAT,1.0,1.2,1.3333333333333333,0,,0,,0
+56e46e859e224d01:threes:1.5:under,Cason Wallace,threes,1.5,-197,PASS,0.0111,0.3488,0.98,0.6744,,,FLAT,1.0,1.2,1.3333333333333333,0,,0,,0
+b8557de9d9477231:threes:1.5:over,Jalen Williams,threes,1.5,125,PASS,0.0241,0.2,1.48,0.4685,,,FLAT,1.6,1.1111111111111112,1.1111111111111112,0,,0,,0
+b8557de9d9477231:threes:1.5:under,Jalen Williams,threes,1.5,-170,PASS,-0.0981,0.2,1.48,0.5315,,,FLAT,1.6,1.1111111111111112,1.1111111111111112,0,,0,,0
+d63216a88b094398:threes:1.5:over,Cedric Coward,threes,1.5,121,PASS,-0.0548,0.2046,1.21,0.3977,,,FLAT,1.0,0.7,1.2666666666666666,0,,0,,0
+d63216a88b094398:threes:1.5:under,Cedric Coward,threes,1.5,-162,PASS,-0.016,0.2046,1.21,0.6023,,,FLAT,1.0,0.7,1.2666666666666666,0,,0,,0
+72618e8212979bf6:assists:3.5:over,Ajay Mitchell,assists,3.5,129,PASS,-0.0116,0.2,3.27,0.4251,,,FLAT,3.8,3.3,3.466666666666667,0,,0,,0
+72618e8212979bf6:assists:3.5:under,Ajay Mitchell,assists,3.5,-173,PASS,-0.0588,0.2,3.27,0.5749,,,FLAT,3.8,3.3,3.466666666666667,0,,0,,0
+72618e8212979bf6:points:11.5:over,Ajay Mitchell,points,11.5,-106,PASS,-0.0648,0.2,10.71,0.4498,,,DOWN,11.0,10.4,11.6,0,,0,,0
+72618e8212979bf6:points:11.5:under,Ajay Mitchell,points,11.5,-125,PASS,-0.0053,0.2,10.71,0.5502,,,DOWN,11.0,10.4,11.6,0,,0,,0
+72618e8212979bf6:pra:18.5:over,Ajay Mitchell,pra,18.5,-102,PASS,-0.0601,0.2,17.18,0.4448,,,FLAT,18.6,16.7,18.133333333333333,0,,0,,0
+72618e8212979bf6:pra:18.5:under,Ajay Mitchell,pra,18.5,-127,PASS,-0.0043,0.2,17.18,0.5552,,,FLAT,18.6,16.7,18.133333333333333,0,,0,,0
+8df7d668b3bc738d:pra:14.5:over,Kentavious Caldwell-Pope,pra,14.5,102,PASS,-0.0055,0.16,14.5,0.4896,,,UNKNOWN,,,,0,,0,,0
+8df7d668b3bc738d:pra:14.5:under,Kentavious Caldwell-Pope,pra,14.5,-132,PASS,-0.0585,0.16,14.5,0.5104,,,UNKNOWN,,,,0,,0,,0
+8df7d668b3bc738d:rebounds:2.5:over,Kentavious Caldwell-Pope,rebounds,2.5,-132,PASS,-0.06,0.16,2.5,0.5089,,,UNKNOWN,,,,0,,0,,0
+8df7d668b3bc738d:rebounds:2.5:under,Kentavious Caldwell-Pope,rebounds,2.5,-102,PASS,-0.0139,0.16,2.5,0.4911,,,UNKNOWN,,,,0,,0,,0
+d63216a88b094398:assists:3.5:over,Cedric Coward,assists,3.5,120,PASS,-0.012,0.2,3.28,0.4426,,,UP,3.4,2.9,2.6,0,,0,,0
+d63216a88b094398:assists:3.5:under,Cedric Coward,assists,3.5,-165,PASS,-0.0652,0.2,3.28,0.5574,,,UP,3.4,2.9,2.6,0,,0,,0
+00417796df3a3a94:points:12.5:over,Jaylen Wells,points,12.5,-135,PASS,-0.0971,0.16,12.12,0.4774,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:points:12.5:under,Jaylen Wells,points,12.5,104,PASS,0.0324,0.16,12.12,0.5226,,,UNKNOWN,,,,0,,0,,0
+6a272d519405d94b:pra:11.5:over,Luguentz Dort,pra,11.5,-123,PASS,-0.0346,0.16,11.62,0.517,,,UNKNOWN,,,,0,,0,,0
+6a272d519405d94b:pra:11.5:under,Luguentz Dort,pra,11.5,-104,PASS,-0.0268,0.16,11.62,0.483,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:pra:19.5:over,Jaylen Wells,pra,19.5,-110,PASS,-0.0607,0.16,18.91,0.4631,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:pra:19.5:under,Jaylen Wells,pra,19.5,-118,PASS,-0.0044,0.16,18.91,0.5369,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:threes:2.5:over,Shai Gilgeous-Alexander,threes,2.5,152,PASS,0.0721,0.16,2.52,0.4689,,,UNKNOWN,,,,0,,0,,0
+0c6544ad9eae0712:threes:2.5:under,Shai Gilgeous-Alexander,threes,2.5,-200,PASS,-0.1356,0.16,2.52,0.5311,,,UNKNOWN,,,,0,,0,,0
+4e45d282ab40fb92:threes:3.5:over,Cam Spencer,threes,3.5,146,PASS,0.167,0.2,4.21,0.5735,,,UP,4.2,3.6,2.933333333333333,0,,0,,0
+4e45d282ab40fb92:threes:3.5:under,Cam Spencer,threes,3.5,-192,PASS,-0.2311,0.2,4.21,0.4265,,,UP,4.2,3.6,2.933333333333333,0,,0,,0
+00417796df3a3a94:assists:1.5:over,Jaylen Wells,assists,1.5,-141,PASS,-0.0837,0.16,1.46,0.5014,,,UNKNOWN,,,,0,,0,,0
+00417796df3a3a94:assists:1.5:under,Jaylen Wells,assists,1.5,106,PASS,0.0132,0.16,1.46,0.4986,,,UNKNOWN,,,,0,,0,,0
+d63216a88b094398:rebounds:5.5:over,Cedric Coward,rebounds,5.5,-157,PASS,-0.0241,0.2,6.41,0.5868,,,FLAT,6.2,6.8,6.4,0,,0,,0
+d63216a88b094398:rebounds:5.5:under,Cedric Coward,rebounds,5.5,118,PASS,-0.0455,0.2,6.41,0.4132,,,FLAT,6.2,6.8,6.4,0,,0,,0

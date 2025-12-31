@@ -1,1 +1,13 @@
 .env
+
+# Learned calibration weights (machine-specific)
+data/learned_weights.json
+
+# Cache databases
+*.db
+
+# Generated files
+*.log
+*.pyc
+__pycache__/
+.DS_Store

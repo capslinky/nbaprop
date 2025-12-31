@@ -202,8 +202,12 @@ class OddsAPIClient:
         endpoint = f"sports/{self.sport}/events"
         return self._make_request(endpoint, {})
 
-    def get_player_props(self, event_id: str = None,
-                         markets: List[str] = None) -> List[dict]:
+    def get_player_props(
+        self,
+        event_id: str = None,
+        markets: List[str] = None,
+        bookmakers: List[str] = None,
+    ) -> List[dict]:
         """
         Get player prop betting lines for a specific event.
 
@@ -213,6 +217,7 @@ class OddsAPIClient:
                     Options: player_points, player_rebounds, player_assists,
                             player_threes, player_blocks, player_steals,
                             player_points_rebounds_assists, etc.
+            bookmakers: Optional list of sportsbook keys to filter (e.g., ['fanduel']).
         """
         if markets is None:
             markets = [
@@ -220,7 +225,10 @@ class OddsAPIClient:
                 'player_rebounds',
                 'player_assists',
                 'player_points_rebounds_assists',
-                'player_threes'
+                'player_threes',
+                'player_blocks',
+                'player_steals',
+                'player_turnovers'
             ]
 
         if not event_id:
@@ -234,19 +242,28 @@ class OddsAPIClient:
             'markets': ','.join(markets),
             'oddsFormat': 'american'
         }
+        if bookmakers:
+            params['bookmakers'] = ','.join(bookmakers)
 
         result = self._make_request(endpoint, params)
         # Wrap single event in list for consistent parsing
         return [result] if result and isinstance(result, dict) else result
 
-    def get_all_player_props(self, markets: List[str] = None,
-                             max_events: int = None) -> List[dict]:
+    def get_all_player_props(
+        self,
+        markets: List[str] = None,
+        max_events: int = None,
+        event_ids: List[str] = None,
+        bookmakers: List[str] = None,
+    ) -> List[dict]:
         """
         Get player props for all upcoming games.
 
         Args:
             markets: List of prop markets to fetch
             max_events: Limit number of events to fetch (saves API calls)
+            event_ids: Optional list of specific event IDs to fetch (overrides max_events)
+            bookmakers: Optional list of sportsbook keys to filter.
 
         Returns:
             List of event data with player props
@@ -257,7 +274,10 @@ class OddsAPIClient:
                 'player_rebounds',
                 'player_assists',
                 'player_points_rebounds_assists',
-                'player_threes'
+                'player_threes',
+                'player_blocks',
+                'player_steals',
+                'player_turnovers'
             ]
 
         # First get all events
@@ -265,7 +285,10 @@ class OddsAPIClient:
         if not events:
             return []
 
-        if max_events:
+        # Filter to specific event IDs if provided
+        if event_ids:
+            events = [e for e in events if e.get('id') in event_ids]
+        elif max_events:
             events = events[:max_events]
 
         all_props = []
@@ -274,7 +297,7 @@ class OddsAPIClient:
             if not event_id:
                 continue
 
-            props = self.get_player_props(event_id, markets)
+            props = self.get_player_props(event_id, markets, bookmakers=bookmakers)
             if props:
                 all_props.extend(props)
             time.sleep(0.1)  # Small delay between requests
@@ -332,7 +355,8 @@ class OddsAPIClient:
             'player_points_rebounds_assists': 'pra',
             'player_threes': 'threes',
             'player_blocks': 'blocks',
-            'player_steals': 'steals'
+            'player_steals': 'steals',
+            'player_turnovers': 'turnovers'
         }
         df['prop_type'] = df['market'].map(market_map).fillna(df['market'])
 
