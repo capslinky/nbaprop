@@ -1,8 +1,10 @@
-"""NBA Prop Intelligence v2 package (skeleton)."""
+"""NBA Prop Intelligence v2 package."""
 
 __all__ = [
     "cli",
     "config",
+    "constants",
+    "exceptions",
     "ingestion",
     "normalization",
     "features",
@@ -12,6 +14,7 @@ __all__ = [
     "ops",
     "storage",
     "runtime",
+    "utils",
 ]
 
 __version__ = "0.1.0"

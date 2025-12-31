@@ -1,5 +1,5 @@
 """
-Unit tests for core/odds_utils.py
+Unit tests for nbaprop/utils/odds.py
 
 Tests all betting math utilities including:
 - Odds conversions (American to decimal, implied probability)
@@ -13,7 +13,7 @@ Tests all betting math utilities including:
 import pytest
 import numpy as np
 import pandas as pd
-from core.odds_utils import (
+from nbaprop.utils.odds import (
     american_to_decimal,
     american_to_implied_prob,
     remove_vig,
